@@ -10,181 +10,217 @@ import {
 } from "@nextui-org/table";
 
 import { Chip, ChipProps } from "@nextui-org/chip";
-import React, { useState } from "react";
-import {
-  DeleteIcon,
-  EditIcon,
-} from "@/app/(dashboard)/internPeriod/_components/Icons";
+import React, { Key } from "react";
+import { EditIcon } from "@/app/(dashboard)/intern/_components/Icon";
 import { Tooltip } from "@nextui-org/tooltip";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { Pagination } from "@nextui-org/pagination";
+import { useMutation, useQuery } from "@tanstack/react-query"; //get request
 import { apiEndpoints } from "@/libs/config";
+import { DeleteIcon } from "@/app/(dashboard)/intern/_components/Icons";
 import { Spinner } from "@nextui-org/spinner";
-import {
-  Modal,
-  ModalBody,
-  ModalContent,
-  useDisclosure,
-} from "@nextui-org/modal";
-import { Button } from "@nextui-org/button";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-
 const statusColorMap: Record<string, ChipProps["color"]> = {
-  InProgress: "success",
+  Approved: "success",
   Rejected: "danger",
   Pending: "warning",
 };
 
-export default function InternPeriodTable() {
-  const [selectedPeriod, setSelectedPeriod] = useState<number | null>(null);
-  const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
-
-  const { isLoading, error, data, refetch } = useQuery({
-    queryKey: ["data"],
+export type AccountTableProps = {
+  selectedInterns: Set<string>;
+  setSelectedInterns: (selectedInterns: Set<string>) => void;
+};
+export default function InternsTable(props: AccountTableProps) {
+  const {
+    data: allData,
+    refetch,
+    isLoading,
+  } = useQuery({
+    queryKey: ["sharedAllData"],
     queryFn: async () => {
-      const internPeriod = await fetch(apiEndpoints.internPeriod).then((res) =>
+      const candidateData = await fetch(apiEndpoints.candidate).then((res) =>
         res.json(),
       );
-      return { period: internPeriod?.data?.pagingData || [] };
+
+      return {
+        candidates: candidateData?.data?.pagingData || [],
+      };
     },
   });
 
-  const periodData = data?.period || [];
+  const candidates = allData?.candidates || [];
 
-  const deleteMutation = useMutation({
-    mutationFn: (id: number) =>
-      fetch(`${apiEndpoints.internPeriod}/${id}`, { method: "DELETE" }).then(
-        (response) => response.json(),
-      ),
+  const formatDateOfBirth = (dob: string) => {
+    const date = new Date(dob); // Convert string to Date object
+    const day = String(date.getDate()); // Get day and pad with 0 if necessary
+    const month = String(date.getMonth() + 1); // Months are 0-indexed, so add 1
+    const year = String(date.getFullYear()); // Get last 2 digits of the year
 
-    onSuccess: () => {
-      toast.success("Deleted period successfully!");
-      refetch();
-    },
-    onError: (error) => {
-      console.error("Error:", error);
-      toast.error("Failed to delete period.");
-    },
-  });
-
-  const handleDeleteConfirmation = (id: number) => {
-    setSelectedPeriod(id);
-    onOpen();
+    return `${day}/${month}/${year}`; // Return formatted date
   };
 
-  const confirmDelete = () => {
-    if (selectedPeriod) {
-      deleteMutation.mutate(selectedPeriod);
-      onClose();
+  const deleteInternMutation = useMutation({
+    mutationFn: (id: number) =>
+      fetch(apiEndpoints.candidate + "/" + id, {
+        method: "DELETE",
+      }).then((response) => response.json()),
+
+    onError: (error) => {
+      console.error("Error:", error);
+    },
+
+    onSuccess: () => {
+      refetch();
+    },
+  });
+
+  const handleDelete = (id: number) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this period?",
+    );
+
+    if (confirmDelete) {
+      deleteInternMutation.mutate(id);
     }
   };
 
   const columns = [
-    { key: "name", label: "FULL NAME" },
-    { key: "startDate", label: "Start Date" },
-    { key: "endDate", label: "End Date" },
-    { key: "description", label: "Description" },
-    { key: "internshipDuration", label: "Duration" },
-    { key: "numberOfMember", label: "Total Members" },
-    { key: "status", label: "STATUS" },
-    { key: "actions", label: "ACTIONS" },
+    {
+      key: "fullName",
+      label: "FULL NAME",
+    },
+    {
+      key: "group",
+      label: "GROUP",
+    },
+    {
+      key: "doB",
+      label: "Date of birth",
+    },
+    {
+      key: "phoneNumber",
+      label: "PHONE",
+    },
+    {
+      key: "personalEmail",
+      label: "EMAIL",
+    },
+    {
+      key: "cvUri",
+      label: "CV",
+    },
+    {
+      key: "gpa",
+      label: "GPA",
+    },
+    {
+      key: "universityId",
+      label: "UNIVERSITY  ",
+    },
+
+    {
+      key: "status",
+      label: "STATUS",
+    },
+    {
+      key: "actions",
+      label: "ACTIONS",
+    },
   ];
 
-  const renderCell = React.useCallback((period: any, columnKey: React.Key) => {
-    const cellValue = period[columnKey as keyof typeof period];
+  const renderCell = React.useCallback(
+    (candidate: any, columnKey: React.Key) => {
+      const cellValue = candidate[columnKey as keyof typeof candidate];
 
-    switch (columnKey) {
-      case "name":
-        return <div>{period.name}</div>;
-      case "startDate":
-        return <div>{formatDate(period.startDate)}</div>;
-      case "endDate":
-        return <div>{formatDate(period.endDate)}</div>;
-      case "description":
-        return <div>{period.description}</div>;
-      case "internshipDuration":
-        return <div>{period.internshipDuration}</div>;
-      case "numberOfMember":
-        return <div>{period.numberOfMember}</div>;
-      case "status":
-        return (
-          <Chip color={statusColorMap[period.status]} size="sm" variant="flat">
-            {cellValue}
-          </Chip>
-        );
-      case "actions":
-        return (
-          <div className="flex gap-2">
-            <Tooltip content="Edit">
-              <span className="cursor-pointer">
-                <EditIcon />
-              </span>
-            </Tooltip>
-            <Tooltip content="Delete">
-              <button
-                onClick={() => handleDeleteConfirmation(period.id)}
-                className="cursor-pointer"
-              >
-                <DeleteIcon />
-              </button>
-            </Tooltip>
-          </div>
-        );
-      default:
-        return cellValue;
-    }
-  }, []);
+      switch (columnKey) {
+        case "fullName":
+          return <div>{candidate.fullName}</div>;
+        case "group":
+          return <div>{candidate.internPeriodViewModel.name}</div>;
+        case "doB":
+          return <div>{formatDateOfBirth(candidate.doB)}</div>;
+        case "phoneNumber":
+          return <div>{candidate.phoneNumber}</div>;
+        case "personalEmail":
+          return <div>{candidate.personalEmail}</div>;
+        case "cvUri":
+          return <div>{candidate.cvUri}</div>;
+        case "gpa":
+          return <div>{candidate.gpa}</div>;
+        case "role":
+          return <div>{candidate.role}</div>;
+        case "universityId":
+          return <div>{candidate.universityViewModel.name}</div>;
+        case "status":
+          return (
+            <Chip
+              className="capitalize"
+              color={statusColorMap[candidate.status]}
+              size="md"
+              variant="flat"
+            >
+              {cellValue}
+            </Chip>
+          );
+        case "actions":
+          return (
+            <div className="relative flex items-center gap-2">
+              <Tooltip content="Delete">
+                <button
+                  onClick={() => handleDelete(candidate.id)}
+                  className="cursor-pointer text-lg active:opacity-50"
+                >
+                  <DeleteIcon className="bg-red-500 text-red-500" />
+                </button>
+              </Tooltip>
+              <Tooltip content="Edit">
+                <span className="mb-1 cursor-pointer text-lg active:opacity-50">
+                  <EditIcon />
+                </span>
+              </Tooltip>
+            </div>
+          );
+      }
+    },
+    [],
+  );
 
-  const formatDate = (dob: string) => {
-    const date = new Date(dob);
-
-    return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
-  };
-
-  if (error) return <div>Error: {error.message}</div>;
+  if (isLoading) {
+    return <Spinner size="lg" />;
+  }
 
   return (
     <>
-      <Table selectionMode="multiple">
-        <TableHeader columns={columns}>
-          {(column) => (
-            <TableColumn key={column.key}>{column.label}</TableColumn>
-          )}
-        </TableHeader>
-        <TableBody
-          items={periodData}
-          loadingState={isLoading ? "loading" : "idle"}
-          loadingContent={
-            <div className="flex items-center gap-2">
-              <Spinner /> Loading...
-            </div>
-          }
+      <div>
+        <Table
+          selectionMode="multiple"
+          className="m-5 w-auto"
+          onSelectionChange={(keys) => {
+            props.setSelectedInterns(keys as Set<string>);
+          }}
         >
-          {(period: any) => (
-            <TableRow key={period.id}>
-              {(columnKey) => (
-                <TableCell>{renderCell(period, columnKey)}</TableCell>
-              )}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-        <ModalContent>
-          <ModalBody>
-            <p>Are you sure you want to delete this period?</p>
-            <div className="mt-4 flex gap-5">
-              <Button color="primary" onClick={confirmDelete}>
-                Yes
-              </Button>
-              <Button onClick={onClose}>No</Button>
-            </div>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
-
-      <ToastContainer position="bottom-right" autoClose={3000} />
+          <TableHeader columns={columns}>
+            {(columns) => (
+              <TableColumn key={columns.key}>{columns.label}</TableColumn>
+            )}
+          </TableHeader>
+          <TableBody items={candidates}>
+            {(candidate: any) => (
+              <TableRow key={candidate.id}>
+                {(colKey) => (
+                  <TableCell>{renderCell(candidate, colKey)}</TableCell>
+                )}
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+        <Pagination
+          className="m-4 flex justify-center"
+          isCompact
+          loop
+          showControls
+          total={12}
+          initialPage={1}
+        />
+      </div>
     </>
   );
 }
