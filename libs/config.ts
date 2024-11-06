@@ -10,4 +10,5 @@ export const apiEndpoints = {
   technology: `${API_BASE_URL}/technology`,
   sendEmail: `${API_BASE_URL}/mail/multi-recipients`,
   responseEmail: `${API_BASE_URL}/mail/response`,
+  interviewQuestion: `${API_BASE_URL}/interview-question`,
 };

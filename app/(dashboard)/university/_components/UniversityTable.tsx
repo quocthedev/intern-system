@@ -13,7 +13,7 @@ import React, { useState } from "react";
 import {
   DeleteIcon,
   EditIcon,
-} from "@/app/(dashboard)/position/_components/Icons";
+} from "@/app/(dashboard)/university/_components/Icons";
 import { Tooltip } from "@nextui-org/tooltip";
 import { useMutation, useQuery } from "@tanstack/react-query"; //get request
 import { apiEndpoints } from "@/libs/config";
@@ -36,7 +36,7 @@ const statusColorMap: Record<string, ChipProps["color"]> = {
   Pending: "warning",
 };
 
-export default function PositionTable() {
+export default function UniversityTable() {
   const {
     isOpen: isDeleteOpen,
     onOpen: onOpenDelete,
@@ -55,12 +55,13 @@ export default function PositionTable() {
   const [updateData, setUpdateData] = useState({
     name: "",
     abbreviation: "",
+    address: "",
   });
 
   const { isLoading, error, data, refetch } = useQuery({
     queryKey: ["data"],
     queryFn: async () => {
-      const university = await fetch(apiEndpoints.position).then((res) =>
+      const university = await fetch(apiEndpoints.university).then((res) =>
         res.json(),
       );
 
@@ -72,7 +73,7 @@ export default function PositionTable() {
 
   const mutation = useMutation({
     mutationFn: (id: string) =>
-      fetch(apiEndpoints.position + "/" + id, {
+      fetch(apiEndpoints.university + "/" + id, {
         method: "DELETE",
       }).then((response) => response.json()),
 
@@ -87,7 +88,7 @@ export default function PositionTable() {
 
   const updateMutation = useMutation({
     mutationFn: async () => {
-      await fetch(apiEndpoints.position + "/" + selectedUni, {
+      await fetch(apiEndpoints.university + "/" + selectedUni, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updateData),
@@ -102,7 +103,7 @@ export default function PositionTable() {
 
   const handleDelete = (id: string) => {
     mutation.mutate(id);
-    toast.success("Deleted successfully!");
+    toast.success("Deleted university successfully!");
     onCloseDelete();
   };
 
@@ -115,9 +116,10 @@ export default function PositionTable() {
     id: React.SetStateAction<string>,
     name: string,
     abbreviation: string,
+    address: string,
   ) => {
     setSelectedUni(id);
-    setUpdateData({ name, abbreviation });
+    setUpdateData({ name, abbreviation, address });
     onOpenEdit();
   };
 
@@ -134,7 +136,10 @@ export default function PositionTable() {
       key: "abbreviation",
       label: "ABBREVIATION",
     },
-
+    {
+      key: "address",
+      label: "ADDRESS",
+    },
     {
       key: "actions",
       label: "ACTIONS",
@@ -171,7 +176,12 @@ export default function PositionTable() {
               <button
                 className="cursor-pointer text-lg text-default-400 active:opacity-50"
                 onClick={() =>
-                  openEditModal(univer.id, univer.name, univer.abbreviation)
+                  openEditModal(
+                    univer.id,
+                    univer.name,
+                    univer.abbreviation,
+                    univer.address,
+                  )
                 }
               >
                 <EditIcon />
@@ -213,7 +223,7 @@ export default function PositionTable() {
               Loading...
             </div>
           }
-          emptyContent={<div>No position found!</div>}
+          emptyContent={<div>No university found!</div>}
         >
           {(uni: any) => (
             <TableRow key={uni.id}>
@@ -272,7 +282,15 @@ export default function PositionTable() {
                 setUpdateData({ ...updateData, abbreviation: e.target.value })
               }
             />
-
+            <Input
+              placeholder="Address"
+              label="Address"
+              className="mt-2"
+              value={updateData.address}
+              onChange={(e) =>
+                setUpdateData({ ...updateData, address: e.target.value })
+              }
+            />
             <div className="mt-2 grid grid-cols-2 gap-5">
               <Button onClick={handleUpdate} color="primary">
                 Update
