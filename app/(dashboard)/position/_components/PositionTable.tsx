@@ -13,7 +13,7 @@ import React, { useState } from "react";
 import {
   DeleteIcon,
   EditIcon,
-} from "@/app/(dashboard)/university/_components/Icons";
+} from "@/app/(dashboard)/position/_components/Icons";
 import { Tooltip } from "@nextui-org/tooltip";
 import { useMutation, useQuery } from "@tanstack/react-query"; //get request
 import { apiEndpoints } from "@/libs/config";
