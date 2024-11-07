@@ -3,7 +3,7 @@ import React from "react";
 
 export default function TechnologyPage() {
   return (
-    <div className="p-9">
+    <div className="p-6">
       <h1 className="text-left text-2xl font-semibold capitalize text-black">
         Question Bank Management
       </h1>
