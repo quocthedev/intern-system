@@ -11,13 +11,14 @@ import {
 
 import { Chip, ChipProps } from "@nextui-org/chip";
 import React, { Key } from "react";
-import { EditIcon } from "@/app/(dashboard)/intern/_components/Icon";
+import { EditIcon } from "@/app/(dashboard)/intern/_components/Icons";
 import { Tooltip } from "@nextui-org/tooltip";
 import { Pagination } from "@nextui-org/pagination";
 import { useMutation, useQuery } from "@tanstack/react-query"; //get request
 import { apiEndpoints } from "@/libs/config";
 import { DeleteIcon } from "@/app/(dashboard)/intern/_components/Icons";
 import { Spinner } from "@nextui-org/spinner";
+import Link from "next/link";
 const statusColorMap: Record<string, ChipProps["color"]> = {
   Approved: "success",
   Rejected: "danger",
@@ -142,7 +143,11 @@ export default function InternsTable(props: AccountTableProps) {
         case "personalEmail":
           return <div>{candidate.personalEmail}</div>;
         case "cvUri":
-          return <div>{candidate.cvUri}</div>;
+          return (
+            <Link className="text-blue-500 underline" href={candidate.cvUri}>
+              Link
+            </Link>
+          );
         case "gpa":
           return <div>{candidate.gpa}</div>;
         case "role":
@@ -162,19 +167,19 @@ export default function InternsTable(props: AccountTableProps) {
           );
         case "actions":
           return (
-            <div className="relative flex items-center gap-2">
+            <div className="flex gap-2">
+              <Tooltip content="Edit">
+                <span className="cursor-pointer text-lg active:opacity-50">
+                  <EditIcon />
+                </span>
+              </Tooltip>
               <Tooltip content="Delete">
                 <button
                   onClick={() => handleDelete(candidate.id)}
                   className="cursor-pointer text-lg active:opacity-50"
                 >
-                  <DeleteIcon className="bg-red-500 text-red-500" />
+                  <DeleteIcon />
                 </button>
-              </Tooltip>
-              <Tooltip content="Edit">
-                <span className="mb-1 cursor-pointer text-lg active:opacity-50">
-                  <EditIcon />
-                </span>
               </Tooltip>
             </div>
           );
