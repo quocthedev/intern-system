@@ -12,9 +12,82 @@ import { Button } from "@nextui-org/button";
 import { AddIcon } from "./Icons";
 import { Input } from "@nextui-org/input";
 import { DatePicker } from "@nextui-org/date-picker";
+import { Select, SelectItem } from "@nextui-org/select";
+import { useQuery } from "@tanstack/react-query";
 
 export default function NewProjectModal() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
+  const {
+    isLoading: isPositionsLoading,
+    error: positionsError,
+    data: positions,
+  } = useQuery({
+    queryKey: ["positions"],
+    queryFn: async () => {
+      // const response = await apiClient.get<GetProjectResponse>(
+      //   apiEndpoints.project,
+      // );
+
+      // if (response?.statusCode === "200") {
+      //   const { data } = response as PaginationResponseSuccess<Project>;
+
+      //   return data.pagingData;
+      // }
+
+      // return [];
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+
+      return [
+        {
+          key: "1",
+          label: "Backend Developer",
+        },
+        {
+          key: "2",
+          label: "Frontend Developer",
+        },
+      ];
+    },
+  });
+
+  const {
+    isLoading: isTechnologiesLoading,
+    error: technologiesError,
+    data: technologies,
+  } = useQuery({
+    queryKey: ["technologies"],
+    queryFn: async () => {
+      // const response = await apiClient.get<GetProjectResponse>(
+      //   apiEndpoints.project,
+      // );
+
+      // if (response?.statusCode === "200") {
+      //   const { data } = response as PaginationResponseSuccess<Project>;
+
+      //   return data.pagingData;
+      // }
+
+      // return [];
+
+      await new Promise((resolve) => setTimeout(resolve, 5000));
+
+      return [
+        {
+          key: "1",
+          label: "React",
+        },
+        {
+          key: "2",
+          label: "NodeJS",
+        },
+        {
+          key: "3",
+          label: "MongoDB",
+        },
+      ];
+    },
+  });
 
   return (
     <>
@@ -42,17 +115,36 @@ export default function NewProjectModal() {
                   placeholder="Enter project name"
                   labelPlacement="outside"
                 />
-                <Input
+                <Select
                   label="Position"
-                  placeholder="Add positions included in the project: frontend, backend,..."
+                  placeholder="Select positions"
+                  selectionMode="multiple"
+                  isLoading={isPositionsLoading}
+                  items={positions || []}
                   labelPlacement="outside"
-                />
+                >
+                  {(position) => (
+                    <SelectItem key={position.key} value={position.key}>
+                      {position.label}
+                    </SelectItem>
+                  )}
+                </Select>
 
-                <Input
-                  label="Technologies"
-                  placeholder="Add technology stacks utilized within project’s scope: java, nodejs, python,..."
+                <Select
+                  label="Technology"
+                  placeholder="Select technologies"
+                  selectionMode="multiple"
+                  isLoading={isTechnologiesLoading}
+                  items={technologies || []}
                   labelPlacement="outside"
-                />
+                >
+                  {(technology) => (
+                    <SelectItem key={technology.key} value={technology.key}>
+                      {technology.label}
+                    </SelectItem>
+                  )}
+                </Select>
+
                 <div className="grid grid-cols-3 gap-4">
                   <Input
                     label="Leader"

@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from "axios";
+import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 
 export const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000/api";
@@ -20,7 +20,10 @@ export default class APIClient {
     );
   }
 
-  async get<ResponseType>(url: string, config = {}): Promise<ResponseType> {
+  async get<ResponseType>(
+    url: string,
+    config: AxiosRequestConfig = {},
+  ): Promise<ResponseType> {
     const response = await this.client.get(url, config);
 
     return response.data as ResponseType;
