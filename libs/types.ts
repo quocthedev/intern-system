@@ -35,3 +35,27 @@ export type LoginWithGoogleResponseFailed = {
 export type LoginWithGoogleResponse =
   | LoginWithGoogleResponseSuccess
   | LoginWithGoogleResponseFailed;
+
+export type PagingData<T> = {
+  pageIndex: number;
+  totalPages: number;
+  pageSize: number;
+  totalCount: number;
+  hasPrevious: boolean;
+  hasNext: boolean;
+  pagingData: T[];
+};
+
+export type PaginationResponseSuccess<T> = {
+  statusCode: "200";
+  data: PagingData<T>;
+};
+
+export type PaginationResponseFailed = {
+  statusCode: Exclude<string, "200">;
+  message: string;
+};
+
+export type PaginationResponse<T> =
+  | PaginationResponseSuccess<T>
+  | PaginationResponseFailed;
