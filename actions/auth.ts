@@ -53,6 +53,10 @@ export async function login(formData: FormData): Promise<
     // Save the session in a cookie
     cookies().set("accessToken", tokenString, { expires, httpOnly: true });
 
+    cookies().set("userId", id, { expires, httpOnly: true });
+    cookies().set("userName", name, { expires, httpOnly: true });
+    cookies().set("userRole", role, { expires, httpOnly: true });
+
     return {
       id,
       name,
