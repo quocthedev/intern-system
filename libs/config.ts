@@ -4,6 +4,7 @@ export const API_BASE_URL =
 export const apiEndpoints = {
   login: `${API_BASE_URL}/auth/signin`,
   googleLogin: `${API_BASE_URL}/auth/signin-google`,
+  project: `${API_BASE_URL}/project`,
   candidate: `${API_BASE_URL}/candidate`,
   university: `${API_BASE_URL}/university`,
   internPeriod: `${API_BASE_URL}/intern-period`,

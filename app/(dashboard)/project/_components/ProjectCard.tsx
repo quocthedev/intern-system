@@ -1,4 +1,3 @@
-import React from "react";
 import { Card, CardBody, CardFooter, CardHeader } from "@nextui-org/card";
 import { Divider } from "@nextui-org/divider";
 import { Link } from "@nextui-org/link";
@@ -6,15 +5,18 @@ import { Chip } from "@nextui-org/chip";
 import { Button } from "@nextui-org/button";
 import { Checkbox } from "@nextui-org/checkbox";
 import { EditIcon } from "./Icons";
-export default function ProjectCard() {
+import { Project } from "../_types/Project";
+import { PropsWithChildren } from "react";
+
+export default function ProjectCard(props: PropsWithChildren<Project>) {
   return (
-    <Card>
+    <Card key={props.id}>
       <CardHeader className="flex gap-1">
         <div className="flex w-full justify-between">
-          <p className="text-lg font-semibold">Intern System</p>
+          <p className="text-lg font-semibold">{props.title}</p>
           <div className="flex items-center gap-1">
             <Chip className="bg-warning-400/50 text-warning-700" size="sm">
-              In Progress
+              {props.status}
             </Chip>
             <Button
               variant="light"
@@ -33,11 +35,17 @@ export default function ProjectCard() {
         <div className="flex flex-col gap-3">
           <div className="flex gap-1 text-xs">
             <p className="font-semibold">Position:</p>
-            <p>Back-End, Front-End, BA, Design</p>
+            <p>
+              {props.listPosition?.map((position) => position.name).join(", ")}
+            </p>
           </div>
           <div className="flex gap-1 text-xs">
             <p className="font-semibold">Technology:</p>
-            <p>.NET, ReactJS, Trello,...</p>
+            <p>
+              {props.listTechnology
+                ?.map((technology) => technology.name)
+                .join(", ")}
+            </p>
           </div>
           <div className="flex gap-1 text-xs">
             <p className="font-semibold">Leader - Sub Leader:</p>
@@ -58,7 +66,7 @@ export default function ProjectCard() {
               isExternal
               className="text-xs"
             >
-              https://zalo.me/g/123456789
+              {props.zaloUri}
             </Link>
           </div>
         </div>
@@ -66,8 +74,12 @@ export default function ProjectCard() {
       <Divider />
       <CardFooter>
         <div className="flex w-full justify-between">
-          <p className="text-xs text-success-400">From: 05 Jan 2023</p>
-          <p className="text-xs text-danger-400">To: 05 Jan 2024</p>
+          <p className="text-xs text-success-400">
+            Start On: {props.startDate}
+          </p>
+          <p className="text-xs text-danger-400">
+            Release On: {props.releaseDate}
+          </p>
         </div>
       </CardFooter>
     </Card>
