@@ -13,9 +13,8 @@ import { Input } from "@nextui-org/input";
 import { CreateIcon } from "@/app/(dashboard)/intern/_components/Icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiEndpoints } from "@/libs/config";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { error } from "console";
 
 interface UniversityData {
   name: string;
@@ -127,13 +126,6 @@ export default function NewUniverModal() {
           </>
         </ModalContent>
       </Modal>
-      <ToastContainer
-        position="bottom-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        closeOnClick
-        draggable
-      />
     </>
   );
 }

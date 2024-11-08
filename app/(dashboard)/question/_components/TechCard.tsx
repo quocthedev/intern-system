@@ -71,10 +71,13 @@ export const TechCard = () => {
 
   return (
     <>
-      <div>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4">
+        <span className="font-semibold text-lime-700 sm:-mr-1">
+          Selected Position:
+        </span>
         <Dropdown>
-          <DropdownTrigger>
-            <Button variant="bordered">
+          <DropdownTrigger className="mb-4 mt-3 sm:mb-4 sm:mt-3">
+            <Button variant="bordered" className="text-sm">
               {isLoading ? (
                 <Spinner size="sm" />
               ) : positionId ? (
@@ -94,7 +97,6 @@ export const TechCard = () => {
           </DropdownMenu>
         </Dropdown>
       </div>
-
       {isTechnologyLoading ? (
         <div className="mt-20 flex items-center justify-center gap-3">
           <Spinner size="lg" />
