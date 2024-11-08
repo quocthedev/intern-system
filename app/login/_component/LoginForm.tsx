@@ -12,6 +12,22 @@ import { Button } from "@nextui-org/button";
 import { redirect, useRouter } from "next/navigation";
 import { login } from "@/actions/auth";
 
+type GOOGLE_AUTH_KEYS =
+  | "client_id"
+  | "client_secret"
+  | "endpoint"
+  | "redirect_uri"
+  | "scopes";
+
+export const oauth_google: Record<GOOGLE_AUTH_KEYS, string> = {
+  client_id: process.env.NEXT_PUBLIC_GOOGLE_OAUTH_CLIENT_ID || "",
+  client_secret: process.env.NEXT_PUBLIC_GOOGLE_OAUTH_CLIENT_SECRET || "",
+  endpoint: "https://accounts.google.com/o/oauth2/v2/auth",
+  redirect_uri: process.env.NEXT_PUBLIC_GOOGLE_OAUTH_REDIRECT_URI || "",
+  scopes:
+    "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile",
+};
+
 export const LoginForm = () => {
   const [visible, setVisible] = useState(false);
   const [email, setEmail] = useState("");
@@ -21,6 +37,18 @@ export const LoginForm = () => {
 
   const toggleVisible = () => {
     setVisible(!visible);
+  };
+
+  const loginWithGoogle = () => {
+    const query = {
+      client_id: oauth_google.client_id,
+      redirect_uri: oauth_google.redirect_uri,
+      response_type: "code",
+      scope: oauth_google.scopes,
+    };
+    const url = new URL(oauth_google.endpoint);
+    url.search = new URLSearchParams(query).toString();
+    window.location.href = url.toString();
   };
 
   return (
@@ -102,7 +130,7 @@ export const LoginForm = () => {
             className="mt-4 w-[100%]"
             variant="bordered"
             startContent={<GoogleIcon />}
-            // onPress={() => signIn("google")}
+            onPress={() => loginWithGoogle()}
           >
             Sign in with Google
           </Button>

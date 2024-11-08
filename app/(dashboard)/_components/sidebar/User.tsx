@@ -1,31 +1,20 @@
-"use client";
-
-import { useUser } from "@/hooks/useUser";
 import { Card, CardBody } from "@nextui-org/card";
 import { cn } from "@nextui-org/theme";
 import { User as UserComponent } from "@nextui-org/user";
-import {
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownSection,
-  DropdownItem,
-} from "@nextui-org/dropdown";
-import { useRouter } from "next/navigation";
-import { logout } from "@/actions/auth";
+import { Dropdown, DropdownTrigger } from "@nextui-org/dropdown";
+import UserDropdown from "./UserDropdown";
+import { cookies } from "next/headers";
 
 export type UserProps = {
   className?: string;
 };
 
 export default function User({ className }: UserProps) {
-  const user = useUser((state) => state);
-  const router = useRouter();
+  const cookiesStore = cookies();
 
-  const logoutUser = async () => {
-    window.localStorage.clear();
-    await logout();
-    router.push("/login");
+  const user = {
+    name: cookiesStore.get("userName")?.value as string,
+    role: cookiesStore.get("userRole")?.value as string,
   };
 
   return (
@@ -43,15 +32,7 @@ export default function User({ className }: UserProps) {
           </CardBody>
         </Card>
       </DropdownTrigger>
-      <DropdownMenu>
-        <DropdownSection>
-          <DropdownItem>Profile</DropdownItem>
-          <DropdownItem>Settings</DropdownItem>
-          <DropdownItem className="text-danger-500" onClick={logoutUser}>
-            Logout
-          </DropdownItem>
-        </DropdownSection>
-      </DropdownMenu>
+      <UserDropdown />
     </Dropdown>
   );
 }
