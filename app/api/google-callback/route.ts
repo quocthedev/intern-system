@@ -1,5 +1,5 @@
 import APIClient from "@/libs/api-client";
-import { apiEndpoints } from "@/libs/config";
+import { API_ENDPOINTS } from "@/libs/config";
 import {
   LoginWithGoogleResponse,
   LoginWithGoogleResponseSuccess,
@@ -37,7 +37,7 @@ export async function GET(req: NextRequest) {
   });
 
   const response = await apiClient.post<LoginWithGoogleResponse>(
-    apiEndpoints.googleLogin + "?" + query,
+    API_ENDPOINTS.googleLogin + "?" + query,
   );
 
   if (response?.statusCode === "200") {

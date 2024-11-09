@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useParams } from "next/navigation";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { apiEndpoints } from "@/libs/config";
+import { API_ENDPOINTS } from "@/libs/config";
 import { Tooltip } from "@nextui-org/tooltip";
 import {
   CreateIcon,
@@ -75,7 +75,7 @@ export default function QuestionBankPage() {
     queryKey: ["data", techId],
     queryFn: async () => {
       const response = await fetch(
-        `${apiEndpoints.interviewQuestion}/technology/${techId}/interview-questions`,
+        `${API_ENDPOINTS.interviewQuestion}/technology/${techId}/interview-questions`,
       );
 
       const questions = response.json();
@@ -96,7 +96,7 @@ export default function QuestionBankPage() {
 
   const mutation = useMutation({
     mutationFn: (id: string) =>
-      fetch(apiEndpoints.interviewQuestion + "/" + id, {
+      fetch(API_ENDPOINTS.interviewQuestion + "/" + id, {
         method: "DELETE",
       }).then(async (response) => {
         if (!response.ok) {
@@ -120,7 +120,7 @@ export default function QuestionBankPage() {
 
   const updateMutation = useMutation({
     mutationFn: async () => {
-      await fetch(apiEndpoints.interviewQuestion + "/" + selectedQuestion, {
+      await fetch(API_ENDPOINTS.interviewQuestion + "/" + selectedQuestion, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updateData),
@@ -140,7 +140,7 @@ export default function QuestionBankPage() {
 
   const { mutate } = useMutation({
     mutationFn: async (newQuestion: QuestionData) => {
-      const response = await fetch(apiEndpoints.interviewQuestion, {
+      const response = await fetch(API_ENDPOINTS.interviewQuestion, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -17,7 +17,7 @@ import {
 } from "@/app/(dashboard)/internPeriod/_components/Icons";
 import { Tooltip } from "@nextui-org/tooltip";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { apiEndpoints } from "@/libs/config";
+import { API_ENDPOINTS } from "@/libs/config";
 import { Spinner } from "@nextui-org/spinner";
 import {
   Modal,
@@ -42,7 +42,7 @@ export default function InternPeriodTable() {
   const { isLoading, error, data, refetch } = useQuery({
     queryKey: ["data"],
     queryFn: async () => {
-      const internPeriod = await fetch(apiEndpoints.internPeriod).then((res) =>
+      const internPeriod = await fetch(API_ENDPOINTS.internPeriod).then((res) =>
         res.json(),
       );
 
@@ -54,7 +54,7 @@ export default function InternPeriodTable() {
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) =>
-      fetch(apiEndpoints.internPeriod + "/" + id, { method: "DELETE" }).then(
+      fetch(API_ENDPOINTS.internPeriod + "/" + id, { method: "DELETE" }).then(
         (response) => response.json(),
       ),
 

@@ -4,7 +4,7 @@ import {
   LoginResponseFailed,
   LoginResponseSuccess,
 } from "@/libs/types";
-import { apiEndpoints } from "@/libs/config";
+import { API_ENDPOINTS } from "@/libs/config";
 import { cookies } from "next/headers";
 import APIClient from "@/libs/api-client";
 
@@ -38,7 +38,7 @@ export async function login(formData: FormData): Promise<
   };
 
   const response = await apiClient.post<LoginResponse>(
-    apiEndpoints.login,
+    API_ENDPOINTS.login,
     user,
   );
 
