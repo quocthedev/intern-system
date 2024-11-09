@@ -48,24 +48,36 @@ export default function ProjectCard(props: PropsWithChildren<Project>) {
             </p>
           </div>
           <div className="flex gap-1 text-xs">
-            <p className="font-semibold">Leader - Sub Leader:</p>
-            <div className="flex gap-1">
-              <p>John Doe</p>
-              <p>-</p>
-              <p>Jane Doe</p>
-            </div>
+            <p className="font-semibold">Leader:</p>
+            <p>
+              {props.groupUserRelated
+                ?.find((group) => group.role === "Leader")
+                ?.users.map((user) => user.fullName)
+                .join(", ")}
+            </p>
+          </div>
+
+          <div className="flex gap-1 text-xs">
+            <p className="font-semibold">Sub Leader:</p>
+            <p>
+              {props.groupUserRelated
+                ?.find((group) => group.role === "SubLeader")
+                ?.users.map((user) => user.fullName)
+                .join(", ")}
+            </p>
           </div>
           <div className="flex gap-1 text-xs">
             <p className="font-semibold">Mentor:</p>
-            <p>John Doe</p>
+            <p>
+              {props.groupUserRelated
+                ?.find((group) => group.role === "Mentor")
+                ?.users.map((user) => user.fullName)
+                .join(", ")}
+            </p>
           </div>
           <div className="flex items-center gap-1 text-xs">
             <p className="font-semibold">Zalo Group:</p>
-            <Link
-              href="https://zalo.me/g/123456789"
-              isExternal
-              className="text-xs"
-            >
+            <Link href={props.zaloUri} isExternal className="text-xs">
               {props.zaloUri}
             </Link>
           </div>
@@ -75,10 +87,10 @@ export default function ProjectCard(props: PropsWithChildren<Project>) {
       <CardFooter>
         <div className="flex w-full justify-between">
           <p className="text-xs text-success-400">
-            Start On: {props.startDate}
+            Start On: {props.startDate.split("T")[0]}
           </p>
           <p className="text-xs text-danger-400">
-            Release On: {props.releaseDate}
+            Release On: {props.releaseDate.split("T")[0]}
           </p>
         </div>
       </CardFooter>
