@@ -14,6 +14,22 @@ import { Input } from "@nextui-org/input";
 import { DatePicker } from "@nextui-org/date-picker";
 import { Select, SelectItem } from "@nextui-org/select";
 import { useQuery } from "@tanstack/react-query";
+import APIClient from "@/libs/api-client";
+import { GetPositionResponse, Position } from "../_types/Position";
+import { API_ENDPOINTS } from "@/libs/config";
+import { PaginationResponseSuccess } from "@/libs/types";
+import { GetTechnologyResponse, Technology } from "../_types/Technology";
+import { createNewProject } from "@/actions/create-new-project";
+
+const apiClient = new APIClient({
+  onFulfilled: (response) => response,
+  onRejected: (error) => {
+    // console.error(error);
+    // return Promise.reject(error);
+
+    console.log(error.response.data);
+  },
+});
 
 export default function NewProjectModal() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -25,29 +41,17 @@ export default function NewProjectModal() {
   } = useQuery({
     queryKey: ["positions"],
     queryFn: async () => {
-      // const response = await apiClient.get<GetProjectResponse>(
-      //   apiEndpoints.project,
-      // );
+      const response = await apiClient.get<GetPositionResponse>(
+        API_ENDPOINTS.position,
+      );
 
-      // if (response?.statusCode === "200") {
-      //   const { data } = response as PaginationResponseSuccess<Project>;
+      if (response?.statusCode === "200") {
+        const { data } = response as PaginationResponseSuccess<Position>;
 
-      //   return data.pagingData;
-      // }
+        return data.pagingData;
+      }
 
-      // return [];
-      await new Promise((resolve) => setTimeout(resolve, 5000));
-
-      return [
-        {
-          key: "1",
-          label: "Backend Developer",
-        },
-        {
-          key: "2",
-          label: "Frontend Developer",
-        },
-      ];
+      return [];
     },
   });
 
@@ -58,34 +62,17 @@ export default function NewProjectModal() {
   } = useQuery({
     queryKey: ["technologies"],
     queryFn: async () => {
-      // const response = await apiClient.get<GetProjectResponse>(
-      //   apiEndpoints.project,
-      // );
+      const response = await apiClient.get<GetTechnologyResponse>(
+        API_ENDPOINTS.technology,
+      );
 
-      // if (response?.statusCode === "200") {
-      //   const { data } = response as PaginationResponseSuccess<Project>;
+      if (response?.statusCode === "200") {
+        const { data } = response as PaginationResponseSuccess<Technology>;
 
-      //   return data.pagingData;
-      // }
+        return data.pagingData;
+      }
 
-      // return [];
-
-      await new Promise((resolve) => setTimeout(resolve, 5000));
-
-      return [
-        {
-          key: "1",
-          label: "React",
-        },
-        {
-          key: "2",
-          label: "NodeJS",
-        },
-        {
-          key: "3",
-          label: "MongoDB",
-        },
-      ];
+      return [];
     },
   });
 
@@ -109,72 +96,87 @@ export default function NewProjectModal() {
                 Add New Project
               </ModalHeader>
 
-              <ModalBody className="gap-5">
-                <Input
-                  label="Project name"
-                  placeholder="Enter project name"
-                  labelPlacement="outside"
-                />
-                <Select
-                  label="Position"
-                  placeholder="Select positions"
-                  selectionMode="multiple"
-                  isLoading={isPositionsLoading}
-                  items={positions || []}
-                  labelPlacement="outside"
+              <ModalBody className="w-[800px]">
+                <form
+                  className="flex flex-col gap-5"
+                  action={async (formData: FormData) => {
+                    createNewProject(formData);
+                  }}
                 >
-                  {(position) => (
-                    <SelectItem key={position.key} value={position.key}>
-                      {position.label}
-                    </SelectItem>
-                  )}
-                </Select>
-
-                <Select
-                  label="Technology"
-                  placeholder="Select technologies"
-                  selectionMode="multiple"
-                  isLoading={isTechnologiesLoading}
-                  items={technologies || []}
-                  labelPlacement="outside"
-                >
-                  {(technology) => (
-                    <SelectItem key={technology.key} value={technology.key}>
-                      {technology.label}
-                    </SelectItem>
-                  )}
-                </Select>
-
-                <div className="grid grid-cols-3 gap-4">
                   <Input
-                    label="Leader"
-                    placeholder="Enter username"
+                    label="Project title"
+                    placeholder="Enter project title"
                     labelPlacement="outside"
+                    name="title"
+                    required
                   />
-
                   <Input
-                    label="Sub Leader"
-                    placeholder="Enter username"
+                    label="Product URL"
+                    placeholder="Enter product URL"
                     labelPlacement="outside"
+                    name="productUri"
+                    required
                   />
-
                   <Input
-                    label="Mentor"
-                    placeholder="Enter username"
+                    label="Zalo URL"
+                    placeholder="Enter Zalo URL"
                     labelPlacement="outside"
+                    name="zaloUri"
+                    required
                   />
-                </div>
+                  <Select
+                    label="Positions"
+                    placeholder="Select positions"
+                    selectionMode="multiple"
+                    isLoading={isPositionsLoading}
+                    items={positions || []}
+                    labelPlacement="outside"
+                    name="positions"
+                    required
+                  >
+                    {(position) => (
+                      <SelectItem key={position.id} value={position.name}>
+                        {position.name}
+                      </SelectItem>
+                    )}
+                  </Select>
 
-                <div className="flex w-full gap-3">
-                  <DatePicker label="Start date" labelPlacement="outside" />
-                  <DatePicker label="End date" labelPlacement="outside" />
-                </div>
+                  <Select
+                    label="Technologies"
+                    placeholder="Select technologies"
+                    selectionMode="multiple"
+                    isLoading={isTechnologiesLoading}
+                    items={technologies || []}
+                    labelPlacement="outside"
+                    name="technologies"
+                    required
+                  >
+                    {(technology) => (
+                      <SelectItem key={technology.id} value={technology.name}>
+                        {technology.name}
+                      </SelectItem>
+                    )}
+                  </Select>
+
+                  <div className="flex w-full gap-3">
+                    <DatePicker
+                      label="Start date"
+                      labelPlacement="outside"
+                      name="startDate"
+                      isRequired
+                    />
+                    <DatePicker
+                      label="Release date"
+                      labelPlacement="outside"
+                      name="releaseDate"
+                      isRequired
+                    />
+                  </div>
+                  <Button color="primary" className="w-full" type="submit">
+                    Submit
+                  </Button>
+                </form>
               </ModalBody>
-              <ModalFooter>
-                <Button color="primary" onPress={onClose} className="w-full">
-                  Submit
-                </Button>
-              </ModalFooter>
             </>
           )}
         </ModalContent>
