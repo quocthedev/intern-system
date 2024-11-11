@@ -20,8 +20,8 @@ export type Project = {
   releaseDate: string;
   status: string;
   groupUserRelated: GroupUserRelated[];
-  listPosition: { name: string }[];
-  listTechnology: { name: string }[];
+  listPosition: { name: string; id: string }[];
+  listTechnology: { name: string; id: string }[];
   id: string;
   dateCreate: string;
   dateUpdate: string;
