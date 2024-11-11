@@ -17,7 +17,7 @@ import {
 import { Tooltip } from "@nextui-org/tooltip";
 import { Pagination } from "@nextui-org/pagination";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { apiEndpoints } from "@/libs/config";
+import { API_ENDPOINTS } from "@/libs/config";
 import { Spinner } from "@nextui-org/spinner";
 import Link from "next/link";
 import APIClient from "@/libs/api-client";
@@ -78,7 +78,7 @@ export default function InternsTable({
     queryKey: ["candidates", pageIndex, pageSize],
     queryFn: async () => {
       const response = await apiClient.get<PaginationResponse<Candidate>>(
-        apiEndpoints.candidate,
+        API_ENDPOINTS.candidate,
         {
           params: new URLSearchParams({
             PageIndex: pageIndex.toString(),
@@ -103,7 +103,7 @@ export default function InternsTable({
 
   const deleteInternMutation = useMutation({
     mutationFn: (id: number) =>
-      fetch(`${apiEndpoints.candidate}/${id}`, { method: "DELETE" }).then(
+      fetch(`${API_ENDPOINTS.candidate}/${id}`, { method: "DELETE" }).then(
         (response) => response.json(),
       ),
     onError: (error) => console.error("Error:", error),

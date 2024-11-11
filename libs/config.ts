@@ -1,7 +1,7 @@
 export const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000/api";
 
-export const apiEndpoints = {
+export const API_ENDPOINTS = {
   login: `${API_BASE_URL}/auth/signin`,
   googleLogin: `${API_BASE_URL}/auth/signin-google`,
   project: `${API_BASE_URL}/project`,

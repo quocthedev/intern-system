@@ -33,6 +33,7 @@ export default class APIClient {
     url: string,
     data = {},
     headers = {},
+    auth = false,
   ): Promise<ResponseType> {
     // If auth is true, add the Authorization header to the request by using the access token stored in cookies
 
@@ -40,7 +41,61 @@ export default class APIClient {
       headers,
     };
 
+    if (auth) {
+      const { cookies } = await import("next/headers");
+      // Add the Authorization header
+      const accessToken = cookies().get("accessToken")?.value;
+
+      if (!accessToken) {
+        throw new Error("Access token is missing");
+      }
+
+      config.headers = {
+        ...config.headers,
+        Authorization: `Bearer ${accessToken}`,
+      };
+    }
     const response = await this.client.post<ResponseType>(url, data, config);
+
+    return response.data as ResponseType;
+  }
+
+  async put<ResponseType>(
+    url: string,
+    data = {},
+    headers = {},
+    auth = false,
+  ): Promise<ResponseType> {
+    // If auth is true, add the Authorization header to the request by using the access token stored in cookies
+
+    const config = {
+      headers,
+    };
+
+    if (auth) {
+      const { cookies } = await import("next/headers");
+      // Add the Authorization header
+      const accessToken = cookies().get("accessToken")?.value;
+
+      if (!accessToken) {
+        throw new Error("Access token is missing");
+      }
+
+      config.headers = {
+        ...config.headers,
+        Authorization: `Bearer ${accessToken}`,
+      };
+    }
+    const response = await this.client.put<ResponseType>(url, data, config);
+
+    return response.data as ResponseType;
+  }
+
+  async delete<ResponseType>(
+    url: string,
+    config: AxiosRequestConfig = {},
+  ): Promise<ResponseType> {
+    const response = await this.client.delete(url, config);
 
     return response.data as ResponseType;
   }

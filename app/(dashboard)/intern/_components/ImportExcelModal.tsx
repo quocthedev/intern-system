@@ -11,7 +11,7 @@ import {
 } from "@nextui-org/modal";
 import { Button } from "@nextui-org/button";
 import { useQuery } from "@tanstack/react-query";
-import { apiEndpoints } from "@/libs/config";
+import { API_ENDPOINTS } from "@/libs/config";
 import { Select, SelectItem } from "@nextui-org/select";
 import { Spinner } from "@nextui-org/spinner";
 import { ToastContainer, toast } from "react-toastify";
@@ -77,8 +77,8 @@ function ImportExcelModal() {
     queryKey: ["sharedAllData"],
     queryFn: async () => {
       const [universityData, internperiodData] = await Promise.all([
-        fetch(apiEndpoints.university).then((res) => res.json()),
-        fetch(apiEndpoints.internPeriod).then((res) => res.json()),
+        fetch(API_ENDPOINTS.university).then((res) => res.json()),
+        fetch(API_ENDPOINTS.internPeriod).then((res) => res.json()),
       ]);
 
       return {

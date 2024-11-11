@@ -12,7 +12,7 @@ import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import { CreateIcon } from "@/app/(dashboard)/intern/_components/Icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { apiEndpoints } from "@/libs/config";
+import { API_ENDPOINTS } from "@/libs/config";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -32,7 +32,7 @@ export default function NewUniverModal() {
 
   const { mutate } = useMutation({
     mutationFn: async (newUni: UniversityData) => {
-      const response = await fetch(apiEndpoints.university, {
+      const response = await fetch(API_ENDPOINTS.university, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

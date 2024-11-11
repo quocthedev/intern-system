@@ -1,5 +1,17 @@
 import { PaginationResponse } from "@/libs/types";
 
+type User = {
+  fullName: string;
+  gender: string;
+  id: string;
+};
+
+type GroupUserRelated = {
+  role: string;
+  count: number;
+  users: User[];
+};
+
 export type Project = {
   title: string;
   productUri: string;
@@ -7,9 +19,9 @@ export type Project = {
   startDate: string;
   releaseDate: string;
   status: string;
-  listPosition?: { name: string }[];
-  listTechnology?: { name: string }[];
-  groupUserRelated?: { name: string }[];
+  groupUserRelated: GroupUserRelated[];
+  listPosition: { name: string; id: string }[];
+  listTechnology: { name: string; id: string }[];
   id: string;
   dateCreate: string;
   dateUpdate: string;
