@@ -90,4 +90,13 @@ export default class APIClient {
 
     return response.data as ResponseType;
   }
+
+  async delete<ResponseType>(
+    url: string,
+    config: AxiosRequestConfig = {},
+  ): Promise<ResponseType> {
+    const response = await this.client.delete(url, config);
+
+    return response.data as ResponseType;
+  }
 }
