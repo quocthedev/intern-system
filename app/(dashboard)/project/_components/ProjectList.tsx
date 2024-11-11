@@ -25,22 +25,29 @@ const apiClient = new APIClient({
 });
 
 export default function ProjectList(props: ProjectListProps) {
-  const num_items_show = props.isShowFilter ? 4 : 6;
+  const [pageIndex, setPageIndex] = React.useState(1);
 
   const { isLoading, error, data, refetch } = useQuery({
-    queryKey: ["data"],
+    queryKey: ["projects", pageIndex],
     queryFn: async () => {
       const response = await apiClient.get<GetProjectResponse>(
         API_ENDPOINTS.project,
+        {
+          params: new URLSearchParams({
+            PageIndex: pageIndex.toString(),
+            PageSize: "6",
+          }),
+        },
       );
 
       if (response?.statusCode === "200") {
         const { data } = response as PaginationResponseSuccess<Project>;
 
-        return data.pagingData;
+        return {
+          projects: data.pagingData,
+          totalPages: data.totalPages,
+        };
       }
-
-      return [];
     },
   });
 
@@ -56,10 +63,21 @@ export default function ProjectList(props: ProjectListProps) {
         {isLoading && data ? (
           <div>Loading...</div>
         ) : (
-          data?.map((project) => <ProjectCard key={project.id} {...project} />)
+          data?.projects.map((project) => (
+            <ProjectCard key={project.id} {...project} refetch={refetch} />
+          ))
         )}
       </div>
-      <Pagination showControls total={10} initialPage={1} />
+      <Pagination
+        isCompact
+        loop
+        showControls
+        total={Number(data?.totalPages) || 1}
+        initialPage={1}
+        onChange={(page) => {
+          setPageIndex(page);
+        }}
+      />
     </div>
   );
 }
