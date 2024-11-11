@@ -13,7 +13,7 @@ import { Chip, ChipProps } from "@nextui-org/chip";
 import React, { useState } from "react";
 import {
   DeleteIcon,
-  EditIcon,
+  ViewIcon,
 } from "@/app/(dashboard)/internPeriod/_components/Icons";
 import { Tooltip } from "@nextui-org/tooltip";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -28,6 +28,7 @@ import {
 import { Button } from "@nextui-org/button";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Link from "next/link";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   InProgress: "success",
@@ -81,12 +82,13 @@ export default function InternPeriodTable() {
   };
 
   const columns = [
-    { key: "name", label: "FULL NAME" },
-    { key: "startDate", label: "Start Date" },
-    { key: "endDate", label: "End Date" },
-    { key: "description", label: "Description" },
-    { key: "internshipDuration", label: "Duration" },
-    { key: "numberOfMember", label: "Total Members" },
+    { key: "name", label: "NAME" },
+    { key: "startDate", label: "START DATE" },
+    { key: "endDate", label: "END DATE" },
+
+    { key: "internshipDuration", label: "DURATION (MONTHS)" },
+    { key: "numberOfMember", label: "MAX MEMBER" },
+    { key: "description", label: "DESCRIPTION" },
     { key: "status", label: "STATUS" },
     { key: "actions", label: "ACTIONS" },
   ];
@@ -101,12 +103,13 @@ export default function InternPeriodTable() {
         return <div>{formatDate(period.startDate)}</div>;
       case "endDate":
         return <div>{formatDate(period.endDate)}</div>;
-      case "description":
-        return <div>{period.description}</div>;
+
       case "internshipDuration":
-        return <div>{period.internshipDuration}</div>;
+        return <div>{period.internshipDuration} </div>;
       case "numberOfMember":
         return <div>{period.numberOfMember}</div>;
+      case "description":
+        return <div>{period.description}</div>;
       case "status":
         return (
           <Chip color={statusColorMap[period.status]} size="sm" variant="flat">
@@ -116,10 +119,12 @@ export default function InternPeriodTable() {
       case "actions":
         return (
           <div className="flex gap-2">
-            <Tooltip content="Edit">
-              <span className="cursor-pointer">
-                <EditIcon />
-              </span>
+            <Tooltip content="View detail">
+              <Link href={`/internPeriod/${period.id}`}>
+                <Button className="cursor-pointer">
+                  <ViewIcon />
+                </Button>
+              </Link>
             </Tooltip>
             <Tooltip content="Delete">
               <button
@@ -146,7 +151,7 @@ export default function InternPeriodTable() {
 
   return (
     <>
-      <Table selectionMode="multiple">
+      <Table>
         <TableHeader columns={columns}>
           {(column) => (
             <TableColumn key={column.key}>{column.label}</TableColumn>

@@ -51,7 +51,8 @@ function ImportExcelModal() {
 
     try {
       await axios.post(
-        `https://intern-system-web-fjd3dcb9abf9etec.canadacentral-01.azurewebsites.net/api/candidate/import-candidate-list?internPeriodId=${selectedInternPeriodId}&universityId=${selectedUniversityId}`,
+        apiEndpoints.candidate +
+          `/import-candidate-list?internPeriodId=${selectedInternPeriodId}&universityId=${selectedUniversityId}`,
         formData,
         {
           headers: {
@@ -63,14 +64,14 @@ function ImportExcelModal() {
       onClose(); // Close modal
       await refetch(); // Refetch data if needed
     } catch (error) {
+      toast.error("Error uploading file");
       console.log("Upload error:", error);
     }
   };
 
   const {
     data: allData,
-    isLoading,
-    error,
+
     refetch,
   } = useQuery({
     queryKey: ["sharedAllData"],
@@ -92,9 +93,6 @@ function ImportExcelModal() {
     onOpen();
     setShouldFetchData(true);
   };
-
-  if (isLoading) return <Spinner size="lg" />;
-  if (error) return <div>Error loading data</div>;
 
   const universityData = allData?.university || [];
   const internperiodData = allData?.internperiod || [];
