@@ -13,7 +13,9 @@ const apiClient = new APIClient({
   },
 });
 
-export async function createNewProject(data: FormData) {
+export async function createNewProject(
+  data: FormData,
+): Promise<boolean | null> {
   const params = {
     title: data.get("title") as string,
     productUri: data.get("productUri") as string,
@@ -22,16 +24,15 @@ export async function createNewProject(data: FormData) {
       positionId: id,
     })),
     technologies: data.getAll("technologies") as string[],
-    startDate: new Date(data.get("startDate") as string).toISOString(),
-    endDate: new Date(data.get("endDate") as string).toISOString(),
+    startDate: new Date(
+      data.get("startDate")?.toString().split("+")[0] as string,
+    ).toISOString(),
+    releaseDate: new Date(
+      data.get("releaseDate")?.toString().split("+")[0] as string,
+    ).toISOString(),
   };
 
-  const response = await apiClient.post(
-    API_ENDPOINTS.project,
-    params,
-    {},
-    true,
-  );
+  await apiClient.post(API_ENDPOINTS.project, params, {}, true);
 
-  return response;
+  return true;
 }
