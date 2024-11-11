@@ -7,8 +7,18 @@ import { Checkbox } from "@nextui-org/checkbox";
 import { EditIcon } from "./Icons";
 import { Project } from "../_types/Project";
 import { PropsWithChildren } from "react";
+import ProjectModal from "./ProjectModal";
+import { useDisclosure } from "@nextui-org/modal";
 
-export default function ProjectCard(props: PropsWithChildren<Project>) {
+export default function ProjectCard(
+  props: PropsWithChildren<
+    Project & {
+      refetch?: () => void;
+    }
+  >,
+) {
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+
   return (
     <Card key={props.id}>
       <CardHeader className="flex gap-1">
@@ -18,14 +28,23 @@ export default function ProjectCard(props: PropsWithChildren<Project>) {
             <Chip className="bg-warning-400/50 text-warning-700" size="sm">
               {props.status}
             </Chip>
+
             <Button
               variant="light"
               size="sm"
               startContent={<EditIcon />}
               className="text-grey"
+              onPress={onOpen}
             >
               Edit
             </Button>
+            <ProjectModal
+              mode="edit"
+              isOpen={isOpen}
+              onOpenChange={onOpenChange}
+              selectedProjectInfo={props}
+              refetch={props.refetch}
+            />
             <Checkbox />
           </div>
         </div>
