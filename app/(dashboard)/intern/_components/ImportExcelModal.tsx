@@ -51,7 +51,7 @@ function ImportExcelModal() {
 
     try {
       await axios.post(
-        apiEndpoints.candidate +
+        API_ENDPOINTS.candidate +
           `/import-candidate-list?internPeriodId=${selectedInternPeriodId}&universityId=${selectedUniversityId}`,
         formData,
         {

@@ -1,6 +1,6 @@
 "use client";
 
-import { apiEndpoints } from "@/libs/config";
+import { API_ENDPOINTS } from "@/libs/config";
 import { Button } from "@nextui-org/button";
 import { Chip, ChipProps } from "@nextui-org/chip";
 import {
@@ -56,10 +56,10 @@ export default function PeriodDetailPage() {
       const [candidateResponse, internPeriodResponse, universityResponse] =
         await Promise.all([
           fetch(
-            `${apiEndpoints.internPeriod}/${internPeriodId}/universities/candidates`,
+            `${API_ENDPOINTS.internPeriod}/${internPeriodId}/universities/candidates`,
           ),
-          fetch(`${apiEndpoints.internPeriod}/${internPeriodId}`),
-          fetch(`${apiEndpoints.internPeriod}/${internPeriodId}/universities`),
+          fetch(`${API_ENDPOINTS.internPeriod}/${internPeriodId}`),
+          fetch(`${API_ENDPOINTS.internPeriod}/${internPeriodId}/universities`),
         ]);
 
       const candidate = await candidateResponse.json();
