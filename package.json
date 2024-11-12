@@ -9,6 +9,7 @@
     "lint": "eslint . --ext .ts,.tsx -c .eslintrc.json --fix"
   },
   "dependencies": {
+    "@nextui-org/accordion": "^2.0.40",
     "@nextui-org/button": "2.0.38",
     "@nextui-org/card": "^2.0.34",
     "@nextui-org/checkbox": "^2.1.5",
@@ -28,6 +29,7 @@
     "@nextui-org/popover": "^2.1.29",
     "@nextui-org/radio": "^2.1.5",
     "@nextui-org/select": "^2.2.7",
+    "@nextui-org/skeleton": "^2.0.32",
     "@nextui-org/snippet": "2.0.43",
     "@nextui-org/spinner": "^2.0.34",
     "@nextui-org/switch": "2.0.34",
@@ -44,6 +46,7 @@
     "axios": "^1.7.7",
     "clsx": "2.1.1",
     "cookies-next": "^4.3.0",
+    "date-fns": "^4.1.0",
     "framer-motion": "~11.1.9",
     "google-auth-library": "^9.14.2",
     "intl-messageformat": "^10.7.0",

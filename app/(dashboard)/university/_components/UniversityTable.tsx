@@ -129,9 +129,14 @@ export default function UniversityTable() {
 
   const columns = [
     {
-      key: "name",
-      label: "FULL NAME",
+      key: "image",
+      label: "IMAGE",
     },
+    {
+      key: "name",
+      label: "NAME",
+    },
+
     {
       key: "abbreviation",
       label: "ABBREVIATION",
@@ -151,24 +156,12 @@ export default function UniversityTable() {
 
     switch (columnKey) {
       case "name":
-        return <div>{univer.name}</div>;
-      case "description":
-        return <div>{univer.description}</div>;
-      case "internshipDuration":
-        return <div>{univer.internshipDuration}</div>;
-      case "numberOfMember":
-        return <div>{univer.numberOfMember}</div>;
-      case "status":
-        return (
-          <Chip
-            className="capitalize"
-            color={statusColorMap[univer.status]}
-            size="sm"
-            variant="flat"
-          >
-            {cellValue}
-          </Chip>
-        );
+        return <div className="text-xs">{univer.name}</div>;
+      case "abbreviation":
+        return <div className="text-xs">{univer.abbreviation}</div>;
+      case "address":
+        return <div className="text-xs">{univer.address}</div>;
+
       case "actions":
         return (
           <div className="relative flex items-center gap-2">

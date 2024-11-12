@@ -86,7 +86,7 @@ export default function InternPeriodTable() {
     { key: "startDate", label: "START DATE" },
     { key: "endDate", label: "END DATE" },
 
-    { key: "internshipDuration", label: "DURATION (MONTHS)" },
+    { key: "internshipDuration", label: "DURATION " },
     { key: "numberOfMember", label: "MAX MEMBER" },
     { key: "description", label: "DESCRIPTION" },
     { key: "status", label: "STATUS" },
@@ -98,18 +98,23 @@ export default function InternPeriodTable() {
 
     switch (columnKey) {
       case "name":
-        return <div>{period.name}</div>;
+        return <div className="text-xs">{period.name}</div>;
       case "startDate":
-        return <div>{formatDate(period.startDate)}</div>;
+        return <div className="text-xs">{formatDate(period.startDate)}</div>;
       case "endDate":
-        return <div>{formatDate(period.endDate)}</div>;
+        return <div className="text-xs">{formatDate(period.endDate)}</div>;
 
       case "internshipDuration":
-        return <div>{period.internshipDuration} </div>;
+        return (
+          <div className="text-xs">
+            {`${period.internshipDuration} `}
+            {period.internshipDuration === 1 ? "month" : "months"}
+          </div>
+        );
       case "numberOfMember":
-        return <div>{period.numberOfMember}</div>;
+        return <div className="text-xs">{period.maxCandidateQuantity} </div>;
       case "description":
-        return <div>{period.description}</div>;
+        return <div className="text-xs">{period.description}</div>;
       case "status":
         return (
           <Chip color={statusColorMap[period.status]} size="sm" variant="flat">
@@ -121,9 +126,9 @@ export default function InternPeriodTable() {
           <div className="flex gap-2">
             <Tooltip content="View detail">
               <Link href={`/internPeriod/${period.id}`}>
-                <Button className="cursor-pointer">
+                <button className="cursor-pointer">
                   <ViewIcon />
-                </Button>
+                </button>
               </Link>
             </Tooltip>
             <Tooltip content="Delete">
@@ -175,15 +180,17 @@ export default function InternPeriodTable() {
           )}
         </TableBody>
       </Table>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="max-w-fit">
         <ModalContent>
-          <ModalBody>
+          <ModalBody className="mt-4 text-center">
             <p>Are you sure you want to delete this period?</p>
-            <div className="mt-4 flex gap-5">
+            <div className="mt-5 grid grid-cols-2 gap-5">
               <Button color="primary" onClick={confirmDelete}>
                 Yes
               </Button>
-              <Button onClick={onClose}>No</Button>
+              <Button onClick={onClose} color="default">
+                No
+              </Button>
             </div>
           </ModalBody>
         </ModalContent>

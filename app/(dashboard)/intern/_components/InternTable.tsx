@@ -22,6 +22,16 @@ import { Spinner } from "@nextui-org/spinner";
 import Link from "next/link";
 import APIClient from "@/libs/api-client";
 import { PaginationResponse, PaginationResponseSuccess } from "@/libs/types";
+import {
+  Modal,
+  ModalBody,
+  ModalContent,
+  useDisclosure,
+} from "@nextui-org/modal";
+import { Button } from "@nextui-org/button";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { formatedDate } from "@/app/util/format";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   Approved: "success",
@@ -35,7 +45,7 @@ export type AccountTableProps = {
 };
 
 type Candidate = {
-  id: number;
+  id: string;
   fullName: string;
   internPeriodViewModel: { name: string };
   doB: string;
@@ -45,14 +55,6 @@ type Candidate = {
   gpa: number;
   universityViewModel: { name: string };
   status: string;
-};
-
-const formatDateOfBirth = (dob: string) => {
-  const date = new Date(dob);
-  const day = String(date.getDate()).padStart(2, "0");
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const year = String(date.getFullYear());
-  return `${day}/${month}/${year}`;
 };
 
 const apiClient = new APIClient({
@@ -69,6 +71,15 @@ export default function InternsTable({
   const [pageIndex, setPageIndex] = useState(1);
 
   const pageSize = 5;
+
+  const {
+    isOpen: isDeleteOpen,
+    onOpen: onOpenDelete,
+    onClose: onCloseDelete,
+    onOpenChange: onOpenDeleteChange,
+  } = useDisclosure();
+
+  const [selectedCandidate, setSelectedCandidate] = useState("");
 
   const {
     data: candidateData,
@@ -102,7 +113,7 @@ export default function InternsTable({
   const candidates = candidateData?.candidates || [];
 
   const deleteInternMutation = useMutation({
-    mutationFn: (id: number) =>
+    mutationFn: (id: string) =>
       fetch(`${API_ENDPOINTS.candidate}/${id}`, { method: "DELETE" }).then(
         (response) => response.json(),
       ),
@@ -110,10 +121,15 @@ export default function InternsTable({
     onSuccess: () => refetch(),
   });
 
-  const handleDelete = (id: number) => {
-    if (window.confirm("Are you sure you want to delete this period?")) {
-      deleteInternMutation.mutate(id);
-    }
+  const handleDelete = (id: string) => {
+    deleteInternMutation.mutate(id);
+    toast.success("Deleted successfully");
+    onCloseDelete();
+  };
+
+  const openDeleteModal = (id: string) => {
+    onOpenDelete();
+    setSelectedCandidate(id);
   };
 
   const columns = useMemo(
@@ -143,7 +159,7 @@ export default function InternsTable({
           <p className="text-xs">{candidate.internPeriodViewModel.name}</p>
         );
       case "doB":
-        return <p className="text-xs"> {formatDateOfBirth(candidate.doB)}</p>;
+        return <p className="text-xs"> {formatedDate(candidate.doB)}</p>;
       case "phoneNumber":
         return <p className="text-xs">{candidate.phoneNumber}</p>;
       case "personalEmail":
@@ -184,7 +200,7 @@ export default function InternsTable({
             </Tooltip>
             <Tooltip content="Delete">
               <button
-                onClick={() => handleDelete(candidate.id)}
+                onClick={() => openDeleteModal(candidate.id)}
                 className="cursor-pointer text-xs active:opacity-50"
               >
                 <DeleteIcon />
@@ -196,10 +212,6 @@ export default function InternsTable({
         return null;
     }
   };
-
-  if (isLoading) {
-    return <Spinner size="lg" />;
-  }
 
   return (
     <div className="flex flex-col px-4">
@@ -213,7 +225,17 @@ export default function InternsTable({
             <TableColumn key={column.key}>{column.label}</TableColumn>
           )}
         </TableHeader>
-        <TableBody items={candidates}>
+        <TableBody
+          items={candidates}
+          loadingState={isLoading ? "loading" : "idle"}
+          loadingContent={
+            <div className="flex items-center gap-2">
+              <Spinner />
+              Loading...
+            </div>
+          }
+          emptyContent={<div>No candidate found!</div>}
+        >
           {(candidate: Candidate) => (
             <TableRow key={candidate.id}>
               {(colKey) => (
@@ -223,6 +245,35 @@ export default function InternsTable({
           )}
         </TableBody>
       </Table>
+
+      <Modal
+        isOpen={isDeleteOpen}
+        onOpenChange={onOpenDeleteChange}
+        className="max-w-fit"
+      >
+        <ModalContent>
+          <ModalBody className="mt-5">
+            Are you sure you want to delete?
+            <div className="mt-5 grid grid-cols-2 gap-5">
+              <Button
+                onClick={() => handleDelete(selectedCandidate)}
+                color="primary"
+              >
+                Yes
+              </Button>
+              <Button onClick={onCloseDelete}>No</Button>
+            </div>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        closeOnClick
+        draggable
+      />
+
       <Pagination
         className="m-4 flex justify-center"
         isCompact
