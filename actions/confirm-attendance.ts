@@ -1,7 +1,7 @@
 "use server";
 
 import APIClient from "@/libs/api-client";
-import { apiEndpoints } from "@/libs/config";
+import { API_ENDPOINTS } from "@/libs/config";
 
 export async function confirmAttendance(data: FormData) {
   const candidateId = data.get("candidateId")?.toString() as string;
@@ -29,7 +29,7 @@ export async function confirmAttendance(data: FormData) {
     },
   );
 
-  const response = await apiClient.post(apiEndpoints.responseEmail, formData);
+  const response = await apiClient.post(API_ENDPOINTS.responseEmail, formData);
 
   console.log(response);
 

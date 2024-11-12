@@ -14,7 +14,7 @@ import { DatePicker } from "@nextui-org/date-picker";
 import { CreateIcon } from "@/app/(dashboard)/intern/_components/Icons";
 import { parseDate } from "@internationalized/date"; // Parses a date string or Date object to DateValue
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { apiEndpoints } from "@/libs/config";
+import { API_ENDPOINTS } from "@/libs/config";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { addMonths } from "date-fns";
@@ -70,7 +70,7 @@ export default function NewPeriodModal() {
 
   const { mutate } = useMutation({
     mutationFn: async (newPeriod: PeriodData) => {
-      const response = await fetch(apiEndpoints.internPeriod, {
+      const response = await fetch(API_ENDPOINTS.internPeriod, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

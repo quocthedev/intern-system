@@ -14,7 +14,7 @@ import { DatePicker } from "@nextui-org/date-picker";
 import { CreateIcon } from "@/app/(dashboard)/intern/_components/Icons";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import { apiEndpoints } from "@/libs/config";
+import { API_ENDPOINTS } from "@/libs/config";
 
 export default function NewInternModal() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -33,7 +33,7 @@ export default function NewInternModal() {
 
   const mutation = useMutation({
     mutationFn: (newIntern) => {
-      return axios.post(apiEndpoints.candidate, newIntern);
+      return axios.post(API_ENDPOINTS.candidate, newIntern);
     },
   });
 

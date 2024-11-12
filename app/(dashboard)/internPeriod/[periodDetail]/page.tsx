@@ -2,7 +2,7 @@
 
 import { CandidateIcon } from "@/app/(dashboard)/internPeriod/_components/Icons";
 import { formatedDate } from "@/app/util";
-import { apiEndpoints } from "@/libs/config";
+import { API_ENDPOINTS } from "@/libs/config";
 import { Accordion, AccordionItem } from "@nextui-org/accordion";
 import { Spinner } from "@nextui-org/spinner";
 import {
@@ -27,12 +27,14 @@ export default function PeriodDetailPage() {
   const { isLoading, data } = useQuery({
     queryKey: ["data", internPeriodId],
     queryFn: async () => {
-      const [candidateResponse, internPeriodResponse] = await Promise.all([
-        fetch(
-          `${apiEndpoints.internPeriod}/${internPeriodId}/universities/candidates`,
-        ),
-        fetch(`${apiEndpoints.internPeriod}/${internPeriodId}/universities`),
-      ]);
+      const [candidateResponse, internPeriodResponse, universityResponse] =
+        await Promise.all([
+          fetch(
+            `${API_ENDPOINTS.internPeriod}/${internPeriodId}/universities/candidates`,
+          ),
+          fetch(`${API_ENDPOINTS.internPeriod}/${internPeriodId}`),
+          fetch(`${API_ENDPOINTS.internPeriod}/${internPeriodId}/universities`),
+        ]);
 
       const candidate = await candidateResponse.json();
       const internPeriod = await internPeriodResponse.json();

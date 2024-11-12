@@ -16,7 +16,7 @@ import {
 } from "@/app/(dashboard)/university/_components/Icons";
 import { Tooltip } from "@nextui-org/tooltip";
 import { useMutation, useQuery } from "@tanstack/react-query"; //get request
-import { apiEndpoints } from "@/libs/config";
+import { API_ENDPOINTS } from "@/libs/config";
 import { Spinner } from "@nextui-org/spinner";
 import {
   Modal,
@@ -61,7 +61,7 @@ export default function UniversityTable() {
   const { isLoading, error, data, refetch } = useQuery({
     queryKey: ["data"],
     queryFn: async () => {
-      const university = await fetch(apiEndpoints.university).then((res) =>
+      const university = await fetch(API_ENDPOINTS.university).then((res) =>
         res.json(),
       );
 
@@ -73,7 +73,7 @@ export default function UniversityTable() {
 
   const mutation = useMutation({
     mutationFn: (id: string) =>
-      fetch(apiEndpoints.university + "/" + id, {
+      fetch(API_ENDPOINTS.university + "/" + id, {
         method: "DELETE",
       }).then((response) => response.json()),
 
@@ -88,7 +88,7 @@ export default function UniversityTable() {
 
   const updateMutation = useMutation({
     mutationFn: async () => {
-      await fetch(apiEndpoints.university + "/" + selectedUni, {
+      await fetch(API_ENDPOINTS.university + "/" + selectedUni, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updateData),

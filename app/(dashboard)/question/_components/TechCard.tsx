@@ -7,7 +7,7 @@ import Image from "next/image";
 import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
 import { useQuery } from "@tanstack/react-query";
-import { apiEndpoints } from "@/libs/config";
+import { API_ENDPOINTS } from "@/libs/config";
 import {
   Dropdown,
   DropdownItem,
@@ -25,7 +25,7 @@ export const TechCard = () => {
   const { isLoading, error, data, refetch } = useQuery({
     queryKey: ["data", positionId],
     queryFn: async () => {
-      const position = await fetch(apiEndpoints.position).then((res) =>
+      const position = await fetch(API_ENDPOINTS.position).then((res) =>
         res.json(),
       );
 
@@ -45,7 +45,7 @@ export const TechCard = () => {
     queryKey: ["technology", positionId],
     queryFn: async () => {
       const response = await fetch(
-        `${apiEndpoints.interviewQuestion}/position/${positionId}/technologies`,
+        `${API_ENDPOINTS.interviewQuestion}/position/${positionId}/technologies`,
       );
       const technology = await response.json();
 
