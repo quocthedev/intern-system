@@ -1,5 +1,5 @@
 import ExcelSVG from "@/public/icons/actionbar/excel-icon.svg";
-import DeleteSVG from "@/public/icons/actionbar/delete-icon.svg";
+import DeleteSVG from "@/public/icons/actionbar/delete-red-icon.svg";
 import AddSVG from "@/public/icons/actionbar/add-icon.svg";
 
 import FilterSVG from "@/public/icons/actionbar/filter-icon.svg";

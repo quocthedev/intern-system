@@ -13,10 +13,11 @@ import { Input } from "@nextui-org/input";
 import { DatePicker } from "@nextui-org/date-picker";
 import { CreateIcon } from "@/app/(dashboard)/intern/_components/Icons";
 import { parseDate } from "@internationalized/date"; // Parses a date string or Date object to DateValue
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiEndpoints } from "@/libs/config";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { addMonths } from "date-fns";
 
 interface PeriodData {
   name: string;
@@ -25,7 +26,7 @@ interface PeriodData {
   internshipDuration: number;
   description: string;
   universityAttended: string;
-  numberOfMember: number;
+  maxCandidateQuantity: number;
   status: number;
 }
 
@@ -34,15 +35,38 @@ export default function NewPeriodModal() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [universityAttended, setUniversityAttended] = useState("");
-  const [internshipDuration, setinternshipDuration] = useState("");
-  const [totalMember, settotalMember] = useState("");
-  const [status, setStatus] = useState("");
+  const [internshipDuration, setInternshipDuration] = useState("1");
+  const [maxCandidateQuantity, setMaxCandidateQuantity] = useState("");
+
+  const [status, setStatus] = useState("0");
+
   const [startDate, setStartDate] = useState(
-    parseDate(new Date().toISOString().split("T")[0]),
+    parseDate(
+      new Date(Date.now() + 1 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split("T")[0],
+    ),
   );
   const [endDate, setEndDate] = useState(
     parseDate(new Date().toISOString().split("T")[0]),
   );
+
+  const queryClient = useQueryClient();
+
+  const handleDurationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newDuration = e.target.value;
+
+    setInternshipDuration(newDuration);
+
+    const durationInMonths = parseInt(newDuration, 10);
+
+    const updatedEndDate = addMonths(
+      new Date(startDate.toString()),
+      durationInMonths,
+    );
+
+    setEndDate(parseDate(updatedEndDate.toISOString().split("T")[0]));
+  };
 
   const { mutate } = useMutation({
     mutationFn: async (newPeriod: PeriodData) => {
@@ -68,6 +92,7 @@ export default function NewPeriodModal() {
     },
     onSuccess: () => {
       toast.success("New intern period created successfully!");
+      queryClient.invalidateQueries();
       onClose();
     },
   });
@@ -80,7 +105,7 @@ export default function NewPeriodModal() {
       internshipDuration: Number(internshipDuration),
       description,
       universityAttended,
-      numberOfMember: Number(totalMember),
+      maxCandidateQuantity: Number(maxCandidateQuantity),
       status: Number(status),
     });
   };
@@ -105,7 +130,7 @@ export default function NewPeriodModal() {
             </ModalHeader>
 
             <ModalBody className="gap-5">
-              <div className="grid grid-cols-3 gap-5">
+              <div className="grid grid-cols-2 gap-5">
                 <Input
                   label="Period Name"
                   placeholder="Enter period name"
@@ -122,14 +147,14 @@ export default function NewPeriodModal() {
                   onChange={(e) => setDescription(e.target.value)}
                   isRequired
                 />
-                <Input
+                {/* <Input
                   label="University attended"
                   placeholder="Enter university"
                   labelPlacement="outside"
                   value={universityAttended}
                   onChange={(e) => setUniversityAttended(e.target.value)}
                   isRequired
-                />
+                /> */}
               </div>
               <div className="grid grid-cols-3 gap-4">
                 <Input
@@ -137,16 +162,20 @@ export default function NewPeriodModal() {
                   placeholder="Enter duration (months)"
                   labelPlacement="outside"
                   value={internshipDuration}
-                  onChange={(e) => setinternshipDuration(e.target.value)}
+                  onChange={handleDurationChange}
                   isRequired
+                  type="number"
+                  min="1"
                 />
 
                 <Input
                   label="Total member"
                   placeholder="Enter total member"
                   labelPlacement="outside"
-                  value={totalMember}
-                  onChange={(e) => settotalMember(e.target.value)}
+                  value={maxCandidateQuantity}
+                  onChange={(e) => setMaxCandidateQuantity(e.target.value)}
+                  type="number"
+                  min="1"
                   isRequired
                 />
                 <Input
@@ -156,6 +185,7 @@ export default function NewPeriodModal() {
                   value={status}
                   onChange={(e) => setStatus(e.target.value)}
                   isRequired
+                  isReadOnly
                 />
               </div>
 
@@ -184,12 +214,6 @@ export default function NewPeriodModal() {
           </>
         </ModalContent>
       </Modal>
-      <ToastContainer
-        position="bottom-right"
-        autoClose={3000}
-        closeOnClick
-        draggable
-      />
     </>
   );
 }
