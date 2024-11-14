@@ -35,7 +35,7 @@ export default function NewPeriodModal() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [universityAttended, setUniversityAttended] = useState("");
-  const [internshipDuration, setInternshipDuration] = useState("1");
+  const [internshipDuration, setInternshipDuration] = useState("");
   const [maxCandidateQuantity, setMaxCandidateQuantity] = useState("");
 
   const [status, setStatus] = useState("0");
@@ -114,7 +114,7 @@ export default function NewPeriodModal() {
     <>
       <Button
         color="primary"
-        size="sm"
+        size="md"
         startContent={<CreateIcon />}
         className="text-white"
         variant="shadow"
@@ -122,7 +122,7 @@ export default function NewPeriodModal() {
       >
         New Intern Period
       </Button>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="max-w-fit">
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="max-w-lg">
         <ModalContent>
           <>
             <ModalHeader className="flex flex-col gap-1">
@@ -156,7 +156,7 @@ export default function NewPeriodModal() {
                   isRequired
                 /> */}
               </div>
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 gap-4">
                 <Input
                   label="Internship Duration"
                   placeholder="Enter duration (months)"
@@ -177,15 +177,6 @@ export default function NewPeriodModal() {
                   type="number"
                   min="1"
                   isRequired
-                />
-                <Input
-                  label="Status"
-                  placeholder="Enter period status"
-                  labelPlacement="outside"
-                  value={status}
-                  onChange={(e) => setStatus(e.target.value)}
-                  isRequired
-                  isReadOnly
                 />
               </div>
 

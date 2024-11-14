@@ -1,3 +1,4 @@
+import ActionBar from "@/app/(dashboard)/technology/_components/ActionBar";
 import { TechCard } from "@/app/(dashboard)/technology/_components/TechCard";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -9,6 +10,7 @@ function TechnologyPage() {
         <h1 className="mb-4 text-left text-2xl font-semibold capitalize text-black">
           Technology Management
         </h1>
+        <ActionBar />
         <TechCard />
       </div>
       <ToastContainer

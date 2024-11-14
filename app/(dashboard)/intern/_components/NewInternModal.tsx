@@ -41,7 +41,7 @@ export default function NewInternModal() {
     <>
       <Button
         color="primary"
-        size="sm"
+        size="md"
         startContent={<CreateIcon />}
         className="text-white"
         variant="shadow"
