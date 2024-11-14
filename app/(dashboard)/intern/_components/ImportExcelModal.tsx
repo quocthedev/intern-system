@@ -111,7 +111,7 @@ function ImportExcelModal() {
     <div>
       <Button
         color="success"
-        size="sm"
+        size="md"
         startContent={<ExcelIcon />}
         className="text-white"
         variant="shadow"

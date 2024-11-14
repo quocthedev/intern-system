@@ -19,6 +19,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import React from "react";
 import { Skeleton } from "@nextui-org/skeleton";
+import { Button } from "@nextui-org/button";
 
 export default function PeriodDetailPage() {
   const params = useParams();
@@ -27,14 +28,12 @@ export default function PeriodDetailPage() {
   const { isLoading, data } = useQuery({
     queryKey: ["data", internPeriodId],
     queryFn: async () => {
-      const [candidateResponse, internPeriodResponse, universityResponse] =
-        await Promise.all([
-          fetch(
-            `${API_ENDPOINTS.internPeriod}/${internPeriodId}/universities/candidates`,
-          ),
-          fetch(`${API_ENDPOINTS.internPeriod}/${internPeriodId}`),
-          fetch(`${API_ENDPOINTS.internPeriod}/${internPeriodId}/universities`),
-        ]);
+      const [candidateResponse, internPeriodResponse] = await Promise.all([
+        fetch(
+          `${API_ENDPOINTS.internPeriod}/${internPeriodId}/universities/candidates`,
+        ),
+        fetch(`${API_ENDPOINTS.internPeriod}/${internPeriodId}/universities`),
+      ]);
 
       const candidate = await candidateResponse.json();
       const internPeriod = await internPeriodResponse.json();
@@ -48,6 +47,8 @@ export default function PeriodDetailPage() {
 
   const universitesData = data?.candidateData || [];
   const internPeriodData = data?.internPeriodData || [];
+
+  console.log(internPeriodData);
 
   const columnCandidate = [
     {
@@ -187,9 +188,14 @@ export default function PeriodDetailPage() {
         </div>
       ) : (
         <div className="rounded-lg bg-white p-4 shadow-md">
-          <h2 className="mb-5 text-2xl font-semibold text-amber-600">
-            Intern Period Details
-          </h2>
+          <div className="mb-5 flex w-full items-center justify-between">
+            <h2 className="text-2xl font-semibold text-amber-600">
+              Intern Period Details
+            </h2>
+            <Button color="primary" size="sm">
+              Update intern period
+            </Button>
+          </div>
 
           <div className="grid grid-cols-2 gap-3 text-sm text-gray-600">
             <div className="flex items-center border-b pb-2">
@@ -228,7 +234,7 @@ export default function PeriodDetailPage() {
             <div className="flex items-center">
               <span className="w-1/2 font-medium">Status:</span>
               <span
-                className={`rounded-full px-2 py-0.5 text-xs font-semibold ${internPeriodData?.status === "InProgress" ? "bg-green-100 text-green-600" : "bg-red-100 text-red-600"}`}
+                className={`rounded-full px-2 py-0.5 text-xs font-semibold ${internPeriodData?.status === "InProgress" ? "bg-yellow-100 text-yellow-600" : "bg-red-100 text-red-600"}`}
               >
                 {internPeriodData?.status}
               </span>

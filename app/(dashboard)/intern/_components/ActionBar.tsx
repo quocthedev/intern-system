@@ -66,7 +66,7 @@ export default function ActionBar({ selectedInterns }: ActionBarProps) {
   ];
 
   return (
-    <div className="flex w-full items-center gap-2 p-4">
+    <div className="mb-5 mt-3 flex w-full items-center gap-2">
       <Input
         type="name"
         placeholder="Search by name, group, technology,..."
@@ -77,7 +77,7 @@ export default function ActionBar({ selectedInterns }: ActionBarProps) {
 
       <Button
         color="secondary"
-        size="sm"
+        size="md"
         variant="shadow"
         onPress={(e) => {
           if (selectedInterns.size === 0) {
@@ -222,7 +222,7 @@ export default function ActionBar({ selectedInterns }: ActionBarProps) {
       </Modal>
 
       <NewInternModal />
-      <Button color="default" size="sm" variant="shadow">
+      <Button color="default" size="md" variant="shadow">
         <FilterIcon />
         Filter
       </Button>

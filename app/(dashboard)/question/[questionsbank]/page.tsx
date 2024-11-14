@@ -214,13 +214,14 @@ export default function QuestionBankPage() {
       label: "NO",
     },
     {
-      key: "content",
-      label: "CONTENT",
-    },
-    {
       key: "imageUri",
       label: "IMAGE URI",
     },
+    {
+      key: "content",
+      label: "CONTENT",
+    },
+
     {
       key: "difficulty",
       label: "DIFFICULTY",
@@ -243,7 +244,7 @@ export default function QuestionBankPage() {
         case "imageUri":
           return <div>{question.imageUri}</div>;
         case "difficulty":
-          return <div>{question.difficulty}</div>;
+          return <div className="text-center">{question.difficulty}</div>;
         case "actions":
           return (
             <div className="relative flex items-center gap-2">

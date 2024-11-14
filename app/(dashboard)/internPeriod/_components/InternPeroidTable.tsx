@@ -31,7 +31,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Link from "next/link";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
-  InProgress: "success",
+  InProgress: "warning",
   Rejected: "danger",
   Pending: "warning",
 };
@@ -82,69 +82,97 @@ export default function InternPeriodTable() {
   };
 
   const columns = [
+    { key: "no", label: "NO" },
     { key: "name", label: "NAME" },
     { key: "startDate", label: "START DATE" },
     { key: "endDate", label: "END DATE" },
-
     { key: "internshipDuration", label: "DURATION " },
     { key: "numberOfMember", label: "MAX MEMBER" },
-    { key: "description", label: "DESCRIPTION" },
+    { key: "currentUniversityQuantity", label: "CURRENT UNIVERSITY" },
+    { key: "currentCandidateQuantity", label: "CURRENT CANDIDATE" },
     { key: "status", label: "STATUS" },
     { key: "actions", label: "ACTIONS" },
   ];
 
-  const renderCell = React.useCallback((period: any, columnKey: React.Key) => {
-    const cellValue = period[columnKey as keyof typeof period];
+  const renderCell = React.useCallback(
+    (period: any, columnKey: React.Key, index: number) => {
+      const cellValue = period[columnKey as keyof typeof period];
 
-    switch (columnKey) {
-      case "name":
-        return <div className="text-xs">{period.name}</div>;
-      case "startDate":
-        return <div className="text-xs">{formatDate(period.startDate)}</div>;
-      case "endDate":
-        return <div className="text-xs">{formatDate(period.endDate)}</div>;
+      switch (columnKey) {
+        case "no":
+          return <div className="text-center text-xs">{index + 1}</div>;
+        case "name":
+          return <div className="text-xs">{period.name}</div>;
+        case "startDate":
+          return <div className="text-xs">{formatDate(period.startDate)}</div>;
+        case "endDate":
+          return <div className="text-xs">{formatDate(period.endDate)}</div>;
 
-      case "internshipDuration":
-        return (
-          <div className="text-xs">
-            {`${period.internshipDuration} `}
-            {period.internshipDuration === 1 ? "month" : "months"}
-          </div>
-        );
-      case "numberOfMember":
-        return <div className="text-xs">{period.maxCandidateQuantity} </div>;
-      case "description":
-        return <div className="text-xs">{period.description}</div>;
-      case "status":
-        return (
-          <Chip color={statusColorMap[period.status]} size="sm" variant="flat">
-            {cellValue}
-          </Chip>
-        );
-      case "actions":
-        return (
-          <div className="flex gap-2">
-            <Tooltip content="View detail">
-              <Link href={`/internPeriod/${period.id}`}>
-                <button className="cursor-pointer">
-                  <ViewIcon />
+        case "internshipDuration":
+          return (
+            <div className="text-xs">
+              {`${period.internshipDuration} `}
+              {period.internshipDuration === 1 ? "month" : "months"}
+            </div>
+          );
+        case "numberOfMember":
+          return (
+            <div className="text-center text-xs">
+              {period.maxCandidateQuantity}{" "}
+            </div>
+          );
+        case "currentUniversityQuantity":
+          return (
+            <div className="text-center text-xs">
+              {period.currentUniversityQuantity}{" "}
+            </div>
+          );
+        case "currentCandidateQuantity":
+          return (
+            <div className="text-center text-xs">
+              {period.currentCandidateQuantity}{" "}
+            </div>
+          );
+        case "description":
+          return (
+            <div className="text-center text-xs">{period.description}</div>
+          );
+        case "status":
+          return (
+            <Chip
+              color={statusColorMap[period.status]}
+              size="sm"
+              variant="flat"
+            >
+              {cellValue.replace(/([a-z])([A-Z])/g, "$1 $2")}
+            </Chip>
+          );
+        case "actions":
+          return (
+            <div className="flex gap-2">
+              <Tooltip content="View detail">
+                <Link href={`/internPeriod/${period.id}`}>
+                  <button className="cursor-pointer">
+                    <ViewIcon />
+                  </button>
+                </Link>
+              </Tooltip>
+              <Tooltip content="Delete">
+                <button
+                  onClick={() => handleDeleteConfirmation(period.id)}
+                  className="cursor-pointer"
+                >
+                  <DeleteIcon />
                 </button>
-              </Link>
-            </Tooltip>
-            <Tooltip content="Delete">
-              <button
-                onClick={() => handleDeleteConfirmation(period.id)}
-                className="cursor-pointer"
-              >
-                <DeleteIcon />
-              </button>
-            </Tooltip>
-          </div>
-        );
-      default:
-        return cellValue;
-    }
-  }, []);
+              </Tooltip>
+            </div>
+          );
+        default:
+          return cellValue;
+      }
+    },
+    [],
+  );
 
   const formatDate = (dob: string) => {
     const date = new Date(dob);
@@ -171,13 +199,15 @@ export default function InternPeriodTable() {
             </div>
           }
         >
-          {(period: any) => (
+          {periodData.map((period: any, index: number) => (
             <TableRow key={period.id}>
-              {(columnKey) => (
-                <TableCell>{renderCell(period, columnKey)}</TableCell>
-              )}
+              {columns.map((column) => (
+                <TableCell key={column.key}>
+                  {renderCell(period, column.key, index)}
+                </TableCell>
+              ))}
             </TableRow>
-          )}
+          ))}
         </TableBody>
       </Table>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="max-w-fit">

@@ -7,6 +7,7 @@ import {
   ProjectManagementIcon,
   TechnologyManagementIcon,
   QuestionManagementIcon,
+  InterviewManagementIcon,
 } from "./Icons";
 import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
@@ -20,12 +21,12 @@ type NavigationProps = {
 
 export const AccordionItems = [
   {
-    label: "Interns",
+    label: "Candidates",
     href: "/intern",
     icon: InternManagementIcon,
   },
   {
-    label: "Internship period",
+    label: "Intern periods",
     href: "/internPeriod",
     icon: InternManagementIcon,
   },
@@ -52,16 +53,6 @@ export const NavigationItems = [
     href: "/intern",
     icon: InternManagementIcon,
   },
-  // {
-  //   label: "Internship period",
-  //   href: "/internPeriod",
-  //   icon: InternManagementIcon,
-  // },
-  // {
-  //   label: "Universities",
-  //   href: "/university",
-  //   icon: InternManagementIcon,
-  // },
   {
     label: "Positions",
     href: "/position",
@@ -76,6 +67,11 @@ export const NavigationItems = [
     label: "Technologies",
     href: "/technology",
     icon: TechnologyManagementIcon,
+  },
+  {
+    label: "Interviews",
+    href: "/interview",
+    icon: InterviewManagementIcon,
   },
   {
     label: "Accounts",
@@ -97,7 +93,7 @@ export default function Navigation(props: NavigationProps) {
             <Accordion key={item.label}>
               <AccordionItem
                 aria-label="Intern Accordion"
-                title="InternS"
+                title="Internship"
                 startContent={<InternManagementIcon />}
                 classNames={{
                   base: "px-1",

@@ -12,6 +12,8 @@ import TechnologyManagementActiveSVG from "@/public/icons/sidebar/technology-man
 import TechnologyManagementInactiveSVG from "@/public/icons/sidebar/technology-management-inactive.svg";
 import QuestionManagementActiveSVG from "@/public/icons/sidebar/question-management-active.svg";
 import QuestionManagementInactiveSVG from "@/public/icons/sidebar/question-management-inactive.svg";
+import InterviewManagementActiveSVG from "@/public/icons/sidebar/interview-management-active.svg";
+import InterviewManagementInActiveSVG from "@/public/icons/sidebar/interview-management-inactive.svg";
 
 import Image from "next/image";
 
@@ -120,6 +122,20 @@ export const QuestionManagementIcon = ({
   />
 );
 
+export const InterviewManagementIcon = ({
+  active = false,
+  size = 24,
+  className,
+}: SidebarIconProps) => (
+  <Image
+    src={active ? InterviewManagementActiveSVG : InterviewManagementInActiveSVG}
+    alt="Question Management"
+    width={size}
+    height={size}
+    className={className}
+  />
+);
+
 export default {
   DashboardIcon,
   AccountManagementIcon,
@@ -128,4 +144,5 @@ export default {
   PositionManagementIcon,
   TechnologyManagementIcon,
   QuestionManagementIcon,
+  InterviewManagementIcon,
 };
