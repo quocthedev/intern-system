@@ -10,7 +10,7 @@ import {
 } from "@nextui-org/modal";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
-import { CreateIcon } from "@/app/(dashboard)/intern/_components/Icons";
+import { AddIcon } from "@/app/(dashboard)/position/_components/Icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { API_ENDPOINTS } from "@/libs/config";
 import { ToastContainer, toast } from "react-toastify";
@@ -71,14 +71,14 @@ export default function NewPostionModal() {
       <Button
         color="primary"
         size="md"
-        startContent={<CreateIcon />}
+        startContent={<AddIcon />}
         className="text-white"
         variant="shadow"
         onPress={onOpen}
       >
         New Position
       </Button>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="max-w-fit">
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="max-w-lg">
         <ModalContent>
           <>
             <ModalHeader className="flex flex-col gap-1">
@@ -86,13 +86,14 @@ export default function NewPostionModal() {
             </ModalHeader>
 
             <ModalBody className="gap-5">
-              <div className="grid grid-cols-2 gap-5">
+              <div className="gap-5">
                 <Input
                   label="Position Name"
                   placeholder="Enter position name"
                   labelPlacement="outside"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
+                  className="mb-12"
                   isRequired
                 />
                 <Input
@@ -113,13 +114,6 @@ export default function NewPostionModal() {
           </>
         </ModalContent>
       </Modal>
-      <ToastContainer
-        position="bottom-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        closeOnClick
-        draggable
-      />
     </>
   );
 }

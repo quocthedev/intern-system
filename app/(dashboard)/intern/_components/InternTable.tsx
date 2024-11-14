@@ -13,6 +13,7 @@ import React, { Key, useMemo, useState } from "react";
 import {
   EditIcon,
   DeleteIcon,
+  ViewIcon,
 } from "@/app/(dashboard)/intern/_components/Icons";
 import { Tooltip } from "@nextui-org/tooltip";
 import { Pagination } from "@nextui-org/pagination";
@@ -31,7 +32,7 @@ import {
 import { Button } from "@nextui-org/button";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { formatedDate } from "@/app/util/format";
+import { Image } from "@nextui-org/image";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   Approved: "success",
@@ -46,13 +47,14 @@ export type AccountTableProps = {
 
 type Candidate = {
   id: string;
+  avatar: string;
   fullName: string;
   internPeriodViewModel: { name: string };
-  doB: string;
+  // doB: string;
   phoneNumber: string;
   personalEmail: string;
   cvUri: string;
-  gpa: number;
+  // gpa: number;
   universityViewModel: { name: string };
   status: string;
 };
@@ -134,13 +136,14 @@ export default function InternsTable({
 
   const columns = useMemo(
     () => [
+      { key: "avatar", label: "AVATAR" },
       { key: "fullName", label: "FULL NAME" },
       { key: "group", label: "GROUP" },
-      { key: "doB", label: "Date of birth" },
+      // { key: "doB", label: "Date of birth" },
       { key: "phoneNumber", label: "PHONE" },
       { key: "personalEmail", label: "EMAIL" },
       { key: "cvUri", label: "CV" },
-      { key: "gpa", label: "GPA" },
+      // { key: "gpa", label: "GPA" },
       { key: "universityId", label: "UNIVERSITY" },
       { key: "status", label: "STATUS" },
       { key: "actions", label: "ACTIONS" },
@@ -152,14 +155,22 @@ export default function InternsTable({
     const cellValue = candidate[columnKey as keyof Candidate];
 
     switch (columnKey) {
+      case "avatar":
+        return (
+          <div>
+            <Image
+              width={50}
+              alt="NextUI hero Image"
+              src={`https://i.${candidate.avatar.slice(8)}.jpeg`}
+            />
+          </div>
+        );
       case "fullName":
         return <p className="text-xs">{candidate.fullName}</p>;
       case "group":
         return (
           <p className="text-xs">{candidate.internPeriodViewModel.name}</p>
         );
-      case "doB":
-        return <p className="text-xs"> {formatedDate(candidate.doB)}</p>;
       case "phoneNumber":
         return <p className="text-xs">{candidate.phoneNumber}</p>;
       case "personalEmail":
@@ -173,8 +184,6 @@ export default function InternsTable({
             Link
           </Link>
         );
-      case "gpa":
-        return <p>{candidate.gpa}</p>;
       case "universityId":
         return <p className="text-xs">{candidate.universityViewModel.name}</p>;
       case "status":
@@ -193,6 +202,13 @@ export default function InternsTable({
       case "actions":
         return (
           <div className="flex gap-2">
+            <Tooltip content="View detail">
+              <Link href={`intern/details/${candidate.id}`}>
+                <button className="cursor-pointer">
+                  <ViewIcon />
+                </button>
+              </Link>
+            </Tooltip>
             <Tooltip content="Edit">
               <span className="cursor-pointer text-xs active:opacity-50">
                 <EditIcon />
@@ -214,7 +230,7 @@ export default function InternsTable({
   };
 
   return (
-    <div className="flex flex-col px-4">
+    <div className="flex flex-col">
       <Table
         selectionMode="multiple"
         className="w-full"

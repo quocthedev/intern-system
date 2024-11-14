@@ -4,6 +4,7 @@ import DeleteIconSVG from "@/public/icons/actionbar/delete-red-icon.svg";
 import ExcelIconSVG from "@/public/icons/actionbar/excel-icon.svg";
 import FilterIconSVG from "@/public/icons/actionbar/filter-icon.svg";
 import EditIconSVG from "@/public/icons/others/edit-icon.svg";
+import ViewIconSVG from "@/public/icons/others/view-icon.svg";
 
 import Image from "next/image";
 
@@ -68,6 +69,16 @@ export const EditIcon = ({ size = 20, className }: ActionBarIconsProps) => (
     width={size}
     height={size}
     src={EditIconSVG}
+    className={className}
+  />
+);
+
+export const ViewIcon = ({ size = 20, className }: ActionBarIconsProps) => (
+  <Image
+    alt="Filter Icon"
+    width={size}
+    height={size}
+    src={ViewIconSVG}
     className={className}
   />
 );
