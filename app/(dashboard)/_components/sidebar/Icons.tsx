@@ -10,6 +10,9 @@ import PositionManagementActiveSVG from "@/public/icons/sidebar/position-managem
 import PositionManagementInactiveSVG from "@/public/icons/sidebar/position-management-inactive.svg";
 import TechnologyManagementActiveSVG from "@/public/icons/sidebar/technology-management-active.svg";
 import TechnologyManagementInactiveSVG from "@/public/icons/sidebar/technology-management-inactive.svg";
+import QuestionManagementActiveSVG from "@/public/icons/sidebar/question-management-active.svg";
+import QuestionManagementInactiveSVG from "@/public/icons/sidebar/question-management-inactive.svg";
+
 import Image from "next/image";
 
 type SidebarIconProps = {
@@ -103,6 +106,20 @@ export const TechnologyManagementIcon = ({
   />
 );
 
+export const QuestionManagementIcon = ({
+  active = false,
+  size = 24,
+  className,
+}: SidebarIconProps) => (
+  <Image
+    src={active ? QuestionManagementActiveSVG : QuestionManagementInactiveSVG}
+    alt="Question Management"
+    width={size}
+    height={size}
+    className={className}
+  />
+);
+
 export default {
   DashboardIcon,
   AccountManagementIcon,
@@ -110,4 +127,5 @@ export default {
   ProjectManagementIcon,
   PositionManagementIcon,
   TechnologyManagementIcon,
+  QuestionManagementIcon,
 };

@@ -6,6 +6,7 @@ import {
   InternManagementIcon,
   ProjectManagementIcon,
   TechnologyManagementIcon,
+  QuestionManagementIcon,
 } from "./Icons";
 import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
@@ -69,6 +70,11 @@ export const NavigationItems = [
   {
     label: "Questions",
     href: "/question",
+    icon: QuestionManagementIcon,
+  },
+  {
+    label: "Technologies",
+    href: "/technology",
     icon: TechnologyManagementIcon,
   },
   {
