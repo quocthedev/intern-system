@@ -6,10 +6,26 @@ type User = {
   id: string;
 };
 
-type GroupUserRelated = {
+export type GroupUserRelated = {
   role: string;
   count: number;
   users: User[];
+};
+
+export type Task = {
+  title: string;
+  summary: string;
+  description: string;
+  startDate: string;
+  dueDate: string;
+  priority: string;
+  difficulty: number;
+  status: string;
+  memberName: string;
+  id: string;
+  dateCreate: string;
+  dateUpdate: string;
+  isDeleted: boolean;
 };
 
 export type Project = {
@@ -22,10 +38,16 @@ export type Project = {
   groupUserRelated: GroupUserRelated[];
   listPosition: { name: string; id: string }[];
   listTechnology: { name: string; id: string }[];
+  taskList: Task[];
   id: string;
   dateCreate: string;
   dateUpdate: string;
   isDeleted: boolean;
 };
 
-export type GetProjectResponse = PaginationResponse<Project>;
+export type GetProjectsResponse = PaginationResponse<Project>;
+
+export type GetProjectResponse = {
+  statusCode: "200";
+  data: Project;
+};
