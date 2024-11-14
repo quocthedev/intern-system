@@ -13,4 +13,6 @@ export const API_ENDPOINTS = {
   sendEmail: `${API_BASE_URL}/mail/multi-recipients`,
   responseEmail: `${API_BASE_URL}/mail/response`,
   interviewQuestion: `${API_BASE_URL}/interview-question`,
+  candidateUser: `${API_BASE_URL}/user/candidate`,
+  task: `${API_BASE_URL}/task-info`,
 };
