@@ -9,6 +9,7 @@ import { Project } from "../_types/Project";
 import { PropsWithChildren } from "react";
 import ProjectModal from "./ProjectModal";
 import { useDisclosure } from "@nextui-org/modal";
+import { useRouter } from "next/navigation";
 
 export default function ProjectCard(
   props: PropsWithChildren<
@@ -17,10 +18,16 @@ export default function ProjectCard(
     }
   >,
 ) {
+  const router = useRouter();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   return (
-    <Card key={props.id}>
+    <Card
+      key={props.id}
+      className="hover:translate-y-1"
+      isPressable
+      onPress={() => router.push(`/project/${props.id}` as string)}
+    >
       <CardHeader className="flex gap-1">
         <div className="flex w-full justify-between">
           <p className="text-lg font-semibold">{props.title}</p>

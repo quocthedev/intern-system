@@ -6,7 +6,7 @@ import { Pagination } from "@nextui-org/pagination";
 import { useQuery } from "@tanstack/react-query";
 import APIClient from "@/libs/api-client";
 import { API_ENDPOINTS } from "@/libs/config";
-import { GetProjectResponse, Project } from "../_types/Project";
+import { GetProjectsResponse, Project } from "../_types/Project";
 import { PaginationResponseSuccess } from "@/libs/types";
 
 export type ProjectListProps = {
@@ -30,7 +30,7 @@ export default function ProjectList(props: ProjectListProps) {
   const { isLoading, error, data, refetch } = useQuery({
     queryKey: ["projects", pageIndex],
     queryFn: async () => {
-      const response = await apiClient.get<GetProjectResponse>(
+      const response = await apiClient.get<GetProjectsResponse>(
         API_ENDPOINTS.project,
         {
           params: new URLSearchParams({

@@ -51,11 +51,11 @@ export async function login(formData: FormData): Promise<
     const expires = new Date(Date.now() + expiresInMilliseconds);
 
     // Save the session in a cookie
-    cookies().set("accessToken", tokenString, { expires, httpOnly: true });
+    cookies().set("accessToken", tokenString, { expires, httpOnly: false });
 
-    cookies().set("userId", id, { expires, httpOnly: true });
-    cookies().set("userName", name, { expires, httpOnly: true });
-    cookies().set("userRole", role, { expires, httpOnly: true });
+    cookies().set("userId", id, { expires, httpOnly: false });
+    cookies().set("userName", name, { expires, httpOnly: false });
+    cookies().set("userRole", role, { expires, httpOnly: false });
 
     return {
       id,
