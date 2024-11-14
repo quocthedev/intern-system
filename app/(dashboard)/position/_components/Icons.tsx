@@ -30,7 +30,7 @@ export const DeleteIcon = ({ size = 24, className }: ActionBarIconProps) => (
   />
 );
 
-export const AddIcon = ({ size = 24, className }: ActionBarIconProps) => (
+export const AddIcon = ({ size = 20, className }: ActionBarIconProps) => (
   <Image
     src={AddSVG}
     alt="Add"

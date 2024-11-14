@@ -8,7 +8,6 @@ import {
   TableRow,
   TableCell,
 } from "@nextui-org/table";
-import { Chip, ChipProps } from "@nextui-org/chip";
 import React, { useState } from "react";
 import {
   DeleteIcon,
@@ -30,11 +29,10 @@ import "react-toastify/dist/ReactToastify.css";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 
-const statusColorMap: Record<string, ChipProps["color"]> = {
-  InProgress: "success",
-  Rejected: "danger",
-  Pending: "warning",
-};
+interface Tech {
+  id: string;
+  name: string;
+}
 
 export default function PositionTable() {
   const {
@@ -51,7 +49,7 @@ export default function PositionTable() {
     onOpenChange: onOpenEditChange,
   } = useDisclosure();
 
-  const [selectedUni, setSelectedUni] = useState("");
+  const [selectedPosition, setSelectedPosition] = useState("");
   const [updateData, setUpdateData] = useState({
     name: "",
     abbreviation: "",
@@ -60,15 +58,15 @@ export default function PositionTable() {
   const { isLoading, error, data, refetch } = useQuery({
     queryKey: ["data"],
     queryFn: async () => {
-      const university = await fetch(API_ENDPOINTS.position).then((res) =>
+      const position = await fetch(API_ENDPOINTS.position).then((res) =>
         res.json(),
       );
 
-      return { universitys: university?.data?.pagingData || [] };
+      return { positions: position?.data?.pagingData || [] };
     },
   });
 
-  const universityData = data?.universitys || [];
+  const positionData = data?.positions || [];
 
   const mutation = useMutation({
     mutationFn: (id: string) =>
@@ -87,7 +85,7 @@ export default function PositionTable() {
 
   const updateMutation = useMutation({
     mutationFn: async () => {
-      await fetch(API_ENDPOINTS.position + "/" + selectedUni, {
+      await fetch(API_ENDPOINTS.position + "/" + selectedPosition, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updateData),
@@ -108,7 +106,7 @@ export default function PositionTable() {
 
   const openModalDelete = (id: string) => {
     onOpenDelete();
-    setSelectedUni(String(id));
+    setSelectedPosition(String(id));
   };
 
   const openEditModal = (
@@ -116,7 +114,7 @@ export default function PositionTable() {
     name: string,
     abbreviation: string,
   ) => {
-    setSelectedUni(id);
+    setSelectedPosition(id);
     setUpdateData({ name, abbreviation });
     onOpenEdit();
   };
@@ -128,11 +126,15 @@ export default function PositionTable() {
   const columns = [
     {
       key: "name",
-      label: "FULL NAME",
+      label: "NAME",
     },
     {
       key: "abbreviation",
       label: "ABBREVIATION",
+    },
+    {
+      key: "technologies",
+      label: "TECHNOLOGIES",
     },
 
     {
@@ -141,56 +143,56 @@ export default function PositionTable() {
     },
   ];
 
-  const renderCell = React.useCallback((univer: any, columnKey: React.Key) => {
-    const cellValue = univer[columnKey as keyof typeof univer];
+  const renderCell = React.useCallback(
+    (position: any, columnKey: React.Key) => {
+      const cellValue = position[columnKey as keyof typeof position];
 
-    switch (columnKey) {
-      case "name":
-        return <div>{univer.name}</div>;
-      case "description":
-        return <div>{univer.description}</div>;
-      case "internshipDuration":
-        return <div>{univer.internshipDuration}</div>;
-      case "numberOfMember":
-        return <div>{univer.numberOfMember}</div>;
-      case "status":
-        return (
-          <Chip
-            className="capitalize"
-            color={statusColorMap[univer.status]}
-            size="sm"
-            variant="flat"
-          >
-            {cellValue}
-          </Chip>
-        );
-      case "actions":
-        return (
-          <div className="relative flex items-center gap-2">
-            <Tooltip content="Edit ">
-              <button
-                className="cursor-pointer text-lg text-default-400 active:opacity-50"
-                onClick={() =>
-                  openEditModal(univer.id, univer.name, univer.abbreviation)
-                }
-              >
-                <EditIcon />
-              </button>
-            </Tooltip>
-            <Tooltip color="danger" content="Delete">
-              <button
-                className="cursor-pointer text-lg text-danger active:opacity-50"
-                onClick={() => openModalDelete(univer.id)}
-              >
-                <DeleteIcon />
-              </button>
-            </Tooltip>
-          </div>
-        );
-      default:
-        return cellValue;
-    }
-  }, []);
+      switch (columnKey) {
+        case "name":
+          return <div>{position.name}</div>;
+        case "abbreviation":
+          return <div>{position.abbreviation}</div>;
+        case "technologies":
+          return (
+            <div className="flex gap-2">
+              {position?.tenologies?.map((tech: Tech) => (
+                <div key={tech.id}>{tech.name}</div>
+              ))}
+            </div>
+          );
+        case "actions":
+          return (
+            <div className="relative flex items-center gap-2">
+              <Tooltip content="Edit ">
+                <button
+                  className="cursor-pointer text-lg text-default-400 active:opacity-50"
+                  onClick={() =>
+                    openEditModal(
+                      position.id,
+                      position.name,
+                      position.abbreviation,
+                    )
+                  }
+                >
+                  <EditIcon />
+                </button>
+              </Tooltip>
+              <Tooltip color="danger" content="Delete">
+                <button
+                  className="cursor-pointer text-lg text-danger active:opacity-50"
+                  onClick={() => openModalDelete(position.id)}
+                >
+                  <DeleteIcon />
+                </button>
+              </Tooltip>
+            </div>
+          );
+        default:
+          return cellValue;
+      }
+    },
+    [],
+  );
 
   if (error) {
     return <div>Error + {error.message}</div>;
@@ -201,11 +203,22 @@ export default function PositionTable() {
       <Table>
         <TableHeader columns={columns}>
           {(column) => (
-            <TableColumn key={column.key}>{column.label}</TableColumn>
+            <TableColumn
+              key={column.key}
+              className={
+                column.key === "technologies"
+                  ? "w-1/2" // Make this column take up more width
+                  : column.key === "name"
+                    ? "w-1/3" // Make this column smaller
+                    : "w-1/7" // Default width for other columns
+              }
+            >
+              {column.label}
+            </TableColumn>
           )}
         </TableHeader>
         <TableBody
-          items={universityData}
+          items={positionData}
           loadingState={isLoading ? "loading" : "idle"}
           loadingContent={
             <div className="flex items-center gap-2">
@@ -233,7 +246,10 @@ export default function PositionTable() {
           <ModalBody className="mt-5">
             Are you sure you want to delete?
             <div className="mt-5 grid grid-cols-2 gap-5">
-              <Button onClick={() => handleDelete(selectedUni)} color="primary">
+              <Button
+                onClick={() => handleDelete(selectedPosition)}
+                color="primary"
+              >
                 Yes
               </Button>
               <Button onClick={onCloseDelete}>No</Button>
@@ -241,13 +257,6 @@ export default function PositionTable() {
           </ModalBody>
         </ModalContent>
       </Modal>
-      <ToastContainer
-        position="bottom-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        closeOnClick
-        draggable
-      />
 
       <Modal isOpen={isEditOpen} onOpenChange={onOpenEditChange}>
         <ModalContent>
@@ -282,6 +291,14 @@ export default function PositionTable() {
           </ModalBody>
         </ModalContent>
       </Modal>
+
+      <ToastContainer
+        position="bottom-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        closeOnClick
+        draggable
+      />
     </>
   );
 }
