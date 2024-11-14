@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
+import { getCookie } from "cookies-next";
 
 export const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000/api";
@@ -23,7 +24,30 @@ export default class APIClient {
   async get<ResponseType>(
     url: string,
     config: AxiosRequestConfig = {},
+    auth: boolean = false,
   ): Promise<ResponseType> {
+    if (auth) {
+      let accessToken: string | null;
+
+      if (typeof window === "undefined") {
+        const { cookies } = await import("next/headers");
+        // Add the Authorization header
+
+        accessToken = cookies().get("accessToken")?.value || null;
+      } else {
+        accessToken = (await getCookie("accessToken")) || null;
+      }
+
+      if (!accessToken) {
+        throw new Error("Access token is missing");
+      }
+
+      config.headers = {
+        ...config.headers,
+        Authorization: `Bearer ${accessToken}`,
+      };
+    }
+
     const response = await this.client.get(url, config);
 
     return response.data as ResponseType;
