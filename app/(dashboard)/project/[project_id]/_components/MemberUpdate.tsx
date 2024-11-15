@@ -10,10 +10,14 @@ import {
 } from "@nextui-org/modal";
 import { Select, SelectItem } from "@nextui-org/select";
 import React from "react";
+import { EditIcon } from "../../_components/Icons";
+import { updateMember } from "@/actions/update-member";
 
 export type MemberUpdateProps = {
   projectName: string;
+  projectId: string;
   memberName: string;
+  memberId: string;
   role: string;
 };
 export default function MemberUpdate(props: MemberUpdateProps) {
@@ -42,9 +46,23 @@ export default function MemberUpdate(props: MemberUpdateProps) {
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
+  const [role, setRole] = React.useState<string>(
+    roles.find((role) => role.name === props.role)?.key || "4",
+  );
+
+  const submit = async () => {
+    await updateMember({
+      userId: props.memberId,
+      role,
+      projectId: props.projectId,
+    });
+  };
+
   return (
     <>
-      <Button onPress={onOpen}>Edit</Button>
+      <Button onClick={onOpen} isIconOnly variant="light">
+        <EditIcon />
+      </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent className="max-w-[400px]">
           {(onClose) => (
@@ -77,7 +95,9 @@ export default function MemberUpdate(props: MemberUpdateProps) {
                       defaultSelectedKeys={
                         roles.find((role) => role.name === props.role)?.key
                       }
-                      onChange={() => {}}
+                      onSelectionChange={(selectedKeys) => {
+                        setRole(selectedKeys.currentKey as string);
+                      }}
                       labelPlacement="outside"
                     >
                       {roles.map((role) => (
@@ -89,17 +109,16 @@ export default function MemberUpdate(props: MemberUpdateProps) {
               </ModalBody>
               <ModalFooter>
                 <div className="flex w-full flex-col gap-3">
-                  <Button color="primary" fullWidth variant="shadow">
-                    Update
-                  </Button>
-
                   <Button
-                    color="danger"
+                    color="primary"
                     fullWidth
-                    onClick={onClose}
                     variant="shadow"
+                    onClick={async () => {
+                      await submit();
+                      // onClose();
+                    }}
                   >
-                    Delete
+                    Update
                   </Button>
                 </div>
               </ModalFooter>
