@@ -6,6 +6,7 @@ import { Spinner } from "@nextui-org/spinner";
 import GeneralInformation from "./_components/GeneralInformation";
 import RelatedUsers from "./_components/RelatedUsers";
 import TaskList from "./_components/TaskList";
+import { useState } from "react";
 
 const apiClient = new APIClient({
   onFulfilled: (response) => response,
@@ -26,15 +27,17 @@ export default function ProjectDetails({
 }) {
   const { project_id } = params;
 
+  const [filterTask, setFilterTask] = useState<number>(0);
+
   const {
     data: project,
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["project", project_id],
+    queryKey: ["project", project_id, filterTask],
     queryFn: async () => {
       const response = await apiClient.get<GetProjectResponse>(
-        `/project/${project_id}/summary-details`,
+        `/project/${project_id}/summary-details?filterTask=${filterTask}`,
       );
 
       if (response?.statusCode === "200") {
@@ -75,6 +78,8 @@ export default function ProjectDetails({
           <TaskList
             tasks={project?.taskList as any}
             relatedUsers={relatedUser as any}
+            filterTask={filterTask}
+            setFilterTask={setFilterTask}
             projectId={project_id}
           />
         </div>
