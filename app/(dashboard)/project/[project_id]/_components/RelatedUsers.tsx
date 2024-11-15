@@ -9,6 +9,7 @@ import {
 } from "@nextui-org/table";
 import NewMemberModal from "./NewMemberModal";
 import MemberUpdate from "./MemberUpdate";
+import MemberDeleteModal from "./MemberDeleteModal";
 
 export type RelatedUsersProps = {
   groups: RelatedUser[];
@@ -30,11 +31,19 @@ export default function RelatedUsers(props?: RelatedUsersProps) {
         return <p className="text-sm">{item.role}</p>;
       case "actions":
         return (
-          <MemberUpdate
-            projectName={props?.projectName as string}
-            memberName={item.fullName}
-            role={item.role}
-          />
+          <div className="flex gap-1">
+            <MemberUpdate
+              projectName={props?.projectName as string}
+              projectId={props?.projectId as string}
+              memberName={item.fullName}
+              memberId={item.id}
+              role={item.role}
+            />
+            <MemberDeleteModal
+              projectId={props?.projectId as string}
+              memberId={item.id}
+            />
+          </div>
         );
       default:
         return null;
