@@ -22,6 +22,7 @@ export type Task = {
   difficulty: number;
   status: string;
   memberName: string;
+  memberId: string;
   id: string;
   dateCreate: string;
   dateUpdate: string;

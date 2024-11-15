@@ -92,6 +92,10 @@ export default function NewMemberModal(props: NewMemberModalProps) {
       key: "rank",
       title: "Rank",
     },
+    {
+      key: "role",
+      title: "Role",
+    },
   ];
 
   const roles = [
@@ -116,6 +120,35 @@ export default function NewMemberModal(props: NewMemberModalProps) {
       name: "Member",
     },
   ];
+
+  const renderCell = (item: CandidateUser, columnKey: string) => {
+    switch (columnKey) {
+      case "fullName":
+        return item.fullName;
+      case "email":
+        return item.email;
+      case "position":
+        return item.position;
+      case "rank":
+        return item.rank;
+      case "role":
+        return (
+          <Select
+            defaultSelectedKeys={["4"]}
+            onSelectionChange={(selectedKeys) => {
+              roleMapping[item.id] = selectedKeys.currentKey as string;
+            }}
+            className="w-[150px]"
+          >
+            {roles.map((role) => (
+              <SelectItem key={role.key}>{role.name}</SelectItem>
+            ))}
+          </Select>
+        );
+      default:
+        return "";
+    }
+  };
 
   return (
     <>
@@ -146,6 +179,8 @@ export default function NewMemberModal(props: NewMemberModalProps) {
                       onSelectionChange={(selectedKeys) => {
                         setSelectedKeys(selectedKeys as Set<never>);
                       }}
+                      className="max-h-[300px]"
+                      isHeaderSticky
                     >
                       <TableHeader columns={columns}>
                         {(column) => (
@@ -155,53 +190,18 @@ export default function NewMemberModal(props: NewMemberModalProps) {
                         )}
                       </TableHeader>
 
-                      <TableBody>
+                      <TableBody className="">
                         {(data || []).map((candidate) => (
                           <TableRow key={candidate.id}>
                             {(columnKey) => (
                               <TableCell>
-                                {candidate[columnKey as keyof typeof candidate]}
+                                {renderCell(candidate, columnKey.toString())}
                               </TableCell>
                             )}
                           </TableRow>
                         ))}
                       </TableBody>
                     </Table>
-                  </div>
-
-                  {/* Show selected member */}
-                  <div className="flex flex-col gap-2">
-                    <h1 className="text-xl font-semibold">Selected members</h1>
-
-                    {Array.from(selectedKeys).map((key) => {
-                      const candidate = (data as CandidateUser[]).find(
-                        (m) => m.id == key,
-                      );
-
-                      return (
-                        <div
-                          key={key}
-                          className="flex items-center justify-between gap-2"
-                        >
-                          <span>{candidate?.fullName}</span>
-
-                          <Select
-                            defaultSelectedKeys={["4"]}
-                            onSelectionChange={(selectedKeys) => {
-                              roleMapping[key] =
-                                selectedKeys.currentKey as string;
-                            }}
-                            className="w-[200px]"
-                          >
-                            {roles.map((role) => (
-                              <SelectItem key={role.key}>
-                                {role.name}
-                              </SelectItem>
-                            ))}
-                          </Select>
-                        </div>
-                      );
-                    })}
                   </div>
                 </div>
               </ModalBody>

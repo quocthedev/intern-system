@@ -10,15 +10,21 @@ import {
 } from "@nextui-org/table";
 import TaskModal from "./TaskModal";
 import { RelatedUser } from "../page";
+import TaskDeleteModal from "./TaskDeleteModal";
+import { Tabs, Tab } from "@nextui-org/tabs";
 
 export type TaskListProps = {
   tasks: Task[];
   relatedUsers: RelatedUser[];
   projectId: string;
+  filterTask: number;
+  setFilterTask: (filterTask: number) => void;
   className?: string;
 };
 
 export default function TaskList(props: TaskListProps) {
+  const [selectedStatus, setSelectedStatus] = React.useState("0");
+
   const columns = [
     { key: "title", label: "Title" },
     { key: "summary", label: "Summary" },
@@ -30,6 +36,30 @@ export default function TaskList(props: TaskListProps) {
     { key: "difficulty", label: "Difficulty" },
     { key: "status", label: "Status" },
     { key: "memberName", label: "Member Name" },
+    { key: "actions", label: "Actions" },
+  ];
+
+  const statusOptions = [
+    {
+      key: "0",
+      value: "Not Started",
+    },
+    {
+      key: "1",
+      value: "In Progress",
+    },
+    {
+      key: "2",
+      value: "In Review",
+    },
+    {
+      key: "3",
+      value: "Done",
+    },
+    {
+      key: "4",
+      value: "Over Due",
+    },
   ];
 
   const renderCell = (item: Task, columnKey: Key) => {
@@ -52,6 +82,18 @@ export default function TaskList(props: TaskListProps) {
         return item.status;
       case "memberName":
         return item.memberName;
+      case "actions":
+        return (
+          <div className="flex">
+            <TaskModal
+              mode="edit"
+              relatedUsers={props.relatedUsers}
+              projectId={props.projectId}
+              selectedTaskInfo={item}
+            />
+            <TaskDeleteModal taskId={item.id} />
+          </div>
+        );
       default:
         return null;
     }
@@ -68,6 +110,18 @@ export default function TaskList(props: TaskListProps) {
           projectId={props.projectId}
         />
       </div>
+      <Tabs
+        key={"md"}
+        size={"md"}
+        fullWidth
+        aria-label="Tabs sizes"
+        onSelectionChange={(key) => props.setFilterTask(Number(key))}
+        selectedKey={props.filterTask.toString()}
+      >
+        {statusOptions.map((statusOption) => (
+          <Tab key={statusOption.key} title={statusOption.value} />
+        ))}
+      </Tabs>
       <Table>
         <TableHeader columns={columns}>
           {(column) => (
