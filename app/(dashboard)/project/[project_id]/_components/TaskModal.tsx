@@ -13,10 +13,13 @@ import { getLocalTimeZone, now, parseDate } from "@internationalized/date";
 import { Select, SelectItem } from "@nextui-org/select";
 import { RelatedUser } from "../page";
 import { createNewTask } from "@/actions/create-new-task";
+import { EditIcon } from "../../_components/Icons";
+import { Task } from "../../_types/Project";
+import { updateTask } from "@/actions/update-task";
 
 export type TaskModalProps = {
   mode: "create" | "edit";
-  selectedTaskInfo?: any;
+  selectedTaskInfo?: Task;
   relatedUsers?: RelatedUser[];
   projectId: string;
 };
@@ -49,57 +52,95 @@ export default function TaskModal(props: TaskModalProps) {
 
   const difficultyOptions = [
     {
+      key: "0",
+      value: "Easy",
+    },
+    {
       key: "1",
-      value: "1",
+      value: "MediumEasy",
     },
     {
       key: "2",
-      value: "2",
+      value: "Medium",
     },
     {
       key: "3",
-      value: "3",
+      value: "MediumHard",
     },
     {
       key: "4",
-      value: "4",
+      value: "Hard",
+    },
+  ];
+
+  const statusOptions = [
+    {
+      key: "0",
+      value: "NotStarted",
     },
     {
-      key: "5",
-      value: "5",
+      key: "1",
+      value: "InProgress",
+    },
+    {
+      key: "2",
+      value: "InReview",
+    },
+    {
+      key: "3",
+      value: "Done",
+    },
+    {
+      key: "4",
+      value: "OverDue",
     },
   ];
 
   const submitTask = async (formData: FormData) => {
     formData.append("projectId", props.projectId);
 
-    // Make sure due date is after start date
-    const startDate = new Date(
-      formData.get("startDate")?.toString().split("T")[0] as string,
-    ).getTime();
-    const dueDate = new Date(
-      formData.get("dueDate")?.toString().split("T")[0] as string,
-    ).getTime();
+    if (props.mode === "edit") {
+      formData.append("taskId", props.selectedTaskInfo?.id as string);
 
-    // Make sure start date is not in the past
-    if (startDate < Date.now()) {
-      alert("Start date must be in the future");
-      return;
+      await updateTask(formData);
+    } else {
+      // Make sure due date is after start date
+      const startDate = new Date(
+        formData.get("startDate")?.toString().split("T")[0] as string,
+      ).getTime();
+      const dueDate = new Date(
+        formData.get("dueDate")?.toString().split("T")[0] as string,
+      ).getTime();
+
+      // Make sure start date is not in the past
+      if (startDate < Date.now()) {
+        alert("Start date must be in the future");
+        return;
+      }
+
+      if (startDate >= dueDate) {
+        alert("Due date must be after start date");
+        return;
+      }
+
+      await createNewTask(formData);
     }
-
-    if (startDate >= dueDate) {
-      alert("Due date must be after start date");
-      return;
-    }
-
-    await createNewTask(formData);
   };
+
+  console.log(props.selectedTaskInfo?.memberId);
 
   return (
     <>
-      <Button onPress={onOpen} color="primary" variant="shadow">
-        Add Task
-      </Button>
+      {props.mode === "edit" ? (
+        <Button onClick={onOpen} isIconOnly variant="light">
+          <EditIcon />
+        </Button>
+      ) : (
+        <Button onPress={onOpen} color="primary" variant="shadow">
+          Add Task
+        </Button>
+      )}
+
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="w-[800px]">
         <ModalContent className="max-w-[600px]">
           {(onClose) => (
@@ -117,6 +158,7 @@ export default function TaskModal(props: TaskModalProps) {
                     placeholder="Enter Task Title"
                     isRequired
                     name="title"
+                    defaultValue={props.selectedTaskInfo?.title}
                   />
                   <Input
                     type="text"
@@ -125,6 +167,7 @@ export default function TaskModal(props: TaskModalProps) {
                     placeholder="Enter Task Summary"
                     isRequired
                     name="summary"
+                    defaultValue={props.selectedTaskInfo?.summary}
                   />
 
                   <Textarea
@@ -135,6 +178,7 @@ export default function TaskModal(props: TaskModalProps) {
                     minRows={3}
                     isRequired
                     name="description"
+                    defaultValue={props.selectedTaskInfo?.description}
                   />
 
                   <div className="flex w-full gap-3">
@@ -166,7 +210,7 @@ export default function TaskModal(props: TaskModalProps) {
                         props.mode === "create"
                           ? now(getLocalTimeZone())
                           : parseDate(
-                              props.selectedTaskInfo?.releaseDate.split(
+                              props.selectedTaskInfo?.dueDate.split(
                                 "T",
                               )[0] as string,
                             )
@@ -179,9 +223,10 @@ export default function TaskModal(props: TaskModalProps) {
                       label="Priority"
                       labelPlacement="outside"
                       defaultSelectedKeys={[
-                        props.mode === "create"
-                          ? "4"
-                          : props.selectedTaskInfo.priority,
+                        priorityOptions.find(
+                          (priority) =>
+                            priority.value === props.selectedTaskInfo?.priority,
+                        )?.key ?? "0",
                       ]}
                       name="priority"
                     >
@@ -196,9 +241,11 @@ export default function TaskModal(props: TaskModalProps) {
                       label="Difficulty"
                       labelPlacement="outside"
                       defaultSelectedKeys={[
-                        props.mode === "create"
-                          ? "1"
-                          : props.selectedTaskInfo.difficulty,
+                        difficultyOptions.find(
+                          (difficulty) =>
+                            Number(difficulty.value) ===
+                            props.selectedTaskInfo?.difficulty,
+                        )?.key ?? "0",
                       ]}
                       name="difficulty"
                     >
@@ -212,14 +259,40 @@ export default function TaskModal(props: TaskModalProps) {
                   <Select
                     label="Assignee"
                     labelPlacement="outside"
-                    defaultSelectedKeys={[]}
-                    placeholder="Select assignee"
+                    placeholder={"Select Assignee"}
+                    defaultSelectedKeys={[
+                      `${props.selectedTaskInfo?.memberId ?? ""}`,
+                    ]}
                     name="userId"
+                    required
                   >
                     {(props.relatedUsers ?? []).map((user) => (
                       <SelectItem key={user.id}>{user.fullName}</SelectItem>
                     ))}
                   </Select>
+
+                  {
+                    // Only show status select for edit mode
+                    props.mode === "edit" && (
+                      <Select
+                        label="Status"
+                        labelPlacement="outside"
+                        defaultSelectedKeys={[
+                          statusOptions.find(
+                            (status) =>
+                              status.value === props.selectedTaskInfo?.status,
+                          )?.key ?? "0",
+                        ]}
+                        name="status"
+                      >
+                        {statusOptions.map((status) => (
+                          <SelectItem key={status.key}>
+                            {status.value}
+                          </SelectItem>
+                        ))}
+                      </Select>
+                    )
+                  }
 
                   <Button color="primary" fullWidth type="submit">
                     Submit
