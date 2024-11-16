@@ -13,10 +13,12 @@ import { Button } from "@nextui-org/button";
 import { useQuery } from "@tanstack/react-query";
 import { API_ENDPOINTS } from "@/libs/config";
 import { Select, SelectItem } from "@nextui-org/select";
-import { Spinner } from "@nextui-org/spinner";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ExcelIcon } from "@/app/(dashboard)/intern/_components/Icons";
+import NewPeriodModal from "@/app/(dashboard)/internPeriod/_components/NewPeriodModal";
+import { formatedDate } from "@/app/util";
+import { Divider } from "@nextui-org/divider";
 
 function ImportExcelModal() {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
@@ -28,6 +30,9 @@ function ImportExcelModal() {
   const [selectedInternPeriodId, setSelectedInternPeriodId] = useState<
     string | null
   >(null);
+  const [selectedPeriodData, setSelectedPeriodData] =
+    useState<InternPeriod | null>(null);
+
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
 
   const handleFileChange = (e: any) => {
@@ -44,7 +49,6 @@ function ImportExcelModal() {
       setAlertMessage("Please selected file first!");
     }
 
-    // Sending file to API with query parameters
     const formData = new FormData();
 
     formData.append("file", selectedFile as Blob);
@@ -61,8 +65,8 @@ function ImportExcelModal() {
         },
       );
       toast.success("Upload file successfully!");
-      onClose(); // Close modal
-      await refetch(); // Refetch data if needed
+      onClose();
+      await refetch();
     } catch (error) {
       toast.error("Error uploading file");
       console.log("Upload error:", error);
@@ -100,6 +104,8 @@ function ImportExcelModal() {
   interface InternPeriod {
     id: string;
     name: string;
+    startDate: string;
+    endDate: string;
   }
 
   interface University {
@@ -119,39 +125,72 @@ function ImportExcelModal() {
       >
         Import excel file
       </Button>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="w-6/12">
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="max-w-xl">
         <ModalContent>
           <>
-            <ModalHeader className="flex flex-col gap-1">
-              Add New Intern
+            <ModalHeader className="flex items-center justify-between">
+              <span>Add New Intern</span>
+              <div className="mr-4">
+                <NewPeriodModal />
+              </div>
             </ModalHeader>
-
+            <Divider />
             <ModalBody className="gap-4">
-              <div className="grid grid-cols-2 gap-5">
-                <Select
-                  items={internperiodData}
-                  placeholder="Select intern period"
-                  label="Intern period"
-                  className="max-w-xs"
-                  onSelectionChange={(id) => {
-                    const internPeriodId = Array.from(id).join(","); // Convert to string
+              <div className="grid gap-5">
+                <div className="grid gap-5">
+                  <div className="flex items-start gap-5">
+                    <Select
+                      items={internperiodData}
+                      placeholder="Select an intern period"
+                      label="Intern Period"
+                      className="max-w-xs"
+                      onSelectionChange={(id) => {
+                        const internPeriodId = Array.from(id).join(",");
+                        setSelectedInternPeriodId(internPeriodId);
 
-                    setSelectedInternPeriodId(internPeriodId);
-                  }}
-                >
-                  {(internPeriod: InternPeriod) => (
-                    <SelectItem key={internPeriod.id} value={internPeriod.id}>
-                      {internPeriod.name}
-                    </SelectItem>
-                  )}
-                </Select>
+                        const selectedPeriod = internperiodData.find(
+                          (period: any) => period.id === internPeriodId,
+                        );
+
+                        setSelectedPeriodData(selectedPeriod || null);
+                      }}
+                    >
+                      {(internPeriod: InternPeriod) => (
+                        <SelectItem
+                          key={internPeriod.id}
+                          value={internPeriod.id}
+                        >
+                          {internPeriod.name}
+                        </SelectItem>
+                      )}
+                    </Select>
+
+                    {selectedPeriodData && (
+                      <div className="max-w-sm rounded-md border border-gray-300 bg-gray-50 p-2 shadow-sm">
+                        <p className="text-sm text-gray-600">
+                          <span className="font-medium text-gray-700">
+                            Start Date:
+                          </span>
+                          {formatedDate(selectedPeriodData.startDate)}
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          <span className="font-medium text-gray-700">
+                            End Date:
+                          </span>
+                          {formatedDate(selectedPeriodData.endDate)}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
                 <Select
                   items={universityData}
                   placeholder="Select university"
                   label="University"
                   className="max-w-xs"
                   onSelectionChange={(id) => {
-                    const universityId = Array.from(id).join(","); // Convert to string
+                    const universityId = Array.from(id).join(",");
 
                     setSelectedUniversityId(universityId);
                   }}
@@ -164,21 +203,56 @@ function ImportExcelModal() {
                 </Select>
               </div>
 
-              <input
-                type="file"
-                accept=".xlsx, .xls"
-                onChange={handleFileChange}
-              />
-              {alertMessage && (
-                <div className="text-red-500">{alertMessage}</div>
-              )}
-              <Button
-                color="primary"
-                onPressStart={handleFileUpload}
-                className="w-full"
-              >
-                Submit
-              </Button>
+              <div>
+                <label
+                  htmlFor="file-upload"
+                  className="flex max-w-xs cursor-pointer items-center justify-center rounded-md border bg-green-600 p-3 shadow-sm hover:bg-green-500"
+                >
+                  <ExcelIcon className="h-6 w-6 text-gray-700" />
+                  <span className="ml-2 text-sm font-medium text-gray-700">
+                    {selectedFile ? "Change File" : "Upload File"}
+                  </span>
+                </label>
+                <input
+                  id="file-upload"
+                  type="file"
+                  accept=".xlsx, .xls"
+                  onChange={(e) => {
+                    handleFileChange(e);
+                  }}
+                  className="hidden"
+                />
+                {selectedFile && (
+                  <p className="mt-2 text-sm text-gray-600">
+                    <span className="font-medium">Selected File:</span>{" "}
+                    {selectedFile.name}
+                  </p>
+                )}
+
+                {/* Alert Message */}
+                {alertMessage && (
+                  <div className="mt-2 text-sm text-red-500">
+                    {alertMessage}
+                  </div>
+                )}
+              </div>
+
+              <div className="grid grid-cols-2 gap-5">
+                <Button
+                  color="primary"
+                  onPressStart={handleFileUpload}
+                  className="w-full"
+                >
+                  Submit
+                </Button>
+                <Button
+                  color="default"
+                  onPressStart={onClose}
+                  className="w-full"
+                >
+                  Cancel
+                </Button>
+              </div>
             </ModalBody>
           </>
         </ModalContent>
