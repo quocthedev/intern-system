@@ -28,11 +28,33 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
+import { PaginationResponse, PaginationResponseSuccess } from "@/libs/types";
+import APIClient from "@/libs/api-client";
+import { Pagination } from "@nextui-org/pagination";
+import { Card, CardBody, CardHeader } from "@nextui-org/card";
+import { Divider } from "@nextui-org/divider";
+import AddTechModal from "@/app/(dashboard)/position/_components/AddTechModal";
+import Image from "next/image";
 
 interface Tech {
   id: string;
   name: string;
 }
+
+interface PositionInterface {
+  id: string;
+  name: string;
+  abbreviation: string;
+  tenologies: any;
+  imageUri: string;
+}
+
+const apiClient = new APIClient({
+  onFulfilled: (response) => response,
+  onRejected: (error) => {
+    console.log(error.response.data);
+  },
+});
 
 export default function PositionTable() {
   const {
@@ -55,18 +77,34 @@ export default function PositionTable() {
     abbreviation: "",
   });
 
-  const { isLoading, error, data, refetch } = useQuery({
-    queryKey: ["data"],
-    queryFn: async () => {
-      const position = await fetch(API_ENDPOINTS.position).then((res) =>
-        res.json(),
-      );
+  const [pageIndex, setPageIndex] = useState(1);
 
-      return { positions: position?.data?.pagingData || [] };
+  const pageSize = 6;
+
+  const { isLoading, error, data, refetch } = useQuery({
+    queryKey: ["position", pageIndex, pageSize],
+    queryFn: async () => {
+      const response = await apiClient.get<
+        PaginationResponse<PositionInterface>
+      >(API_ENDPOINTS.position, {
+        params: new URLSearchParams({
+          PageIndex: pageIndex.toString(),
+          PageSize: pageSize.toString(),
+        }),
+      });
+
+      if (response?.statusCode === "200") {
+        const { data } =
+          response as PaginationResponseSuccess<PositionInterface>;
+
+        return {
+          positions: data.pagingData,
+          pageIndex: data.pageIndex,
+          totalPages: data.totalPages,
+        };
+      }
     },
   });
-
-  const positionData = data?.positions || [];
 
   const mutation = useMutation({
     mutationFn: (id: string) =>
@@ -123,120 +161,96 @@ export default function PositionTable() {
     updateMutation.mutate();
   };
 
-  const columns = [
-    {
-      key: "name",
-      label: "NAME",
-    },
-    {
-      key: "abbreviation",
-      label: "ABBREVIATION",
-    },
-    {
-      key: "technologies",
-      label: "TECHNOLOGIES",
-    },
-
-    {
-      key: "actions",
-      label: "ACTIONS",
-    },
-  ];
-
-  const renderCell = React.useCallback(
-    (position: any, columnKey: React.Key) => {
-      const cellValue = position[columnKey as keyof typeof position];
-
-      switch (columnKey) {
-        case "name":
-          return <div>{position.name}</div>;
-        case "abbreviation":
-          return <div>{position.abbreviation}</div>;
-        case "technologies":
-          return (
-            <div className="flex gap-2">
-              {position?.tenologies?.map((tech: Tech) => (
-                <div key={tech.id}>{tech.name}</div>
-              ))}
-            </div>
-          );
-        case "actions":
-          return (
-            <div className="relative flex items-center gap-2">
-              <Tooltip content="Edit ">
-                <button
-                  className="cursor-pointer text-lg text-default-400 active:opacity-50"
-                  onClick={() =>
-                    openEditModal(
-                      position.id,
-                      position.name,
-                      position.abbreviation,
-                    )
-                  }
-                >
-                  <EditIcon />
-                </button>
-              </Tooltip>
-              <Tooltip color="danger" content="Delete">
-                <button
-                  className="cursor-pointer text-lg text-danger active:opacity-50"
-                  onClick={() => openModalDelete(position.id)}
-                >
-                  <DeleteIcon />
-                </button>
-              </Tooltip>
-            </div>
-          );
-        default:
-          return cellValue;
-      }
-    },
-    [],
-  );
-
   if (error) {
     return <div>Error + {error.message}</div>;
   }
 
   return (
-    <>
-      <Table>
-        <TableHeader columns={columns}>
-          {(column) => (
-            <TableColumn
-              key={column.key}
-              className={
-                column.key === "technologies"
-                  ? "w-1/2" // Make this column take up more width
-                  : column.key === "name"
-                    ? "w-1/3" // Make this column smaller
-                    : "w-1/7" // Default width for other columns
-              }
-            >
-              {column.label}
-            </TableColumn>
-          )}
-        </TableHeader>
-        <TableBody
-          items={positionData}
-          loadingState={isLoading ? "loading" : "idle"}
-          loadingContent={
-            <div className="flex items-center gap-2">
-              <Spinner />
-              Loading...
-            </div>
-          }
-          emptyContent={<div>No position found!</div>}
-        >
-          {(uni: any) => (
-            <TableRow key={uni.id}>
-              {(columnKey) => (
-                <TableCell>{renderCell(uni, columnKey)}</TableCell>
-              )}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+    <div>
+      <div className="grid h-full grid-cols-3 gap-5">
+        {data?.positions &&
+          data.positions.map((position: PositionInterface) => (
+            <Card key={position.id as string} className="w-full">
+              <CardHeader>
+                <div className="flex w-full justify-between">
+                  <div className="text-md font-bold">{position.name}</div>
+
+                  <div className="flex space-x-1">
+                    <Tooltip content="Edit" color="success">
+                      <button
+                        className="cursor-pointer text-lg text-default-400 active:opacity-50"
+                        onClick={() =>
+                          openEditModal(
+                            position.id,
+                            position.name,
+                            position.abbreviation,
+                          )
+                        }
+                      >
+                        <EditIcon />
+                      </button>
+                    </Tooltip>
+                    <Tooltip content="Delete" color="danger">
+                      <button
+                        className="bg-transparent"
+                        onClick={() => openModalDelete(position.id as string)}
+                      >
+                        <DeleteIcon />
+                      </button>
+                    </Tooltip>
+                  </div>
+                </div>
+              </CardHeader>
+              <Divider />
+              <CardBody>
+                <div className="mb-4">
+                  {position.imageUri ? (
+                    <Image
+                      width={200}
+                      height={200}
+                      alt={`${position.name} Image`}
+                      src={position.imageUri}
+                      className="rounded-md"
+                    />
+                  ) : (
+                    <Image
+                      width={200}
+                      height={200}
+                      layout="responsive"
+                      alt="Default University Image"
+                      src="/icons/technology/devops.png"
+                      className="rounded-md object-cover"
+                    />
+                  )}
+                </div>
+                <div>
+                  <span className="font-semibold">Abbreviation:</span>
+                  {position.abbreviation}
+                </div>
+                <div className="mt-2 text-xs">
+                  <span className="font-semibold">Technologies:</span>{" "}
+                  <span className="whitespace-normal">
+                    {position?.tenologies
+                      ?.map((tech: Tech) => tech.name)
+                      .join(", ")}
+                  </span>
+                </div>
+              </CardBody>
+            </Card>
+          ))}
+      </div>
+      <Pagination
+        className="m-4 flex justify-center"
+        isCompact
+        loop
+        showControls
+        total={data?.totalPages ? Number(data.totalPages) : 0}
+        initialPage={pageIndex}
+        onChange={(page) => {
+          setPageIndex(page);
+        }}
+      />
+
       <Modal
         isOpen={isDeleteOpen}
         onOpenChange={onOpenDeleteChange}
@@ -282,6 +296,8 @@ export default function PositionTable() {
               }
             />
 
+            <AddTechModal selectedPositionId={selectedPosition} />
+
             <div className="mt-2 grid grid-cols-2 gap-5">
               <Button onClick={handleUpdate} color="primary">
                 Update
@@ -299,6 +315,6 @@ export default function PositionTable() {
         closeOnClick
         draggable
       />
-    </>
+    </div>
   );
 }

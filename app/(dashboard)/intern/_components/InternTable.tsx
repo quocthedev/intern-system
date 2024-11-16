@@ -136,6 +136,7 @@ export default function InternsTable({
 
   const columns = useMemo(
     () => [
+      { key: "no", label: "NO" },
       { key: "avatar", label: "AVATAR" },
       { key: "fullName", label: "FULL NAME" },
       { key: "group", label: "GROUP" },
@@ -149,10 +150,12 @@ export default function InternsTable({
     [],
   );
 
-  const renderCell = (candidate: Candidate, columnKey: Key) => {
+  const renderCell = (candidate: Candidate, columnKey: Key, index: number) => {
     const cellValue = candidate[columnKey as keyof Candidate];
 
     switch (columnKey) {
+      case "no":
+        return <div>{index + 1}</div>;
       case "avatar":
         return (
           <div>
@@ -208,14 +211,14 @@ export default function InternsTable({
               </Link>
             </Tooltip>
             <Tooltip content="Edit">
-              <span className="cursor-pointer text-xs active:opacity-50">
+              <span className="cursor-pointer active:opacity-50">
                 <EditIcon />
               </span>
             </Tooltip>
             <Tooltip content="Delete">
               <button
                 onClick={() => openDeleteModal(candidate.id)}
-                className="cursor-pointer text-xs active:opacity-50"
+                className="cursor-pointer active:opacity-50"
               >
                 <DeleteIcon />
               </button>
@@ -250,13 +253,13 @@ export default function InternsTable({
           }
           emptyContent={<div>No candidate found!</div>}
         >
-          {(candidate: Candidate) => (
+          {candidates.map((candidate: Candidate, index: number) => (
             <TableRow key={candidate.id}>
               {(colKey) => (
-                <TableCell>{renderCell(candidate, colKey)}</TableCell>
+                <TableCell>{renderCell(candidate, colKey, index)}</TableCell>
               )}
             </TableRow>
-          )}
+          ))}
         </TableBody>
       </Table>
 

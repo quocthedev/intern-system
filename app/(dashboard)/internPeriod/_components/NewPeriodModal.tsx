@@ -122,7 +122,7 @@ export default function NewPeriodModal() {
       >
         New Intern Period
       </Button>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="max-w-lg">
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="max-w-xl">
         <ModalContent>
           <>
             <ModalHeader className="flex flex-col gap-1">

@@ -192,7 +192,7 @@ export default function PeriodDetailPage() {
             <h2 className="text-2xl font-semibold text-amber-600">
               Intern Period Details
             </h2>
-            <Button color="primary" size="sm">
+            <Button color="primary" size="md">
               Update intern period
             </Button>
           </div>

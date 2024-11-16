@@ -1,14 +1,5 @@
 "use client";
 
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableColumn,
-  TableRow,
-  TableCell,
-} from "@nextui-org/table";
-import { Chip, ChipProps } from "@nextui-org/chip";
 import React, { useState } from "react";
 import {
   DeleteIcon,
@@ -29,12 +20,26 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
+import APIClient from "@/libs/api-client";
+import { PaginationResponse, PaginationResponseSuccess } from "@/libs/types";
+import { Card, CardBody, CardHeader } from "@nextui-org/card";
+import { Divider } from "@nextui-org/divider";
+import { Pagination } from "@nextui-org/pagination";
+import Image from "next/image";
+const apiClient = new APIClient({
+  onFulfilled: (response) => response,
+  onRejected: (error) => {
+    console.log(error.response.data);
+  },
+});
 
-const statusColorMap: Record<string, ChipProps["color"]> = {
-  InProgress: "success",
-  Rejected: "danger",
-  Pending: "warning",
-};
+interface UniversityInterface {
+  id: string;
+  name: string;
+  abbreviation: string;
+  address: string;
+  imageUri: string;
+}
 
 export default function UniversityTable() {
   const {
@@ -58,19 +63,34 @@ export default function UniversityTable() {
     address: "",
   });
 
-  const { isLoading, error, data, refetch } = useQuery({
-    queryKey: ["data"],
-    queryFn: async () => {
-      const university = await fetch(API_ENDPOINTS.university).then((res) =>
-        res.json(),
-      );
+  const [pageIndex, setPageIndex] = useState(1);
 
-      return { universitys: university?.data?.pagingData || [] };
+  const pageSize = 6;
+
+  const { isLoading, error, data, refetch } = useQuery({
+    queryKey: ["university", pageIndex, pageSize],
+    queryFn: async () => {
+      const response = await apiClient.get<
+        PaginationResponse<UniversityInterface>
+      >(API_ENDPOINTS.university, {
+        params: new URLSearchParams({
+          PageIndex: pageIndex.toString(),
+          PageSize: pageSize.toString(),
+        }),
+      });
+
+      if (response?.statusCode === "200") {
+        const { data } =
+          response as PaginationResponseSuccess<UniversityInterface>;
+
+        return {
+          universitites: data.pagingData,
+          pageIndex: data.pageIndex,
+          totalPages: data.totalPages,
+        };
+      }
     },
   });
-
-  const universityData = data?.universitys || [];
-
   const mutation = useMutation({
     mutationFn: (id: string) =>
       fetch(API_ENDPOINTS.university + "/" + id, {
@@ -151,82 +171,138 @@ export default function UniversityTable() {
     },
   ];
 
-  const renderCell = React.useCallback((univer: any, columnKey: React.Key) => {
-    const cellValue = univer[columnKey as keyof typeof univer];
+  // const renderCell = React.useCallback((univer: any, columnKey: React.Key) => {
+  //   const cellValue = univer[columnKey as keyof typeof univer];
 
-    switch (columnKey) {
-      case "name":
-        return <div className="text-xs">{univer.name}</div>;
-      case "abbreviation":
-        return <div className="text-xs">{univer.abbreviation}</div>;
-      case "address":
-        return <div className="text-xs">{univer.address}</div>;
+  //   switch (columnKey) {
+  //     case "name":
+  //       return <div className="text-xs">{univer.name}</div>;
+  //     case "abbreviation":
+  //       return <div className="text-xs">{univer.abbreviation}</div>;
+  //     case "address":
+  //       return <div className="text-xs">{univer.address}</div>;
 
-      case "actions":
-        return (
-          <div className="relative flex items-center gap-2">
-            <Tooltip content="Edit ">
-              <button
-                className="cursor-pointer text-lg text-default-400 active:opacity-50"
-                onClick={() =>
-                  openEditModal(
-                    univer.id,
-                    univer.name,
-                    univer.abbreviation,
-                    univer.address,
-                  )
-                }
-              >
-                <EditIcon />
-              </button>
-            </Tooltip>
-            <Tooltip color="danger" content="Delete">
-              <button
-                className="cursor-pointer text-lg text-danger active:opacity-50"
-                onClick={() => openModalDelete(univer.id)}
-              >
-                <DeleteIcon />
-              </button>
-            </Tooltip>
-          </div>
-        );
-      default:
-        return cellValue;
-    }
-  }, []);
+  //     case "actions":
+  //       return (
+  //         <div className="relative flex items-center gap-2">
+  //           <Tooltip content="Edit ">
+  //             <button
+  //               className="cursor-pointer text-lg text-default-400 active:opacity-50"
+  //               onClick={() =>
+  //                 openEditModal(
+  //                   univer.id,
+  //                   univer.name,
+  //                   univer.abbreviation,
+  //                   univer.address,
+  //                 )
+  //               }
+  //             >
+  //               <EditIcon />
+  //             </button>
+  //           </Tooltip>
+  //           <Tooltip color="danger" content="Delete">
+  //             <button
+  //               className="cursor-pointer text-lg text-danger active:opacity-50"
+  //               onClick={() => openModalDelete(univer.id)}
+  //             >
+  //               <DeleteIcon />
+  //             </button>
+  //           </Tooltip>
+  //         </div>
+  //       );
+  //     default:
+  //       return cellValue;
+  //   }
+  // }, []);
 
   if (error) {
     return <div>Error + {error.message}</div>;
   }
 
   return (
-    <>
-      <Table>
-        <TableHeader columns={columns}>
-          {(column) => (
-            <TableColumn key={column.key}>{column.label}</TableColumn>
-          )}
-        </TableHeader>
-        <TableBody
-          items={universityData}
-          loadingState={isLoading ? "loading" : "idle"}
-          loadingContent={
-            <div className="flex items-center gap-2">
-              <Spinner />
-              Loading...
-            </div>
-          }
-          emptyContent={<div>No university found!</div>}
-        >
-          {(uni: any) => (
-            <TableRow key={uni.id}>
-              {(columnKey) => (
-                <TableCell>{renderCell(uni, columnKey)}</TableCell>
-              )}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+    <div>
+      <div className="grid h-full grid-cols-3 gap-5">
+        {data?.universitites &&
+          data.universitites.map((university: UniversityInterface) => (
+            <Card key={university.id as string} className="w-full">
+              <CardHeader>
+                <div className="flex w-full justify-between">
+                  <div className="text-md font-bold">{university.name}</div>
+
+                  <div className="flex space-x-1">
+                    <Tooltip content="Edit" color="success">
+                      <button
+                        className="cursor-pointer text-lg text-default-400 active:opacity-50"
+                        onClick={() =>
+                          openEditModal(
+                            university.id,
+                            university.name,
+                            university.abbreviation,
+                            university.address,
+                          )
+                        }
+                      >
+                        <EditIcon />
+                      </button>
+                    </Tooltip>
+                    <Tooltip content="Delete" color="danger">
+                      <button
+                        className="bg-transparent"
+                        onClick={() => openModalDelete(university.id as string)}
+                      >
+                        <DeleteIcon />
+                      </button>
+                    </Tooltip>
+                  </div>
+                </div>
+              </CardHeader>
+              <Divider />
+              <CardBody>
+                <div className="mb-4">
+                  {university.imageUri ? (
+                    <Image
+                      width={200}
+                      height={200}
+                      alt={`${university.name} Image`}
+                      src={university.imageUri}
+                      className="rounded-md"
+                    />
+                  ) : (
+                    <Image
+                      width={200}
+                      height={200}
+                      layout="responsive"
+                      alt="Default University Image"
+                      src="/icons/technology/school.png"
+                      className="rounded-md object-cover"
+                    />
+                  )}
+                </div>
+
+                <div>
+                  <span className="font-bold">Abberviation: </span>
+                  {university.abbreviation}
+                </div>
+                <div className="text-xs">
+                  <span className="font-bold">Adress: </span>
+                  {university.address}
+                </div>
+              </CardBody>
+            </Card>
+          ))}
+      </div>
+      <Pagination
+        className="m-4 flex justify-center"
+        isCompact
+        loop
+        showControls
+        total={data?.totalPages ? Number(data.totalPages) : 0}
+        initialPage={pageIndex}
+        onChange={(page) => {
+          setPageIndex(page);
+        }}
+      />
+
       <Modal
         isOpen={isDeleteOpen}
         onOpenChange={onOpenDeleteChange}
@@ -293,6 +369,6 @@ export default function UniversityTable() {
           </ModalBody>
         </ModalContent>
       </Modal>
-    </>
+    </div>
   );
 }
