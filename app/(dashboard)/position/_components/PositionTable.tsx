@@ -200,7 +200,7 @@ export default function PositionTable() {
                       width={200}
                       height={200}
                       alt={`${position.name} Image`}
-                      src={position?.image}
+                      src={position.image}
                       className="grounded-md h-40 w-full object-cover"
                     />
                   ) : (
