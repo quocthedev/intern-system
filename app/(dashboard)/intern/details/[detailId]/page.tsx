@@ -1,10 +1,10 @@
 "use client";
 
 import React from "react";
-import { useParams } from "next/navigation";
 import { Tabs, Tab } from "@nextui-org/tabs";
 import CandidateInformationPage from "@/app/(dashboard)/intern/details/[detailId]/CandidateInformation";
 import Link from "next/link";
+import CandidateCVPage from "@/app/(dashboard)/intern/details/[detailId]/CandidateCV";
 
 export default function CandidateDetailPage() {
   return (
@@ -26,8 +26,8 @@ export default function CandidateDetailPage() {
         <Tab key="1" title="Information">
           <CandidateInformationPage />
         </Tab>
-        <Tab key="2" title="Goodbye">
-          Goodbye
+        <Tab key="2" title="CV">
+          <CandidateCVPage />
         </Tab>
       </Tabs>
     </div>
