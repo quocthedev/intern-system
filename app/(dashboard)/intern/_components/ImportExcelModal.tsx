@@ -69,7 +69,6 @@ function ImportExcelModal() {
       await refetch();
     } catch (error) {
       toast.error("Error uploading file");
-      console.log("Upload error:", error);
     }
   };
 
@@ -97,11 +96,17 @@ function ImportExcelModal() {
     onOpen();
     setShouldFetchData(true);
   };
+  const handleClose = () => {
+    setSelectedPeriodData(null);
+    onClose();
+  };
 
   const universityData = allData?.university || [];
   const internperiodData = allData?.internperiod || [];
 
   interface InternPeriod {
+    currentCandidateQuantity: number;
+    maxCandidateQuantity: number;
     id: string;
     name: string;
     startDate: string;
@@ -125,7 +130,7 @@ function ImportExcelModal() {
       >
         Import excel file
       </Button>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="max-w-xl">
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="max-w-lg">
         <ModalContent>
           <>
             <ModalHeader className="flex items-center justify-between">
@@ -138,14 +143,16 @@ function ImportExcelModal() {
             <ModalBody className="gap-4">
               <div className="grid gap-5">
                 <div className="grid gap-5">
-                  <div className="flex items-start gap-5">
+                  <div className="gap-5">
                     <Select
                       items={internperiodData}
                       placeholder="Select an intern period"
+                      labelPlacement="outside"
                       label="Intern Period"
-                      className="max-w-xs"
+                      className="max-w-full"
                       onSelectionChange={(id) => {
                         const internPeriodId = Array.from(id).join(",");
+
                         setSelectedInternPeriodId(internPeriodId);
 
                         const selectedPeriod = internperiodData.find(
@@ -166,19 +173,42 @@ function ImportExcelModal() {
                     </Select>
 
                     {selectedPeriodData && (
-                      <div className="max-w-sm rounded-md border border-gray-300 bg-gray-50 p-2 shadow-sm">
-                        <p className="text-sm text-gray-600">
-                          <span className="font-medium text-gray-700">
+                      <div className="mt-4 space-y-4 text-sm">
+                        <div className="flex items-center">
+                          <span className="mr-2 font-medium text-gray-700">
                             Start Date:
                           </span>
-                          {formatedDate(selectedPeriodData.startDate)}
-                        </p>
-                        <p className="text-sm text-gray-600">
-                          <span className="font-medium text-gray-700">
+                          <span className="text-gray-600">
+                            {formatedDate(selectedPeriodData.startDate)}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center">
+                          <span className="mr-2 font-medium text-gray-700">
                             End Date:
                           </span>
-                          {formatedDate(selectedPeriodData.endDate)}
-                        </p>
+                          <span className="text-gray-600">
+                            {formatedDate(selectedPeriodData.endDate)}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center">
+                          <span className="mr-2 font-medium text-gray-700">
+                            Max candidates:
+                          </span>
+                          <span className="text-gray-600">
+                            {selectedPeriodData.maxCandidateQuantity}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center">
+                          <span className="mr-2 font-medium text-gray-700">
+                            Current candidate attending:
+                          </span>
+                          <span className="text-gray-600">
+                            {selectedPeriodData.currentCandidateQuantity}
+                          </span>
+                        </div>
                       </div>
                     )}
                   </div>
@@ -187,8 +217,9 @@ function ImportExcelModal() {
                 <Select
                   items={universityData}
                   placeholder="Select university"
+                  labelPlacement="outside"
                   label="University"
-                  className="max-w-xs"
+                  className="max-w-full"
                   onSelectionChange={(id) => {
                     const universityId = Array.from(id).join(",");
 
@@ -206,9 +237,9 @@ function ImportExcelModal() {
               <div>
                 <label
                   htmlFor="file-upload"
-                  className="flex max-w-xs cursor-pointer items-center justify-center rounded-md border bg-green-600 p-3 shadow-sm hover:bg-green-500"
+                  className="flex max-h-10 max-w-full cursor-pointer items-center rounded-lg border bg-green-500 p-3 shadow-sm hover:bg-green-400"
                 >
-                  <ExcelIcon className="h-6 w-6 text-gray-700" />
+                  <ExcelIcon className="h-5 w-5 text-gray-700" />
                   <span className="ml-2 text-sm font-medium text-gray-700">
                     {selectedFile ? "Change File" : "Upload File"}
                   </span>
@@ -247,7 +278,7 @@ function ImportExcelModal() {
                 </Button>
                 <Button
                   color="default"
-                  onPressStart={onClose}
+                  onPressStart={handleClose}
                   className="w-full"
                 >
                   Cancel

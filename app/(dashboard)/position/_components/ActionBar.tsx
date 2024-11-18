@@ -145,22 +145,7 @@ export default function ActionBar() {
         className="flex-1"
       />
       <NewPrositionModal />
-      <Button
-        color="primary"
-        startContent={<AddIcon />}
-        variant="shadow"
-        onClick={onOpenAddTech}
-      >
-        Add tech
-      </Button>
-      <Button
-        color="danger"
-        startContent={<AddIcon />}
-        variant="shadow"
-        onClick={onOpenRemoveTech}
-      >
-        Remove tech
-      </Button>
+
       <Button
         color="default"
         size="md"
