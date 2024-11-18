@@ -339,12 +339,26 @@ export const TechCard = () => {
                     })
                   }
                 />
-                <div className="mb-4 space-x-2">
+                <div className="mb-4">
+                  <label
+                    htmlFor="file-upload"
+                    className="cursor-pointer text-blue-500 hover:text-blue-700"
+                  >
+                    Change Image
+                  </label>
                   <input
+                    id="file-upload"
                     type="file"
                     accept=".png"
                     onChange={handleFileChange}
+                    className="hidden"
                   />
+                  {selectedFile && (
+                    <p className="mt-2 text-sm text-gray-600">
+                      <span className="font-semibold">Selected file: </span>
+                      {selectedFile.name}
+                    </p>
+                  )}
                 </div>
 
                 <div className="mt-2 grid grid-cols-2 gap-5">
