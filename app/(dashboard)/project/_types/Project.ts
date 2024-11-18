@@ -23,6 +23,8 @@ export type Task = {
   status: string;
   memberName: string;
   memberId: string;
+  completionProgress: number;
+  progressAssessment: number;
   id: string;
   dateCreate: string;
   dateUpdate: string;

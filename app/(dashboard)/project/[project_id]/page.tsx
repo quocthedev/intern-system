@@ -58,15 +58,15 @@ export default function ProjectDetails({
 
   return (
     <div className="flex h-full w-full flex-col p-9">
-      {/* <h1 className="text-left text-2xl font-semibold capitalize text-black">
-        Project Details / {project?.title}
-      </h1> */}
+      <h1 className="text-left text-2xl font-semibold capitalize text-black">
+        Project Details
+      </h1>
 
       {isLoading ? (
         <Spinner />
       ) : (
         <div className="flex flex-col gap-6">
-          <div className="grid w-full grid-cols-1 gap-6">
+          <div className="flex w-full gap-6">
             <GeneralInformation project={project as any} />
             <RelatedUsers
               groups={relatedUser as any}

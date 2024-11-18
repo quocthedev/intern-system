@@ -27,8 +27,8 @@ export default function TaskList(props: TaskListProps) {
 
   const columns = [
     { key: "title", label: "Title" },
-    { key: "summary", label: "Summary" },
-    { key: "description", label: "Description" },
+    // { key: "summary", label: "Summary" },
+    // { key: "description", label: "Description" },
     { key: "startDate", label: "Start Date" },
     { key: "dueDate", label: "Due Date" },
 
@@ -36,6 +36,9 @@ export default function TaskList(props: TaskListProps) {
     { key: "difficulty", label: "Difficulty" },
     { key: "status", label: "Status" },
     { key: "memberName", label: "Member Name" },
+    { key: "completionProgress", label: "Completion" },
+    { key: "progressAssessment", label: "Assessment" },
+    { key: "note", label: "Note" },
     { key: "actions", label: "Actions" },
   ];
 
@@ -65,7 +68,7 @@ export default function TaskList(props: TaskListProps) {
   const renderCell = (item: Task, columnKey: Key) => {
     switch (columnKey) {
       case "title":
-        return item.title;
+        return <p className="max">{item.title}</p>;
       case "summary":
         return item.summary;
       case "description":
@@ -82,6 +85,10 @@ export default function TaskList(props: TaskListProps) {
         return item.status;
       case "memberName":
         return item.memberName;
+      case "completionProgress":
+        return item.completionProgress;
+      case "assessment":
+        return item.progressAssessment;
       case "actions":
         return (
           <div className="flex">
@@ -122,16 +129,16 @@ export default function TaskList(props: TaskListProps) {
           <Tab key={statusOption.key} title={statusOption.value} />
         ))}
       </Tabs>
-      <Table>
+      <Table selectionMode="single">
         <TableHeader columns={columns}>
           {(column) => (
             <TableColumn key={column.key}>{column.label}</TableColumn>
           )}
         </TableHeader>
 
-        <TableBody items={props.tasks}>
+        <TableBody items={props.tasks} emptyContent={"No rows to display."}>
           {(item) => (
-            <TableRow key={item.id}>
+            <TableRow key={item.id} className="hover:cursor-pointer">
               {(columnKey) => (
                 <TableCell>{renderCell(item, columnKey)}</TableCell>
               )}

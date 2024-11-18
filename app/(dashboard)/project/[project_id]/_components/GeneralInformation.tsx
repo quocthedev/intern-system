@@ -18,36 +18,48 @@ export default function GeneralInformation({
   project,
 }: GeneralInformationProps) {
   return (
-    <div className="flex items-center justify-between">
-      <div className="flex flex-col">
-        <div className="flex items-center">
-          <Link
-            href={project.productUri}
-            showAnchorIcon
-            className="text-2xl font-semibold"
-          >
-            {project.title}
+    <div className="mt-3 flex w-[700px] flex-col">
+      <h1 className="text-xl font-semibold">General Information</h1>
+
+      <div className="flex flex-col gap-1">
+        <p className="mt-2">Title: {project.title}</p>
+        <p>
+          Product URI:{" "}
+          <Link href={project.productUri} target="_blank">
+            Link
           </Link>
+        </p>
+
+        <p>
+          Group Zalo:{" "}
+          <Link href={project.zaloUri} target="_blank">
+            Link
+          </Link>
+        </p>
+
+        <div className="flex gap-4">
+          <p>Start Date: {project.startDate.split("T")[0]}</p>
+
+          <p>Release Date: {project.releaseDate.split("T")[0]}</p>
         </div>
-        <div className="flex gap-3">
-          <p className="text-success-500">
-            From: {project.startDate.split("T")[0]}
-          </p>
-          <p className="text-danger-500">
-            To: {project.releaseDate.split("T")[0]}
-          </p>
-        </div>
-      </div>
-      <div className="flex flex-col items-end">
-        <Link href={project.zaloUri} showAnchorIcon>
-          Group Zalo
-        </Link>
-        <div className="flex gap-2">
-          <p className="font-semibold">Position:</p>
-          <p>
-            {project.listPosition?.map((position) => position.name).join(", ")}
-          </p>
-        </div>
+
+        <p>
+          Position:{" "}
+          {project.listPosition.map((position, id) => (
+            <Link key={position.name} href={"#"}>
+              {position.name}
+              {
+                // Add a comma after each position except the last one
+                id !== project.listPosition.length - 1 ? ", " : ""
+              }
+              {
+                // Add a space after each comma
+                id !== project.listPosition.length - 1 ? " " : ""
+              }
+            </Link>
+          ))}
+        </p>
+        <p>Tech Stack: </p>
       </div>
     </div>
   );

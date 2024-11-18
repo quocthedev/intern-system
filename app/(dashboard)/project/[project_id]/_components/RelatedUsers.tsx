@@ -60,6 +60,14 @@ export default function RelatedUsers(props?: RelatedUsersProps) {
       title: "Role",
     },
     {
+      key: "totalTasks",
+      title: "Total Tasks",
+    },
+    {
+      key: "completedTasks",
+      title: "Completed Tasks",
+    },
+    {
       key: "actions",
       title: "Actions",
     },

@@ -176,6 +176,7 @@ export default function TaskModal(props: TaskModalProps) {
                     labelPlacement="outside"
                     placeholder="Enter Task Description"
                     minRows={3}
+                    maxRows={5}
                     isRequired
                     name="description"
                     defaultValue={props.selectedTaskInfo?.description}
@@ -270,6 +271,18 @@ export default function TaskModal(props: TaskModalProps) {
                       <SelectItem key={user.id}>{user.fullName}</SelectItem>
                     ))}
                   </Select>
+
+                  <Textarea
+                    type="text"
+                    label="Notes"
+                    labelPlacement="outside"
+                    placeholder="Enter Task Notes"
+                    minRows={1}
+                    maxRows={2}
+                    // isRequired
+                    name="note"
+                    // defaultValue={props.selectedTaskInfo?.description}
+                  />
 
                   {
                     // Only show status select for edit mode
