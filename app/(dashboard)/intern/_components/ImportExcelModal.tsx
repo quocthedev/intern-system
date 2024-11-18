@@ -35,7 +35,7 @@ function ImportExcelModal() {
 
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
 
-  const handleFileChange = (e: any) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target?.files?.[0];
 
     if (file) {
