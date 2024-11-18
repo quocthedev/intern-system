@@ -1,3 +1,4 @@
+import { API_ENDPOINTS } from "@/libs/config";
 import { Button } from "@nextui-org/button";
 import { Spinner } from "@nextui-org/spinner";
 import { useQuery } from "@tanstack/react-query";
@@ -32,7 +33,7 @@ export default function CandidateCVPage() {
   const { isLoading, data, refetch } = useQuery({
     queryKey: ["data", candidateId],
     queryFn: async () => {
-      const response = await fetch(`API_ENDPOINTS.candidate/${candidateId}`);
+      const response = await fetch(`${API_ENDPOINTS.candidate}/${candidateId}`);
       const candidate = await response.json();
 
       return candidate;
@@ -59,7 +60,7 @@ export default function CandidateCVPage() {
       formData.append("file", selectedFile);
 
       const response = await fetch(
-        `https://intern-system.azurewebsites.net/api/candidate/${candidateId}/upload-cv`,
+        `${API_ENDPOINTS.candidate}/${candidateId}/upload-cv`,
         {
           method: "PUT",
           body: formData,

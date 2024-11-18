@@ -160,7 +160,7 @@ export default function InternPeriodTable() {
               <Tooltip content="Delete">
                 <button
                   onClick={() => handleDeleteConfirmation(period.id)}
-                  className="cursor-pointer"
+                  className="-mt-1 cursor-pointer"
                 >
                   <DeleteIcon />
                 </button>
