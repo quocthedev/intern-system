@@ -1,13 +1,5 @@
 "use client";
 
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableColumn,
-  TableRow,
-  TableCell,
-} from "@nextui-org/table";
 import React, { useState } from "react";
 import {
   DeleteIcon,
@@ -16,7 +8,6 @@ import {
 import { Tooltip } from "@nextui-org/tooltip";
 import { useMutation, useQuery } from "@tanstack/react-query"; //get request
 import { API_ENDPOINTS } from "@/libs/config";
-import { Spinner } from "@nextui-org/spinner";
 import {
   Modal,
   ModalBody,
@@ -46,7 +37,7 @@ interface PositionInterface {
   name: string;
   abbreviation: string;
   tenologies: any;
-  imageUri: string;
+  image: string;
 }
 
 const apiClient = new APIClient({
@@ -204,22 +195,21 @@ export default function PositionTable() {
               <Divider />
               <CardBody>
                 <div className="mb-4">
-                  {position.imageUri ? (
+                  {position.image ? (
                     <Image
                       width={200}
                       height={200}
                       alt={`${position.name} Image`}
-                      src={position.imageUri}
-                      className="rounded-md"
+                      src={position?.image}
+                      className="grounded-md h-40 w-full object-cover"
                     />
                   ) : (
                     <Image
                       width={200}
                       height={200}
-                      layout="responsive"
                       alt="Default University Image"
                       src="/icons/technology/devops.png"
-                      className="rounded-md object-cover"
+                      className="grounded-md h-40 w-full object-cover"
                     />
                   )}
                 </div>
@@ -296,7 +286,10 @@ export default function PositionTable() {
               }
             />
 
-            <AddTechModal selectedPositionId={selectedPosition} />
+            <div className="grid grid-cols-2 gap-5">
+              <AddTechModal selectedPositionId={selectedPosition} />
+              <Button color="danger">Remove tech</Button>
+            </div>
 
             <div className="mt-2 grid grid-cols-2 gap-5">
               <Button onClick={handleUpdate} color="primary">

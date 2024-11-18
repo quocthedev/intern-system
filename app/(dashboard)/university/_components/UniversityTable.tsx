@@ -38,7 +38,7 @@ interface UniversityInterface {
   name: string;
   abbreviation: string;
   address: string;
-  imageUri: string;
+  image: string;
 }
 
 export default function UniversityTable() {
@@ -147,74 +147,6 @@ export default function UniversityTable() {
     updateMutation.mutate();
   };
 
-  const columns = [
-    {
-      key: "image",
-      label: "IMAGE",
-    },
-    {
-      key: "name",
-      label: "NAME",
-    },
-
-    {
-      key: "abbreviation",
-      label: "ABBREVIATION",
-    },
-    {
-      key: "address",
-      label: "ADDRESS",
-    },
-    {
-      key: "actions",
-      label: "ACTIONS",
-    },
-  ];
-
-  // const renderCell = React.useCallback((univer: any, columnKey: React.Key) => {
-  //   const cellValue = univer[columnKey as keyof typeof univer];
-
-  //   switch (columnKey) {
-  //     case "name":
-  //       return <div className="text-xs">{univer.name}</div>;
-  //     case "abbreviation":
-  //       return <div className="text-xs">{univer.abbreviation}</div>;
-  //     case "address":
-  //       return <div className="text-xs">{univer.address}</div>;
-
-  //     case "actions":
-  //       return (
-  //         <div className="relative flex items-center gap-2">
-  //           <Tooltip content="Edit ">
-  //             <button
-  //               className="cursor-pointer text-lg text-default-400 active:opacity-50"
-  //               onClick={() =>
-  //                 openEditModal(
-  //                   univer.id,
-  //                   univer.name,
-  //                   univer.abbreviation,
-  //                   univer.address,
-  //                 )
-  //               }
-  //             >
-  //               <EditIcon />
-  //             </button>
-  //           </Tooltip>
-  //           <Tooltip color="danger" content="Delete">
-  //             <button
-  //               className="cursor-pointer text-lg text-danger active:opacity-50"
-  //               onClick={() => openModalDelete(univer.id)}
-  //             >
-  //               <DeleteIcon />
-  //             </button>
-  //           </Tooltip>
-  //         </div>
-  //       );
-  //     default:
-  //       return cellValue;
-  //   }
-  // }, []);
-
   if (error) {
     return <div>Error + {error.message}</div>;
   }
@@ -259,13 +191,13 @@ export default function UniversityTable() {
               <Divider />
               <CardBody>
                 <div className="mb-4">
-                  {university.imageUri ? (
+                  {university.image ? (
                     <Image
                       width={200}
                       height={200}
                       alt={`${university.name} Image`}
-                      src={university.imageUri}
-                      className="rounded-md"
+                      src={university.image}
+                      className="h-40 w-full rounded-md object-cover"
                     />
                   ) : (
                     <Image

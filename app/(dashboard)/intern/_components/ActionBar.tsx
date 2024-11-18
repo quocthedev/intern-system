@@ -26,7 +26,6 @@ import {
 } from "@nextui-org/modal";
 
 import { Select, SelectItem } from "@nextui-org/select";
-import NewInternModal from "@/app/(dashboard)/intern/_components/NewInternModal";
 import APIClient from "@/libs/api-client";
 import { DatePicker } from "@nextui-org/date-picker";
 import { TimeInput } from "@nextui-org/date-input";
@@ -70,7 +69,7 @@ export default function ActionBar({ selectedInterns }: ActionBarProps) {
       <Input
         type="name"
         placeholder="Search by name, group, technology,..."
-        className="h-10 w-[45%]"
+        className="h-10"
       />
 
       <ImportExcelModal />
@@ -79,13 +78,14 @@ export default function ActionBar({ selectedInterns }: ActionBarProps) {
         color="secondary"
         size="md"
         variant="shadow"
-        onPress={(e) => {
+        onPress={() => {
           if (selectedInterns.size === 0) {
             alert("Please select at least one intern");
           } else onOpen();
         }}
+        startContent={<EmailIcon />}
       >
-        <EmailIcon /> Send email
+        Send email
       </Button>
 
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="3xl">
@@ -104,7 +104,6 @@ export default function ActionBar({ selectedInterns }: ActionBarProps) {
                   <form
                     onSubmit={async (e) => {
                       e.preventDefault();
-                      // Append the selected intern's email to the form data
                       const formData = new FormData(
                         e.target as HTMLFormElement,
                       );
@@ -221,7 +220,6 @@ export default function ActionBar({ selectedInterns }: ActionBarProps) {
         </ModalContent>
       </Modal>
 
-      <NewInternModal />
       <Button color="default" size="md" variant="shadow">
         <FilterIcon />
         Filter
