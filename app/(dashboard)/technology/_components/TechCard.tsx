@@ -17,19 +17,21 @@ import {
   Modal,
   ModalBody,
   ModalContent,
+  ModalHeader,
   useDisclosure,
 } from "@nextui-org/modal";
 import { Button } from "@nextui-org/button";
 import { toast } from "react-toastify";
+import { Input } from "@nextui-org/input";
 
 export interface TechnologyInterface {
-  name: String;
+  name: string;
   abbreviation: string;
   imageUri: string;
-  description: String;
-  id: String;
-  dateCreate: String;
-  dateUpdate: String;
+  description: string;
+  id: string;
+  dateCreate: string;
+  dateUpdate: string;
   isDeleted: Boolean;
 }
 
@@ -49,9 +51,24 @@ export const TechCard = () => {
     onOpenChange: onOpenDeleteChange,
   } = useDisclosure();
 
+  const {
+    isOpen: isEditOpen,
+    onOpen: onOpenEdit,
+    onClose: onCloseEdit,
+    onOpenChange: onOpenEditChange,
+  } = useDisclosure();
+
+  const [updateData, setUpdateData] = useState({
+    name: "",
+    abbreviation: "",
+    description: "",
+    imageUri: "",
+  });
+
   const [pageIndex, setPageIndex] = useState(1);
 
   const pageSize = 6;
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const { isLoading, data, refetch } = useQuery({
     queryKey: ["technology", pageIndex, pageSize],
@@ -95,6 +112,27 @@ export const TechCard = () => {
     },
   });
 
+  const updateMutation = useMutation({
+    mutationFn: async () => {
+      await fetch(API_ENDPOINTS.technology + "/" + selectedTech, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updateData),
+      });
+    },
+    onSuccess: () => {
+      toast.success("Updated successfully!");
+      refetch();
+      onCloseEdit();
+    },
+  });
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setSelectedFile(e.target.files[0]);
+    }
+  };
+
   const handleDelete = (id: string) => {
     deleteMutation.mutate(id);
     toast.success("Deleted successfully!");
@@ -104,6 +142,47 @@ export const TechCard = () => {
   const openModalDelete = (id: string) => {
     onOpenDelete();
     setSelectedTech(String(id));
+  };
+
+  const openEditModal = (
+    id: React.SetStateAction<string>,
+    name: string,
+    abbreviation: string,
+    description: string,
+    imageUri: string,
+  ) => {
+    setSelectedTech(id);
+    setUpdateData({ name, abbreviation, description, imageUri });
+    onOpenEdit();
+  };
+
+  const handleUpdate = async () => {
+    updateMutation.mutate();
+
+    if (!selectedFile) return;
+
+    try {
+      const formData = new FormData();
+
+      formData.append("file", selectedFile);
+
+      const response = await fetch(
+        `${API_ENDPOINTS.technology}/${selectedTech}/upload-technology-image`,
+        {
+          method: "PUT",
+          body: formData,
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("File upload failed");
+      }
+
+      await refetch();
+    } catch (error) {
+      toast.error("Error uploading image");
+      console.error(error);
+    }
   };
 
   return (
@@ -124,7 +203,19 @@ export const TechCard = () => {
                       <div className="text-md font-bold">{technology.name}</div>
 
                       <div className="flex space-x-1">
-                        <EditIcon />
+                        <button
+                          onClick={() =>
+                            openEditModal(
+                              technology.id,
+                              technology.name,
+                              technology.abbreviation,
+                              technology.description,
+                              technology.imageUri,
+                            )
+                          }
+                        >
+                          <EditIcon />
+                        </button>
                         <button
                           className="bg-transparent"
                           onClick={() =>
@@ -138,13 +229,28 @@ export const TechCard = () => {
                   </CardHeader>
                   <Divider />
                   <CardBody>
-                    <Image
-                      className="my-3 ml-10"
-                      width={200}
-                      height={200}
-                      alt={`${technology.name} Image`}
-                      src={technology.imageUri}
-                    />
+                    {technology.imageUri ? (
+                      <Image
+                        width={200}
+                        height={200}
+                        alt={`${technology.name} Image`}
+                        src={technology.imageUri}
+                        className="grounded-md h-40 w-full object-cover"
+                      />
+                    ) : (
+                      <Image
+                        width={200}
+                        height={200}
+                        alt="Default University Image"
+                        src="/icons/technology/devops.png"
+                        className="grounded-md h-40 w-full object-cover"
+                      />
+                    )}
+                    <div className="mb-2 mt-2">
+                      <span className="font-semibold">Abbreviation:</span>
+                      {technology.abbreviation}
+                    </div>
+                    <div>{technology.description} </div>
                   </CardBody>
                 </Card>
               ))}
@@ -180,6 +286,75 @@ export const TechCard = () => {
                   <Button onClick={onCloseDelete}>No</Button>
                 </div>
               </ModalBody>
+            </ModalContent>
+          </Modal>
+
+          <Modal isOpen={isEditOpen} onOpenChange={onOpenEditChange}>
+            <ModalContent>
+              <ModalHeader className="mt-2 flex justify-center">
+                Update information
+              </ModalHeader>
+              <ModalBody>
+                <Input
+                  placeholder="Name"
+                  label="Name"
+                  value={updateData.name}
+                  onChange={(e) =>
+                    setUpdateData({ ...updateData, name: e.target.value })
+                  }
+                />
+                <Input
+                  placeholder="Abbreviation"
+                  label="Abbreviation"
+                  className="mt-2"
+                  value={updateData.abbreviation}
+                  onChange={(e) =>
+                    setUpdateData({
+                      ...updateData,
+                      abbreviation: e.target.value,
+                    })
+                  }
+                />
+                <Input
+                  placeholder="Description"
+                  label="Description"
+                  className="mt-2"
+                  value={updateData.description}
+                  onChange={(e) =>
+                    setUpdateData({
+                      ...updateData,
+                      description: e.target.value,
+                    })
+                  }
+                />
+                <Input
+                  placeholder="Description"
+                  label="Description"
+                  className="mt-2"
+                  value={updateData.imageUri}
+                  onChange={(e) =>
+                    setUpdateData({
+                      ...updateData,
+                      imageUri: e.target.value,
+                    })
+                  }
+                />
+                <div className="mb-4 space-x-2">
+                  <input
+                    type="file"
+                    accept=".png"
+                    onChange={handleFileChange}
+                  />
+                </div>
+
+                <div className="mt-2 grid grid-cols-2 gap-5">
+                  <Button onClick={handleUpdate} color="primary">
+                    Update
+                  </Button>
+                  <Button onClick={onCloseEdit}>Cancel</Button>
+                </div>
+              </ModalBody>
+              <div></div>
             </ModalContent>
           </Modal>
         </div>

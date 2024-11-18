@@ -5,6 +5,7 @@ import { FilterIcon } from "@/app/(dashboard)/intern/_components/Icons";
 
 import { Input } from "@nextui-org/input";
 import { CreateIcon } from "@/app/(dashboard)/technology/_components/Icons";
+import NewTechModal from "@/app/(dashboard)/technology/_components/NewTechModal";
 
 export default function ActionBar() {
   return (
@@ -15,10 +16,7 @@ export default function ActionBar() {
         size="md"
       />
       <div className="flex min-w-max gap-3">
-        <Button color="primary" size="md" variant="shadow">
-          <CreateIcon />
-          Create technology
-        </Button>
+        <NewTechModal />
       </div>
       <div className="flex min-w-max gap-3">
         <Button color="default" size="md" variant="shadow">
