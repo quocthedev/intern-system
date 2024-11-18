@@ -66,6 +66,7 @@ export default function UniversityTable() {
   const [pageIndex, setPageIndex] = useState(1);
 
   const pageSize = 6;
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const { isLoading, error, data, refetch } = useQuery({
     queryKey: ["university", pageIndex, pageSize],
@@ -121,6 +122,12 @@ export default function UniversityTable() {
     },
   });
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setSelectedFile(e.target.files[0]);
+    }
+  };
+
   const handleDelete = (id: string) => {
     mutation.mutate(id);
     toast.success("Deleted university successfully!");
@@ -143,8 +150,33 @@ export default function UniversityTable() {
     onOpenEdit();
   };
 
-  const handleUpdate = () => {
+  const handleUpdate = async () => {
     updateMutation.mutate();
+
+    if (!selectedFile) return;
+
+    try {
+      const formData = new FormData();
+
+      formData.append("file", selectedFile);
+
+      const response = await fetch(
+        `${API_ENDPOINTS.university}/${selectedUni}/upload-university-image`,
+        {
+          method: "PUT",
+          body: formData,
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("File upload failed");
+      }
+
+      await refetch();
+    } catch (error) {
+      toast.error("Error uploading image");
+      console.error(error);
+    }
   };
 
   if (error) {
@@ -292,6 +324,29 @@ export default function UniversityTable() {
                 setUpdateData({ ...updateData, address: e.target.value })
               }
             />
+
+            <div className="mb-4">
+              <label
+                htmlFor="file-upload"
+                className="cursor-pointer text-blue-500 hover:text-blue-700"
+              >
+                Change Image
+              </label>
+              <input
+                id="file-upload"
+                type="file"
+                accept=".png"
+                onChange={handleFileChange}
+                className="hidden"
+              />
+              {selectedFile && (
+                <p className="mt-2 text-sm text-gray-600">
+                  <span className="font-semibold">Selected file: </span>
+                  {selectedFile.name}
+                </p>
+              )}
+            </div>
+
             <div className="mt-2 grid grid-cols-2 gap-5">
               <Button onClick={handleUpdate} color="primary">
                 Update
