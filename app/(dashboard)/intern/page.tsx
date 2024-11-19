@@ -5,7 +5,10 @@ import ActionBar from "./_components/ActionBar";
 
 export default function InternPage() {
   const [selectedInterns, setSelectedInterns] = React.useState(
-    new Set<string>([]),
+    new Set<{
+      id: string;
+      fullName: string;
+    }>([]),
   );
 
   return (
@@ -14,10 +17,7 @@ export default function InternPage() {
         Intern management
       </h1>
       <ActionBar selectedInterns={selectedInterns} />
-      <InternTable
-        selectedInterns={selectedInterns}
-        setSelectedInterns={setSelectedInterns}
-      />
+      <InternTable setSelectedInterns={setSelectedInterns} />
     </div>
   );
 }
