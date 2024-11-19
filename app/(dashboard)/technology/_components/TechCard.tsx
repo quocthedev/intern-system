@@ -235,22 +235,25 @@ export const TechCard = () => {
                         height={200}
                         alt={`${technology.name} Image`}
                         src={technology.imageUri}
-                        className="grounded-md h-40 w-full object-cover"
+                        className="grounded-md h-40 w-full object-contain"
                       />
                     ) : (
                       <Image
                         width={200}
                         height={200}
                         alt="Default University Image"
-                        src="/icons/technology/devops.png"
-                        className="grounded-md h-40 w-full object-cover"
+                        src="/icons/technology/noimg.png"
+                        className="grounded-md h-40 w-full object-contain"
                       />
                     )}
                     <div className="mb-2 mt-2">
-                      <span className="font-semibold">Abbreviation:</span>
+                      <span className="font-semibold">Abbreviation: </span>
                       {technology.abbreviation}
                     </div>
-                    <div>{technology.description} </div>
+                    <div className="mb-2 mt-1">
+                      <span className="font-semibold">Description: </span>
+                      {technology.description}
+                    </div>
                   </CardBody>
                 </Card>
               ))}
@@ -327,18 +330,7 @@ export const TechCard = () => {
                     })
                   }
                 />
-                <Input
-                  placeholder="Description"
-                  label="Description"
-                  className="mt-2"
-                  value={updateData.imageUri}
-                  onChange={(e) =>
-                    setUpdateData({
-                      ...updateData,
-                      imageUri: e.target.value,
-                    })
-                  }
-                />
+
                 <div className="mb-4">
                   <label
                     htmlFor="file-upload"
@@ -349,7 +341,7 @@ export const TechCard = () => {
                   <input
                     id="file-upload"
                     type="file"
-                    accept=".png"
+                    accept=".png, .jpg"
                     onChange={handleFileChange}
                     className="hidden"
                   />

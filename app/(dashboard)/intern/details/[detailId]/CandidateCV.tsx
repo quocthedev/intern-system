@@ -3,7 +3,7 @@ import { Button } from "@nextui-org/button";
 import { Spinner } from "@nextui-org/spinner";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -84,6 +84,10 @@ export default function CandidateCVPage() {
     }
   };
 
+  useEffect(() => {
+    handleUpload();
+  }, [selectedFile]);
+
   return (
     <div className="p-4">
       {uploadError && <div style={{ color: "red" }}>{uploadError}</div>}
@@ -91,16 +95,22 @@ export default function CandidateCVPage() {
         <Spinner />
       ) : (
         <div>
-          <div className="mb-4 space-x-2">
-            <Button onPress={handleUpload} disabled={uploading} color="primary">
+          <div className="mb-4 flex justify-end space-x-2">
+            <Button
+              onPress={() => document.getElementById("uploadCV")?.click()}
+              color="primary"
+              size="md"
+            >
               {uploading ? "Uploading..." : "Upload CV"}
             </Button>
 
             <input
+              id="uploadCV"
               type="file"
               accept=".pdf, .docx"
               onChange={handleFileChange}
               disabled={uploading}
+              hidden
             />
           </div>
           <PDFEmbed pdfUrl={candidateData.cvUri} />

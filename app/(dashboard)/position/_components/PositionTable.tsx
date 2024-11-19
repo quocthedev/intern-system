@@ -24,8 +24,8 @@ import APIClient from "@/libs/api-client";
 import { Pagination } from "@nextui-org/pagination";
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import { Divider } from "@nextui-org/divider";
-import AddTechModal from "@/app/(dashboard)/position/_components/AddTechModal";
 import Image from "next/image";
+import { Select, SelectItem } from "@nextui-org/select";
 
 interface Tech {
   id: string;
@@ -63,6 +63,8 @@ export default function PositionTable() {
   } = useDisclosure();
 
   const [selectedPosition, setSelectedPosition] = useState("");
+  const [technologyId, setTechnologyId] = useState<string[]>([]);
+
   const [updateData, setUpdateData] = useState({
     name: "",
     abbreviation: "",
@@ -112,6 +114,21 @@ export default function PositionTable() {
     },
   });
 
+  const { data: techData } = useQuery({
+    queryKey: ["data"],
+    queryFn: async () => {
+      const response = await fetch(API_ENDPOINTS.technology);
+
+      const technology = await response.json();
+
+      return {
+        technologies: technology?.techData?.pagingData || [],
+      };
+    },
+  });
+
+  const technologyData = techData?.technologies || [];
+
   const updateMutation = useMutation({
     mutationFn: async () => {
       await fetch(API_ENDPOINTS.position + "/" + selectedPosition, {
@@ -126,6 +143,39 @@ export default function PositionTable() {
       onCloseEdit();
     },
   });
+
+  const addTechMutation = useMutation({
+    mutationFn: async (techIds: string[]) => {
+      const response = await fetch(
+        `${API_ENDPOINTS.position}/${selectedPosition}/technologies`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(techIds),
+        },
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+
+        throw new Error(errorData.message);
+      }
+
+      return response.json();
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+    onSuccess: () => {
+      refetch();
+    },
+  });
+
+  const handleSelectTechnology = (id: Set<string>) => {
+    setTechnologyId(Array.from(id));
+  };
 
   const handleDelete = (id: string) => {
     mutation.mutate(id);
@@ -142,14 +192,17 @@ export default function PositionTable() {
     id: React.SetStateAction<string>,
     name: string,
     abbreviation: string,
+    technologies: Tech[],
   ) => {
     setSelectedPosition(id);
     setUpdateData({ name, abbreviation });
+    setTechnologyId(technologies.map((tech) => tech.id));
     onOpenEdit();
   };
 
   const handleUpdate = () => {
     updateMutation.mutate();
+    addTechMutation.mutate(technologyId);
   };
 
   if (error) {
@@ -175,6 +228,7 @@ export default function PositionTable() {
                             position.id,
                             position.name,
                             position.abbreviation,
+                            position.tenologies,
                           )
                         }
                       >
@@ -201,23 +255,23 @@ export default function PositionTable() {
                       height={200}
                       alt={`${position.name} Image`}
                       src={position.image}
-                      className="grounded-md h-40 w-full object-cover"
+                      className="h-40 w-full rounded-md object-contain"
                     />
                   ) : (
                     <Image
                       width={200}
                       height={200}
                       alt="Default University Image"
-                      src="/icons/technology/devops.png"
-                      className="grounded-md h-40 w-full object-cover"
+                      src="/icons/technology/noimg.png"
+                      className="h-40 w-full rounded-md object-contain"
                     />
                   )}
                 </div>
                 <div>
-                  <span className="font-semibold">Abbreviation:</span>
+                  <span className="font-semibold">Abbreviation: </span>
                   {position.abbreviation}
                 </div>
-                <div className="mt-2 text-xs">
+                <div className="mt-2">
                   <span className="font-semibold">Technologies:</span>{" "}
                   <span className="whitespace-normal">
                     {position?.tenologies
@@ -286,10 +340,20 @@ export default function PositionTable() {
               }
             />
 
-            <div className="grid grid-cols-2 gap-5">
-              <AddTechModal selectedPositionId={selectedPosition} />
-              <Button color="danger">Remove tech</Button>
-            </div>
+            <Select
+              value={technologyId}
+              placeholder="Select technology"
+              selectionMode="multiple"
+              onSelectionChange={(id) =>
+                handleSelectTechnology(id as Set<string>)
+              }
+            >
+              {technologyData.map((technology: Tech) => (
+                <SelectItem key={technology.id} value={technology.id}>
+                  {technology.name}
+                </SelectItem>
+              ))}
+            </Select>
 
             <div className="mt-2 grid grid-cols-2 gap-5">
               <Button onClick={handleUpdate} color="primary">

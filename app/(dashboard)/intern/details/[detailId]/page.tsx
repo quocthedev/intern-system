@@ -18,7 +18,7 @@ export default function CandidateDetailPage() {
             Candidate management
           </Link>
           <span className="mx-2"> &gt; </span>
-          <span className="font-semibold"> Candidate information </span>
+          <span className="font-semibold"> Candidate detail </span>
         </div>
       </div>
 
@@ -28,6 +28,12 @@ export default function CandidateDetailPage() {
         </Tab>
         <Tab key="2" title="CV">
           <CandidateCVPage />
+        </Tab>
+        <Tab key="3" title="Interview Information">
+          <CandidateInformationPage />
+        </Tab>
+        <Tab key="4" title="Evaluation">
+          <CandidateInformationPage />
         </Tab>
       </Tabs>
     </div>

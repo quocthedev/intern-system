@@ -229,7 +229,7 @@ export default function UniversityTable() {
                       height={200}
                       alt={`${university.name} Image`}
                       src={university.image}
-                      className="h-40 w-full rounded-md object-cover"
+                      className="h-40 w-full rounded-md object-contain"
                     />
                   ) : (
                     <Image
@@ -237,8 +237,8 @@ export default function UniversityTable() {
                       height={200}
                       layout="responsive"
                       alt="Default University Image"
-                      src="/icons/technology/school.png"
-                      className="rounded-md object-cover"
+                      src="/icons/technology/noimg.png"
+                      className="rounded-md object-contain"
                     />
                   )}
                 </div>
@@ -247,8 +247,8 @@ export default function UniversityTable() {
                   <span className="font-bold">Abberviation: </span>
                   {university.abbreviation}
                 </div>
-                <div className="text-xs">
-                  <span className="font-bold">Adress: </span>
+                <div className="mt-2">
+                  <span className="font-bold">Address: </span>
                   {university.address}
                 </div>
               </CardBody>
