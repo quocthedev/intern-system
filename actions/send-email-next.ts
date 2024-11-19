@@ -8,6 +8,7 @@ const apiClient = new APIClient(
   // Add a response interceptor to handle errors
   {
     onRejected: (error) => {
+      console.error(error);
       return {
         data: {
           error: error.message,
@@ -29,17 +30,10 @@ export async function sendEmail(data: FormData) {
   const date = dateTime.toISOString().split("T")[0];
   const time = `${dateTime.getHours()}:${dateTime.getMinutes()}`;
 
-  // Convert the duration to HH:mm format
-  const duration = data
-    .get("duration")
-    ?.toString()
-    .split(":")
-    .slice(0, 2)
-    .join(":") as string;
-
   const format = Number(data.get("format")) as number;
   const location = data.get("location")?.toString() as string;
   const interviewer = data.get("interviewer")?.toString() as string;
+  const duration = data.get("duration")?.toString() as string;
 
   const params = {
     recipients,
@@ -51,6 +45,8 @@ export async function sendEmail(data: FormData) {
     location,
     interviewer,
   };
+
+  console.log(params);
 
   const formData = new FormData();
   formData.append("Subject", params.subject);
