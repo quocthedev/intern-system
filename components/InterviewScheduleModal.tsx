@@ -21,7 +21,7 @@ import React, { Key } from "react";
 import {
   Candidate,
   GetCandidatePaginationResponse,
-} from "../app/(dashboard)/interview-schedule/_types/Candidate";
+} from "@/libs/_types/Candidate";
 import APIClient from "@/libs/api-client";
 import { API_ENDPOINTS } from "@/libs/config";
 import { PaginationResponseSuccess, PagingData } from "@/libs/types";
@@ -33,7 +33,7 @@ import { DatePicker } from "@nextui-org/date-picker";
 
 import { now, getLocalTimeZone } from "@internationalized/date";
 import { Select, SelectItem } from "@nextui-org/select";
-import { GetUsersByRoleResponse } from "../app/(dashboard)/interview-schedule/_types/GetUsersResponse";
+import { GetUsersByRoleResponse } from "../libs/_types/GetUsersResponse";
 import { sendEmail } from "@/actions/send-email-next";
 import { InterviewIcon } from "@/components/icons/ActionBarIcons";
 
