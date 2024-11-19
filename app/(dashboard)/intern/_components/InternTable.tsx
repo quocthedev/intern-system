@@ -7,6 +7,7 @@ import {
   TableColumn,
   TableRow,
   TableCell,
+  Selection,
 } from "@nextui-org/table";
 import { Chip, ChipProps } from "@nextui-org/chip";
 import React, { Key, useMemo, useState } from "react";
@@ -41,8 +42,12 @@ const statusColorMap: Record<string, ChipProps["color"]> = {
 };
 
 export type AccountTableProps = {
-  selectedInterns: Set<string>;
-  setSelectedInterns: (selectedInterns: Set<string>) => void;
+  setSelectedInterns: (
+    selectedInterns: Set<{
+      id: string;
+      fullName: string;
+    }>,
+  ) => void;
 };
 
 type Candidate = {
@@ -67,7 +72,6 @@ const apiClient = new APIClient({
 });
 
 export default function InternsTable({
-  selectedInterns,
   setSelectedInterns,
 }: AccountTableProps) {
   const [pageIndex, setPageIndex] = useState(1);
@@ -235,7 +239,21 @@ export default function InternsTable({
       <Table
         selectionMode="multiple"
         className="w-full"
-        onSelectionChange={(keys) => setSelectedInterns(keys as Set<string>)}
+        onSelectionChange={(keys: Selection) => {
+          // add selected interns name
+          setSelectedInterns(
+            new Set(
+              Array.from(keys as Set<string>).map((key) => {
+                const intern = candidates.find((c) => c.id === key);
+
+                return {
+                  id: key,
+                  fullName: intern?.fullName || "",
+                };
+              }),
+            ),
+          );
+        }}
       >
         <TableHeader columns={columns}>
           {(column) => (
