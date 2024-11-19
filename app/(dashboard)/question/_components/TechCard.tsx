@@ -18,7 +18,7 @@ import { EditIcon } from "@/app/(dashboard)/question/_components/Icons";
 import { Spinner } from "@nextui-org/spinner";
 
 export const TechCard = () => {
-  const defaultId = "b539ab8f-999d-4ee4-bfa5-ce0578063171";
+  const defaultId = "f8f50d79-778f-4f24-bcf4-b5e9eb83ee56";
 
   const [positionId, setPositionId] = useState(defaultId);
 
@@ -51,8 +51,10 @@ export const TechCard = () => {
 
       return technology?.data?.technologies || [];
     },
-    enabled: !!positionId, // Only run query when positionId is set
+    enabled: !!positionId,
   });
+
+  console.log(technologyData);
 
   const handleSelectPosition = async (id: any) => {
     refetchTechnology();
@@ -112,21 +114,27 @@ export const TechCard = () => {
                     <div className="text-md font-bold">
                       {tech.technologyName}
                     </div>
-
-                    <div className="flex space-x-1">
-                      <EditIcon /> <span>Edit</span>
-                    </div>
                   </div>
                 </CardHeader>
                 <Divider />
                 <CardBody>
-                  <Image
-                    className="my-3 ml-10"
-                    width={200}
-                    height={200}
-                    alt="Nodejs Image"
-                    src={tech.imgeSrc}
-                  />
+                  {tech.imageUri ? (
+                    <Image
+                      width={200}
+                      height={200}
+                      alt={`${tech.name} Image`}
+                      src={tech.imageUri}
+                      className="grounded-md h-40 w-full object-contain"
+                    />
+                  ) : (
+                    <Image
+                      width={200}
+                      height={200}
+                      alt="Default Tech Image"
+                      src="/icons/technology/noimg.png"
+                      className="grounded-md h-40 w-full object-contain"
+                    />
+                  )}
 
                   <Divider />
 

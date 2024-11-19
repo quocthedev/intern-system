@@ -239,9 +239,9 @@ function ImportExcelModal() {
                   htmlFor="file-upload"
                   className="flex max-h-10 max-w-full cursor-pointer items-center rounded-lg border bg-green-500 p-3 shadow-sm hover:bg-green-400"
                 >
-                  <ExcelIcon className="h-5 w-5 text-gray-700" />
-                  <span className="ml-2 text-sm font-medium text-gray-700">
-                    {selectedFile ? "Change File" : "Upload File"}
+                  <ExcelIcon className="h-5 w-5 text-white" />
+                  <span className="ml-2 text-sm font-medium text-white">
+                    {selectedFile ? "Change File.xlsx" : "Upload File.xlsx"}
                   </span>
                 </label>
                 <input

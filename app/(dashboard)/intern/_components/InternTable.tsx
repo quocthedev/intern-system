@@ -11,7 +11,6 @@ import {
 import { Chip, ChipProps } from "@nextui-org/chip";
 import React, { Key, useMemo, useState } from "react";
 import {
-  EditIcon,
   DeleteIcon,
   ViewIcon,
 } from "@/app/(dashboard)/intern/_components/Icons";
@@ -50,11 +49,9 @@ type Candidate = {
   avatar: string;
   fullName: string;
   internPeriodViewModel: { name: string };
-  // doB: string;
   phoneNumber: string;
   personalEmail: string;
   cvUri: string;
-  // gpa: number;
   universityViewModel: { name: string };
   status: string;
 };
@@ -72,7 +69,7 @@ export default function InternsTable({
 }: AccountTableProps) {
   const [pageIndex, setPageIndex] = useState(1);
 
-  const pageSize = 5;
+  const pageSize = 8;
 
   const {
     isOpen: isDeleteOpen,
@@ -159,11 +156,20 @@ export default function InternsTable({
       case "avatar":
         return (
           <div>
-            <Image
-              width={50}
-              alt="NextUI hero Image"
-              src={`https://i.${candidate.avatar.slice(8)}.jpeg`}
-            />
+            {candidate.avatar ? (
+              <Image
+                width={60}
+                height={60}
+                alt={`${candidate.fullName} Image`}
+                src={candidate.avatar}
+              />
+            ) : (
+              <Image
+                width={50}
+                alt="Default Candidate Image"
+                src="/icons/technology/noimg.png"
+              />
+            )}
           </div>
         );
       case "fullName":
@@ -210,15 +216,11 @@ export default function InternsTable({
                 </button>
               </Link>
             </Tooltip>
-            <Tooltip content="Edit">
-              <span className="cursor-pointer active:opacity-50">
-                <EditIcon />
-              </span>
-            </Tooltip>
+
             <Tooltip content="Delete">
               <button
                 onClick={() => openDeleteModal(candidate.id)}
-                className="cursor-pointer active:opacity-50"
+                className="-mt-1 cursor-pointer active:opacity-50"
               >
                 <DeleteIcon />
               </button>

@@ -52,16 +52,29 @@ export default function PeriodDetailPage() {
 
   const columnCandidate = [
     {
+      key: "studentCode",
+      label: "Student Code",
+    },
+    {
       key: "fullName",
-      label: "FULL NAME",
+      label: "Full Name",
     },
     {
       key: "phoneNumber",
-      label: "PHONE",
+      label: "Phone",
     },
     {
       key: "personalEmail",
-      label: "EMAIL",
+      label: "Email",
+    },
+    {
+      key: "universityEmail",
+      label: "University Email",
+    },
+
+    {
+      key: "gender",
+      label: "Gender",
     },
     {
       key: "desiredPosition",
@@ -74,6 +87,8 @@ export default function PeriodDetailPage() {
       const cellValue = candidate[columnKey as keyof typeof candidate];
 
       switch (columnKey) {
+        case "studentCode":
+          return <div>{candidate.studentCode}</div>;
         case "fullName":
           return <div>{candidate.fullName}</div>;
         case "doB":
@@ -82,6 +97,11 @@ export default function PeriodDetailPage() {
           return <div>{candidate.phoneNumber}</div>;
         case "personalEmail":
           return <div>{candidate.personalEmail}</div>;
+        case "universityEmail":
+          return <div>{candidate.universityEmail}</div>;
+
+        case "gender":
+          return <div>{candidate.gender}</div>;
         case "desiredPosition":
           return <div>{candidate.desiredPosition}</div>;
         default:
@@ -204,7 +224,7 @@ export default function PeriodDetailPage() {
             </div>
             <div className="flex items-center border-b pb-2">
               <span className="w-1/2 font-medium">Duration :</span>
-              <span>{internPeriodData?.internshipDuration} (months)</span>
+              <span>{internPeriodData?.internshipDuration} months</span>
             </div>
 
             <div className="flex items-center border-b pb-2">
