@@ -15,4 +15,5 @@ export const API_ENDPOINTS = {
   interviewQuestion: `${API_BASE_URL}/interview-question`,
   candidateUser: `${API_BASE_URL}/user/candidate`,
   task: `${API_BASE_URL}/task-info`,
+  user: `${API_BASE_URL}/user`,
 };
