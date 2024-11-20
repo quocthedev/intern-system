@@ -50,7 +50,11 @@ export async function sendEmail(data: FormData) {
 
   const formData = new FormData();
   formData.append("Subject", params.subject);
-  formData.append("Recipients", params.recipients.join(","));
+
+  params.recipients.forEach((recipient) => {
+    formData.append("Recipients", recipient);
+  });
+
   formData.append("InterviewSchedule.InterviewDate", params.date);
   formData.append("InterviewSchedule.StartTime", params.time);
   formData.append("InterviewSchedule.TimeDuration", params.duration);
