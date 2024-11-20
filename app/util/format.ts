@@ -6,3 +6,9 @@ export const formatedDate = (date: string) => {
 
   return `${day}/${month}/${year}`;
 };
+
+export const formatedTimeToMinutes = (time: string): number => {
+  const [hours, minutes] = time.split(":").map(Number);
+
+  return hours * 60 + minutes;
+};

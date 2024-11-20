@@ -16,28 +16,20 @@ import { API_ENDPOINTS } from "@/libs/config";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-interface UniversityData {
-  name: string;
-  abbreviation: string;
-  address: string;
-}
-
 export default function NewUniverModal() {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [name, setName] = useState("");
   const [abbreviation, setAbbreviation] = useState("");
   const [address, setAddress] = useState("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const queryClient = useQueryClient();
 
   const { mutate } = useMutation({
-    mutationFn: async (newUni: UniversityData) => {
+    mutationFn: async (newUni: FormData) => {
       const response = await fetch(API_ENDPOINTS.university, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newUni),
+        body: newUni,
       });
 
       if (!response.ok) {
@@ -61,12 +53,25 @@ export default function NewUniverModal() {
     },
   });
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setSelectedFile(e.target.files[0]);
+    }
+  };
+
   const handleSubmit = () => {
-    mutate({
-      name,
-      abbreviation,
-      address,
-    });
+    if (!name || !abbreviation || !address || !selectedFile) {
+      toast.error("All fields are required and select an image!");
+      return;
+    }
+
+    const formData = new FormData();
+
+    formData.append("name", name);
+    formData.append("abbreviation", abbreviation);
+    formData.append("address", address);
+    formData.append("image", selectedFile);
+    mutate(formData);
   };
 
   return (
@@ -116,6 +121,27 @@ export default function NewUniverModal() {
                   onChange={(e) => setAddress(e.target.value)}
                   isRequired
                 />
+              </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="file-upload"
+                  className="cursor-pointer text-blue-500 hover:text-blue-700"
+                >
+                  Upload Image
+                </label>
+                <input
+                  id="file-upload"
+                  type="file"
+                  accept=".png, .jpg"
+                  onChange={handleFileChange}
+                  className="hidden"
+                />
+                {selectedFile && (
+                  <p className="mt-2 text-sm text-gray-600">
+                    <span className="font-semibold">Selected file: </span>
+                    {selectedFile.name}
+                  </p>
+                )}
               </div>
             </ModalBody>
             <ModalFooter>

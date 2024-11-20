@@ -13,30 +13,21 @@ import { Input } from "@nextui-org/input";
 import { AddIcon } from "@/app/(dashboard)/position/_components/Icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { API_ENDPOINTS } from "@/libs/config";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { error } from "console";
-
-interface UniversityData {
-  name: string;
-  abbreviation: string;
-}
+import { toast } from "react-toastify";
 
 export default function NewPostionModal() {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [name, setName] = useState("");
   const [abbreviation, setAbbreviation] = useState("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const queryClient = useQueryClient();
 
-  const { mutate } = useMutation({
-    mutationFn: async (newUni: UniversityData) => {
+  const { mutate, isPending } = useMutation({
+    mutationFn: async (newPosition: FormData) => {
       const response = await fetch(API_ENDPOINTS.position, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newUni),
+        body: newPosition,
       });
 
       if (!response.ok) {
@@ -59,11 +50,24 @@ export default function NewPostionModal() {
     },
   });
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setSelectedFile(e.target.files[0]);
+    }
+  };
+
   const handleSubmit = () => {
-    mutate({
-      name,
-      abbreviation,
-    });
+    if (!name || !abbreviation || !selectedFile) {
+      toast.error("Please fill out all fields and select an image.");
+      return;
+    }
+
+    const formData = new FormData();
+
+    formData.append("name", name);
+    formData.append("abbreviation", abbreviation);
+    formData.append("image", selectedFile);
+    mutate(formData);
   };
 
   return (
@@ -105,10 +109,34 @@ export default function NewPostionModal() {
                   isRequired
                 />
               </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="file-upload"
+                  className="cursor-pointer text-blue-500 hover:text-blue-700"
+                >
+                  Upload Image
+                </label>
+                <input
+                  id="file-upload"
+                  type="file"
+                  accept=".png, .jpg"
+                  onChange={handleFileChange}
+                  className="hidden"
+                />
+                {selectedFile && (
+                  <p className="mt-2 text-sm text-gray-600">
+                    <span className="font-semibold">Selected file: </span>
+                    {selectedFile.name}
+                  </p>
+                )}
+              </div>
             </ModalBody>
             <ModalFooter>
               <Button color="primary" onPress={handleSubmit} className="w-full">
                 Submit
+              </Button>
+              <Button onPress={onClose} className="w-full">
+                Cancel
               </Button>
             </ModalFooter>
           </>
