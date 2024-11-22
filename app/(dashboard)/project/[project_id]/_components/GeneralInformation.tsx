@@ -11,6 +11,7 @@ export type GeneralInformationProps = {
     startDate: string;
     releaseDate: string;
     listPosition: { name: string }[];
+    listTechnology: { abbreviation: string }[];
     className?: string;
   };
 };
@@ -43,9 +44,12 @@ export default function GeneralInformation({
           <p>Release Date: {project.releaseDate.split("T")[0]}</p>
         </div>
 
-        <p>
+        <p className="flex gap-3">
           Position:{" "}
-          {project.listPosition.map((position, id) => (
+          <span className="text-blue-500">
+            {project.listPosition.map((position) => position.name).join(" ")}
+          </span>
+          {/* {project.listPosition.map((position, id) => (
             <Link key={position.name} href={"#"}>
               {position.name}
               {
@@ -57,9 +61,16 @@ export default function GeneralInformation({
                 id !== project.listPosition.length - 1 ? " " : ""
               }
             </Link>
-          ))}
+          ))} */}
         </p>
-        <p>Tech Stack: </p>
+        <p className="flex gap-3">
+          Tech Stack:{" "}
+          <span className="text-blue-500">
+            {project.listTechnology
+              .map((technology) => technology.abbreviation)
+              .join(", ")}
+          </span>
+        </p>
       </div>
     </div>
   );

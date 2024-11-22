@@ -18,12 +18,13 @@ import {
   TableHeader,
   TableRow,
 } from "@nextui-org/table";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import React from "react";
 import { CandidateUser, GetCandidateUsersResponse } from "../_types/Candidate";
 import APIClient from "@/libs/api-client";
 import { API_ENDPOINTS } from "@/libs/config";
 import { addNewMembers } from "@/actions/add-new-members";
+import { toast } from "react-toastify";
 
 const apiClient = new APIClient({
   onFulfilled: (response) => response,
@@ -42,6 +43,7 @@ export default function NewMemberModal(props: NewMemberModalProps) {
   const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
 
   const roleMapping: Record<string, string> = {};
+  const queryClient = useQueryClient();
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["members"],
@@ -67,12 +69,20 @@ export default function NewMemberModal(props: NewMemberModalProps) {
   });
 
   const submitAddNewMembers = async () => {
-    const candidates = Array.from(selectedKeys).map((key) => ({
-      userId: key,
-      role: Number(roleMapping[key] || "4"),
-    }));
+    try {
+      const candidates = Array.from(selectedKeys).map((key) => ({
+        userId: key,
+        role: Number(roleMapping[key] || "4"),
+      }));
 
-    await addNewMembers(props.projectId, candidates);
+      await addNewMembers(props.projectId, candidates);
+
+      toast.success("New members added successfully");
+
+      queryClient.invalidateQueries();
+    } catch (error) {
+      toast.error("Member already added in project");
+    }
   };
 
   const columns = [

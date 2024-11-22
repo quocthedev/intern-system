@@ -118,12 +118,12 @@ export const TechCard = () => {
                 </CardHeader>
                 <Divider />
                 <CardBody>
-                  {tech.imageUri ? (
+                  {tech.image ? (
                     <Image
                       width={200}
                       height={200}
                       alt={`${tech.name} Image`}
-                      src={tech.imageUri}
+                      src={tech.image}
                       className="grounded-md h-40 w-full object-contain"
                     />
                   ) : (
@@ -135,8 +135,6 @@ export const TechCard = () => {
                       className="grounded-md h-40 w-full object-contain"
                     />
                   )}
-
-                  <Divider />
 
                   <CardFooter className="flex justify-between text-sm">
                     <Link href={`/question/${tech.id}`}>

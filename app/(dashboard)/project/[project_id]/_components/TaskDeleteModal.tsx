@@ -11,12 +11,15 @@ import React from "react";
 import { DeleteIcon, EditIcon } from "../../_components/Icons";
 import { deleteTask } from "@/actions/delete-task";
 import { TrashIcon } from "@/components/icons/OtherIcons";
+import { toast } from "react-toastify";
+import { useQueryClient } from "@tanstack/react-query";
 export type TaskModalProps = {
   taskId: string;
 };
 
 export default function TaskDeleteModal(props: TaskModalProps) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const queryClient = useQueryClient();
 
   return (
     <>
@@ -39,12 +42,24 @@ export default function TaskDeleteModal(props: TaskModalProps) {
                 <Button
                   onClick={() => {
                     deleteTask(props.taskId);
+                    queryClient.invalidateQueries();
+                    toast.success("Task deleted successfully");
+                    onClose();
                   }}
                   fullWidth
                   variant="shadow"
                   color="danger"
                 >
                   Delete
+                </Button>
+                <Button
+                  onClick={() => {
+                    onClose();
+                  }}
+                  fullWidth
+                  variant="shadow"
+                >
+                  Cancel
                 </Button>
               </ModalFooter>
             </>

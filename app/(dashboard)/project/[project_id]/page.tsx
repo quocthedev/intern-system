@@ -7,6 +7,8 @@ import GeneralInformation from "./_components/GeneralInformation";
 import RelatedUsers from "./_components/RelatedUsers";
 import TaskList from "./_components/TaskList";
 import { useState } from "react";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const apiClient = new APIClient({
   onFulfilled: (response) => response,
@@ -84,6 +86,13 @@ export default function ProjectDetails({
           />
         </div>
       )}
+      <ToastContainer
+        position="bottom-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        closeOnClick
+        draggable
+      />
     </div>
   );
 }
