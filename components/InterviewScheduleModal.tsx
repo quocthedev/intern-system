@@ -36,6 +36,7 @@ import { Select, SelectItem } from "@nextui-org/select";
 import { GetUsersByRoleResponse } from "../libs/_types/GetUsersResponse";
 import { sendEmail } from "@/actions/send-email-next";
 import { InterviewIcon } from "@/components/icons/ActionBarIcons";
+import { toast } from "react-toastify";
 
 const apiClient = new APIClient({
   // onFulfilled: (response) => response,
@@ -209,8 +210,7 @@ export default function InterviewScheduleModal(
           console.log(props.candidates);
           if (!props.isAddingCandidate) {
             if (props.candidates?.length === 0) {
-              console.log("test");
-              alert(
+              toast.warning(
                 "Please select at least one candidate to schedule interview",
               );
             } else {
@@ -258,7 +258,7 @@ export default function InterviewScheduleModal(
                       );
                       formData.append("duration", duration);
                       await sendEmail(formData);
-
+                      toast.success("Interview email send successfully! 🎉");
                       onClose();
                     }}
                   >
@@ -393,7 +393,7 @@ export default function InterviewScheduleModal(
                       fullWidth
                       type="submit"
                     >
-                      Schedule Interview
+                      {isLoading ? "Sending..." : "Schedule Interview"}
                     </Button>
                   </form>
                 ) : (

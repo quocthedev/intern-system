@@ -13,6 +13,7 @@ export async function deleteMember(projectId: string, memberId: string) {
   const response = await apiClient.delete(
     `/project/${projectId}/related-user/${memberId}`,
     {},
+    
   );
 
   return response;

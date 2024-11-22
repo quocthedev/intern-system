@@ -10,6 +10,8 @@ import {
 import React from "react";
 import { TrashIcon } from "@/components/icons/OtherIcons";
 import { deleteMember } from "@/actions/delete-member";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 export type MemberDeleteModalProps = {
   projectId: string;
   memberId: string;
@@ -17,6 +19,7 @@ export type MemberDeleteModalProps = {
 
 export default function MemberDeleteModal(props: MemberDeleteModalProps) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const queryClient = useQueryClient();
 
   return (
     <>
@@ -39,12 +42,18 @@ export default function MemberDeleteModal(props: MemberDeleteModalProps) {
                 <Button
                   onClick={() => {
                     deleteMember(props.projectId, props.memberId);
+                    toast.success("Member deleted successfully");
+                    queryClient.invalidateQueries();
+                    onClose();
                   }}
                   fullWidth
                   variant="shadow"
                   color="danger"
                 >
                   Delete
+                </Button>
+                <Button fullWidth onPress={() => onClose()}>
+                  Cancel
                 </Button>
               </ModalFooter>
             </>

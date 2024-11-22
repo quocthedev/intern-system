@@ -16,6 +16,8 @@ import { createNewTask } from "@/actions/create-new-task";
 import { EditIcon } from "../../_components/Icons";
 import { Task } from "../../_types/Project";
 import { updateTask } from "@/actions/update-task";
+import { toast } from "react-toastify";
+import { useQueryClient } from "@tanstack/react-query";
 
 export type TaskModalProps = {
   mode: "create" | "edit";
@@ -25,7 +27,8 @@ export type TaskModalProps = {
 };
 
 export default function TaskModal(props: TaskModalProps) {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+  const queryClient = useQueryClient();
 
   const priorityOptions = [
     {
@@ -99,31 +102,39 @@ export default function TaskModal(props: TaskModalProps) {
   const submitTask = async (formData: FormData) => {
     formData.append("projectId", props.projectId);
 
-    if (props.mode === "edit") {
-      formData.append("taskId", props.selectedTaskInfo?.id as string);
+    try {
+      if (props.mode === "edit") {
+        formData.append("taskId", props.selectedTaskInfo?.id as string);
+        await updateTask(formData);
+        toast.success("Task updated successfully!");
+        queryClient.invalidateQueries();
+      } else {
+        const startDate = new Date(
+          formData.get("startDate")?.toString().split("T")[0] as string,
+        ).getTime();
+        const dueDate = new Date(
+          formData.get("dueDate")?.toString().split("T")[0] as string,
+        ).getTime();
 
-      await updateTask(formData);
-    } else {
-      // Make sure due date is after start date
-      const startDate = new Date(
-        formData.get("startDate")?.toString().split("T")[0] as string,
-      ).getTime();
-      const dueDate = new Date(
-        formData.get("dueDate")?.toString().split("T")[0] as string,
-      ).getTime();
+        if (startDate < Date.now()) {
+          toast.warning("Start date must be in the future");
+          return;
+        }
 
-      // Make sure start date is not in the past
-      if (startDate < Date.now()) {
-        alert("Start date must be in the future");
-        return;
+        if (startDate >= dueDate) {
+          toast.warning("Due date must be after start date");
+          return;
+        }
+
+        await createNewTask(formData);
+        toast.success("Task created successfully!");
       }
-
-      if (startDate >= dueDate) {
-        alert("Due date must be after start date");
-        return;
-      }
-
-      await createNewTask(formData);
+      queryClient.invalidateQueries();
+      onClose();
+    } catch (error) {
+      toast.error(
+        "An error occurred while creating the task. Please try again.",
+      );
     }
   };
 
@@ -307,9 +318,14 @@ export default function TaskModal(props: TaskModalProps) {
                     )
                   }
 
-                  <Button color="primary" fullWidth type="submit">
-                    Submit
-                  </Button>
+                  <div className="grid grid-cols-2 gap-4">
+                    <Button color="primary" fullWidth type="submit">
+                      Submit
+                    </Button>
+                    <Button fullWidth onPress={onClose}>
+                      Cancel
+                    </Button>
+                  </div>
                 </form>
               </ModalBody>
             </>
