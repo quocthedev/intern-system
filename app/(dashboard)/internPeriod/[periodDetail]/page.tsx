@@ -99,7 +99,6 @@ export default function PeriodDetailPage() {
           return <div>{candidate.personalEmail}</div>;
         case "universityEmail":
           return <div>{candidate.universityEmail}</div>;
-
         case "gender":
           return <div>{candidate.gender}</div>;
         case "desiredPosition":
