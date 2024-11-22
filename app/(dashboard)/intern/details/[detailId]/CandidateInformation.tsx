@@ -169,13 +169,24 @@ export default function CandidateInformationPage() {
     <div className="p-8">
       <div className="flex gap-4">
         <div className="flex w-1/3 flex-col items-center">
-          <Image
-            width={200}
-            height={200}
-            alt="Avatar"
-            src={candidateData.avatar}
-            className="mb-4 rounded-2xl object-contain"
-          />
+          {candidateData.image ? (
+            <Image
+              width={200}
+              height={200}
+              alt={`${candidateData.name} Image`}
+              src={candidateData.avatar}
+              className="h-40 w-full rounded-md object-contain"
+            />
+          ) : (
+            <Image
+              width={200}
+              height={200}
+              layout="responsive"
+              alt="Default Candidate Image"
+              src="/icons/technology/noimg.png"
+              className="rounded-md object-contain"
+            />
+          )}
 
           <div>
             <Button

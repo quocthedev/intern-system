@@ -13,6 +13,7 @@ import {
   CalendarIcon,
   ScheduleIcon,
 } from "@/app/(dashboard)/intern/_components/Icons";
+import { Divider } from "@nextui-org/divider";
 
 interface InterViewScheduleInterface {
   id: string;
@@ -24,6 +25,8 @@ interface InterViewScheduleInterface {
   interviewLocation: string;
   createdByUserId: string;
   interviewerId: string;
+  createdByUser: any;
+  interviewer: any;
 }
 
 const apiClient = new APIClient({
@@ -63,32 +66,46 @@ export default function InterViewCard() {
     },
   });
 
-  console.log(data);
+  const handlePress = (id: string) => {
+    window.open(`interview/details/${id}`);
+  };
 
   return (
     <div>
-      <div className="grid h-full grid-cols-3 gap-5">
+      <div className="grid h-full grid-cols-3 gap-6">
         {data?.interviewSchedules &&
           data.interviewSchedules.map(
             (interview: InterViewScheduleInterface) => (
-              <Card key={interview.id as string} className="w-full">
+              <Card
+                key={interview.id as string}
+                className="w-full"
+                shadow="lg"
+                onPress={() => handlePress(interview.id)}
+                isPressable
+              >
                 <CardHeader>
                   <div>
-                    <div className="text-lg font-semibold">Lê Kỳ Quốc</div>
-                    <div className="text-md mt-1">{interview.title}</div>
+                    <div className="text-md mt-1 text-lg font-semibold">
+                      {interview.title}
+                    </div>
                   </div>
                 </CardHeader>
+                <Divider />
                 <CardBody>
                   <div className="mb-2 grid grid-cols-2">
                     <div className="flex items-center gap-2">
-                      {" "}
-                      <CalendarIcon className="mb-1" />
+                      <span className="font-semibold">Start date: </span>
                       {formatedDate(interview.interviewDate)}
                     </div>
-                    <div className="flex items-center gap-2">
-                      <ScheduleIcon />
+                    <div className="ml-4 flex items-center gap-2">
+                      <span className="font-semibold">Start time: </span>
                       {interview.startTime}
                     </div>
+                  </div>
+                  <div className="mb-2 mt-1">
+                    {" "}
+                    <span className="font-semibold">Interviewed by: </span>
+                    {interview.interviewer?.fullName}
                   </div>
 
                   <div className="mb-2 mt-1">
@@ -96,7 +113,7 @@ export default function InterViewCard() {
                     {formatedTimeToMinutes(interview.timeDuration)} mins
                   </div>
                   <div className="mb-2 mt-1 flex gap-2">
-                    <span className="font-semibold">Interview format: </span>
+                    <span className="font-semibold">Interview type: </span>
                     <div className="text-blue-600">
                       {interview.interviewFormat}
                     </div>
@@ -114,9 +131,6 @@ export default function InterViewCard() {
                     ) : (
                       interview.interviewLocation
                     )}
-                  </div>
-                  <div className="mb-2 mt-1">
-                    <span>Created by: QKL</span>
                   </div>
                 </CardBody>
               </Card>

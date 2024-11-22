@@ -19,6 +19,7 @@ import { ExcelIcon } from "@/app/(dashboard)/intern/_components/Icons";
 import NewPeriodModal from "@/app/(dashboard)/internPeriod/_components/NewPeriodModal";
 import { formatedDate } from "@/app/util";
 import { Divider } from "@nextui-org/divider";
+import Link from "next/link";
 
 function ImportExcelModal() {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
@@ -140,10 +141,29 @@ function ImportExcelModal() {
               </div>
             </ModalHeader>
             <Divider />
-            <ModalBody className="gap-4">
+            <ModalBody className="mt-2 gap-4">
               <div className="grid gap-5">
                 <div className="grid gap-5">
                   <div className="gap-5">
+                    <Select
+                      items={universityData}
+                      placeholder="Select university"
+                      labelPlacement="outside"
+                      label="University"
+                      className="mb-10 max-w-full"
+                      onSelectionChange={(id) => {
+                        const universityId = Array.from(id).join(",");
+
+                        setSelectedUniversityId(universityId);
+                      }}
+                    >
+                      {(university: University) => (
+                        <SelectItem key={university.id} value={university.id}>
+                          {university.name}
+                        </SelectItem>
+                      )}
+                    </Select>
+
                     <Select
                       items={internperiodData}
                       placeholder="Select an intern period"
@@ -213,26 +233,11 @@ function ImportExcelModal() {
                     )}
                   </div>
                 </div>
-
-                <Select
-                  items={universityData}
-                  placeholder="Select university"
-                  labelPlacement="outside"
-                  label="University"
-                  className="max-w-full"
-                  onSelectionChange={(id) => {
-                    const universityId = Array.from(id).join(",");
-
-                    setSelectedUniversityId(universityId);
-                  }}
-                >
-                  {(university: University) => (
-                    <SelectItem key={university.id} value={university.id}>
-                      {university.name}
-                    </SelectItem>
-                  )}
-                </Select>
               </div>
+
+              <Link href="/files/Example_Excel.xlsx" className="text-blue-500">
+                <div>Download example file</div>
+              </Link>
 
               <div>
                 <label
