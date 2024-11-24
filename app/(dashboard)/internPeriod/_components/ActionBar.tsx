@@ -8,6 +8,7 @@ import {
 
 import { Input } from "@nextui-org/input";
 import NewPeriodModal from "@/app/(dashboard)/internPeriod/_components/NewPeriodModal";
+import ImportExcelModal from "@/app/(dashboard)/intern/_components/ImportExcelModal";
 
 // export type ActionBarProps = {
 //   selectedInterns: any[];
@@ -19,6 +20,7 @@ export default function ActionBar() {
       <Input type="name" placeholder="Search by name, group, technology,..." />
       <div className="flex min-w-max gap-3">
         <NewPeriodModal />
+        <ImportExcelModal />
         <Button color="default" size="md" variant="shadow">
           <FilterIcon />
           Filter

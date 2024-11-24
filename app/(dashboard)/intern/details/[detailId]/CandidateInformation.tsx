@@ -153,7 +153,7 @@ export default function CandidateInformationPage() {
         throw new Error("File upload failed");
       }
 
-      await refetch();
+      refetch();
       toast.success("Avatar change successfully!");
     } catch (error) {
       toast.error("Error changing avatar");
@@ -168,27 +168,26 @@ export default function CandidateInformationPage() {
   return (
     <div className="p-8">
       <div className="flex gap-4">
-        <div className="flex w-1/3 flex-col items-center">
+        <div className="mb-4 flex w-1/3 flex-col items-center">
           {candidateData.image ? (
-            <Image
+            <img
               width={200}
               height={200}
-              alt={`${candidateData.name} Image`}
-              src={candidateData.avatar}
-              className="h-40 w-full rounded-md object-contain"
+              alt="Default Candidate"
+              src="/icons/technology/noimg.png"
+              className="rounded-full object-contain"
             />
           ) : (
-            <Image
+            <img
               width={200}
               height={200}
-              layout="responsive"
-              alt="Default Candidate Image"
-              src="/icons/technology/noimg.png"
-              className="rounded-md object-contain"
+              alt={`${candidateData.name}`}
+              src={candidateData.avatar}
+              className="rounded-2xl object-contain"
             />
           )}
 
-          <div>
+          <div className="mt-4">
             <Button
               onPress={() => document.getElementById("uploadImage")?.click()}
               color="primary"
@@ -206,7 +205,7 @@ export default function CandidateInformationPage() {
             />
           </div>
 
-          <div className="font-medium text-gray-600">
+          <div className="mt-2 font-medium text-gray-600">
             Status:{" "}
             {candidateData?.status === "Approved" ? (
               <span className="text-green-500">{candidateData?.status}</span>

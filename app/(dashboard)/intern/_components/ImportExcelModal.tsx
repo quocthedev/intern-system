@@ -46,6 +46,13 @@ function ImportExcelModal() {
   };
 
   const handleFileUpload = async () => {
+    if (!selectedUniversityId) {
+      setAlertMessage("Please select a university before uploading.");
+    }
+
+    if (!selectedInternPeriodId) {
+      setAlertMessage("Please select an intern period before uploading.");
+    }
     if (!selectedFile) {
       setAlertMessage("Please selected file first!");
     }
@@ -135,7 +142,7 @@ function ImportExcelModal() {
         <ModalContent>
           <>
             <ModalHeader className="flex items-center justify-between">
-              <span>Add New Intern</span>
+              <span>Import candidate list</span>
               <div className="mr-4">
                 <NewPeriodModal />
               </div>
@@ -151,6 +158,7 @@ function ImportExcelModal() {
                       labelPlacement="outside"
                       label="University"
                       className="mb-10 max-w-full"
+                      isRequired={true}
                       onSelectionChange={(id) => {
                         const universityId = Array.from(id).join(",");
 
@@ -170,6 +178,7 @@ function ImportExcelModal() {
                       labelPlacement="outside"
                       label="Intern Period"
                       className="max-w-full"
+                      isRequired={true}
                       onSelectionChange={(id) => {
                         const internPeriodId = Array.from(id).join(",");
 

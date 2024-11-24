@@ -1,4 +1,5 @@
 "use client";
+import { ViewIcon } from "@/app/(dashboard)/intern/_components/Icons";
 import { formatedDate, formatedTimeToMinutes } from "@/app/util/format";
 import { API_ENDPOINTS } from "@/libs/config";
 import { Chip, ChipProps } from "@nextui-org/chip";
@@ -12,6 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@nextui-org/table";
+import { Tooltip } from "@nextui-org/tooltip";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -72,8 +74,14 @@ export default function InterViewDetailPage() {
       key: "status",
       label: "Status",
     },
+    {
+      key: "action",
+      label: "Action",
+    },
   ];
-
+  const handleMove = (id: string) => {
+    window.open(`/intern/details/${id}`);
+  };
   const renderCellCandidate = React.useCallback(
     (candidate: any, columnKey: React.Key) => {
       const cellValue = candidate[columnKey as keyof typeof candidate];
@@ -101,6 +109,17 @@ export default function InterViewDetailPage() {
             >
               {candidate.status}
             </Chip>
+          );
+        case "action":
+          return (
+            <Tooltip content="View candidate detail">
+              <button
+                className="cursor-pointer"
+                onClick={() => handleMove(candidate.candidateId)}
+              >
+                <ViewIcon />
+              </button>
+            </Tooltip>
           );
         default:
           return cellValue;

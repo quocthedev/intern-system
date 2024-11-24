@@ -244,7 +244,7 @@ export default function QuestionBankPage() {
         case "imageUri":
           return <div>{question.imageUri}</div>;
         case "difficulty":
-          return <div className="text-center">{question.difficulty}</div>;
+          return <div>{question.difficulty}</div>;
         case "actions":
           return (
             <div className="relative flex items-center gap-2">
