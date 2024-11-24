@@ -5,8 +5,12 @@ import { Tabs, Tab } from "@nextui-org/tabs";
 import CandidateInformationPage from "@/app/(dashboard)/intern/details/[detailId]/CandidateInformation";
 import Link from "next/link";
 import CandidateCVPage from "@/app/(dashboard)/intern/details/[detailId]/CandidateCV";
+import InterviewInformation from "../../_components/InterviewInformation";
+import { useParams } from "next/navigation";
 
 export default function CandidateDetailPage() {
+  const params = useParams();
+  const candidateId = params.detailId as string;
   return (
     <div className="flex h-full w-full flex-col p-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4">
@@ -30,7 +34,7 @@ export default function CandidateDetailPage() {
           <CandidateCVPage />
         </Tab>
         <Tab key="3" title="Interview Information">
-          <CandidateInformationPage />
+          <InterviewInformation candidateId={candidateId} />
         </Tab>
         <Tab key="4" title="Evaluation">
           <CandidateInformationPage />
