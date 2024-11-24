@@ -29,6 +29,10 @@ export default function RelatedUsers(props?: RelatedUsersProps) {
         return <p className="text-sm">{item.fullName}</p>;
       case "role":
         return <p className="text-sm">{item.role}</p>;
+      case "totalTasks":
+        return <p className="text-sm">{item.totalTask}</p>;
+      case "completedTasks":
+        return <p className="text-sm">{item.totalTaskComplete}</p>;
       case "actions":
         return (
           <div className="flex gap-1">

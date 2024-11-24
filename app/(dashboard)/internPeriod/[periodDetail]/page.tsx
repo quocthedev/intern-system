@@ -1,6 +1,9 @@
 "use client";
 
-import { CandidateIcon } from "@/app/(dashboard)/internPeriod/_components/Icons";
+import {
+  CandidateIcon,
+  ViewIcon,
+} from "@/app/(dashboard)/internPeriod/_components/Icons";
 import { formatedDate } from "@/app/util";
 import { API_ENDPOINTS } from "@/libs/config";
 import { Accordion, AccordionItem } from "@nextui-org/accordion";
@@ -68,17 +71,16 @@ export default function PeriodDetailPage() {
       label: "Email",
     },
     {
-      key: "universityEmail",
-      label: "University Email",
-    },
-
-    {
       key: "gender",
       label: "Gender",
     },
     {
       key: "desiredPosition",
       label: "Desired Position",
+    },
+    {
+      key: "action",
+      label: "ACTION",
     },
   ];
 
@@ -101,8 +103,19 @@ export default function PeriodDetailPage() {
           return <div>{candidate.universityEmail}</div>;
         case "gender":
           return <div>{candidate.gender}</div>;
-        case "desiredPosition":
-          return <div>{candidate.desiredPosition}</div>;
+        case "action":
+          return (
+            <div>
+              <Tooltip content="View detail">
+                <button
+                  className="cursor-pointer"
+                  onClick={() => window.open(`/intern/details/${candidate.id}`)}
+                >
+                  <ViewIcon />
+                </button>
+              </Tooltip>
+            </div>
+          );
         default:
           return cellValue;
       }

@@ -81,7 +81,7 @@ export default function NewMemberModal(props: NewMemberModalProps) {
 
       queryClient.invalidateQueries();
     } catch (error) {
-      toast.error("Member already added in project");
+      console.log(error);
     }
   };
 
