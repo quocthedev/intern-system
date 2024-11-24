@@ -17,4 +17,5 @@ export const API_ENDPOINTS = {
   task: `${API_BASE_URL}/task-info`,
   user: `${API_BASE_URL}/user`,
   interviewSchedule: `${API_BASE_URL}/interview-schedule`,
+  questionTemplate: `${API_BASE_URL}/question-template`,
 };
