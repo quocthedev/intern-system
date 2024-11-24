@@ -66,9 +66,16 @@ export default class APIClient {
     };
 
     if (auth) {
-      const { cookies } = await import("next/headers");
-      // Add the Authorization header
-      const accessToken = cookies().get("accessToken")?.value;
+      let accessToken: string | null;
+
+      if (typeof window === "undefined") {
+        const { cookies } = await import("next/headers");
+        // Add the Authorization header
+
+        accessToken = cookies().get("accessToken")?.value || null;
+      } else {
+        accessToken = (await getCookie("accessToken")) || null;
+      }
 
       if (!accessToken) {
         throw new Error("Access token is missing");
