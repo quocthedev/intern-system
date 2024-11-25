@@ -14,10 +14,13 @@ import { Link } from "@nextui-org/link";
 import { cn } from "@nextui-org/theme";
 import { usePathname } from "next/navigation";
 import { Accordion, AccordionItem } from "@nextui-org/accordion";
+import { getCookie } from "@/app/util";
 
 type NavigationProps = {
   className?: string;
 };
+
+const role = getCookie("userRole");
 
 export const AccordionItems = [
   {
@@ -79,6 +82,107 @@ export const NavigationItems = [
     icon: AccountManagementIcon,
   },
 ];
+
+const labelsToRemoveHR = [
+  "Projects",
+  "Questions",
+  "Interns",
+  "Positions",
+  "Technologies",
+  "Accounts",
+  "Interviews",
+];
+
+const labelsToRemoveMentor = [
+  "Projects",
+  "Questions",
+  "Interns",
+  "Positions",
+  "Technologies",
+  "Accounts",
+  "Interviews",
+];
+
+const labelsToRemoveUniver = [
+  "Projects",
+  "Questions",
+  "Interns",
+  "Positions",
+  "Technologies",
+  "Accounts",
+  "Interviews",
+];
+
+if (role === "HR Manager") {
+  for (const label of labelsToRemoveHR) {
+    const index = NavigationItems.findIndex((item) => item.label === label);
+
+    if (index !== -1) {
+      NavigationItems.splice(index, 1);
+    }
+  }
+  NavigationItems.push(
+    {
+      label: "Candidates",
+      href: "/intern",
+      icon: InternManagementIcon,
+    },
+    {
+      label: "Intern periods",
+      href: "/internPeriod",
+      icon: InternManagementIcon,
+    },
+    {
+      label: "Interviews",
+      href: "/interview",
+      icon: InterviewManagementIcon,
+    },
+  );
+}
+
+if (role === "Mentor") {
+  for (const label of labelsToRemoveMentor) {
+    const index = NavigationItems.findIndex((item) => item.label === label);
+
+    if (index !== -1) {
+      NavigationItems.splice(index, 1);
+    }
+  }
+  NavigationItems.push(
+    {
+      label: "Candidates",
+      href: "/intern",
+      icon: InternManagementIcon,
+    },
+    {
+      label: "Intern periods",
+      href: "/internPeriod",
+      icon: InternManagementIcon,
+    },
+  );
+}
+
+if (role === "University Official") {
+  for (const label of labelsToRemoveUniver) {
+    const index = NavigationItems.findIndex((item) => item.label === label);
+
+    if (index !== -1) {
+      NavigationItems.splice(index, 1);
+    }
+  }
+  NavigationItems.push(
+    {
+      label: "Candidates",
+      href: "/intern",
+      icon: InternManagementIcon,
+    },
+    {
+      label: "Intern Periods",
+      href: "/internPeriod",
+      icon: InterviewManagementIcon,
+    },
+  );
+}
 
 export default function Navigation(props: NavigationProps) {
   const currentPath = usePathname();
