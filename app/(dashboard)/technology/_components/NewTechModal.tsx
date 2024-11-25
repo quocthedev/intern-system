@@ -15,6 +15,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { API_ENDPOINTS } from "@/libs/config";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { getCookie } from "@/app/util";
 
 export default function NewTechModal() {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
@@ -73,18 +74,24 @@ export default function NewTechModal() {
     mutate(formData);
   };
 
+  const role = getCookie("userRole");
+
   return (
     <>
-      <Button
-        color="primary"
-        size="md"
-        startContent={<AddIcon />}
-        className="text-white"
-        variant="shadow"
-        onPress={onOpen}
-      >
-        New Technology
-      </Button>
+      {role === "Administrator" ? (
+        <Button
+          color="primary"
+          size="md"
+          startContent={<AddIcon />}
+          className="text-white"
+          variant="shadow"
+          onPress={onOpen}
+        >
+          New Technology
+        </Button>
+      ) : (
+        <></>
+      )}
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="max-w-lg">
         <ModalContent>
           <>

@@ -33,6 +33,7 @@ import { Button } from "@nextui-org/button";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Image } from "@nextui-org/image";
+import { getCookie } from "@/app/util";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   Approved: "success",
@@ -67,6 +68,9 @@ const apiClient = new APIClient({
     console.log(error.response.data);
   },
 });
+
+const role = getCookie("userRole");
+console.log(role);
 
 export default function InternsTable({
   setSelectedInterns,
@@ -222,14 +226,20 @@ export default function InternsTable({
               </button>
             </Tooltip>
 
-            <Tooltip content="Delete">
-              <button
-                onClick={() => openDeleteModal(candidate.id)}
-                className="-mt-1 cursor-pointer active:opacity-50"
-              >
-                <DeleteIcon />
-              </button>
-            </Tooltip>
+            {role === "Administrator" ||
+            role === "HR Manager" ||
+            role === "University Offical" ? (
+              <Tooltip content="Delete">
+                <button
+                  onClick={() => openDeleteModal(candidate.id)}
+                  className="-mt-1 cursor-pointer active:opacity-50"
+                >
+                  <DeleteIcon />
+                </button>
+              </Tooltip>
+            ) : (
+              <></>
+            )}
           </div>
         );
       default:
