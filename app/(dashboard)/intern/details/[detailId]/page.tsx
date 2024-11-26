@@ -7,10 +7,12 @@ import Link from "next/link";
 import CandidateCVPage from "@/app/(dashboard)/intern/details/[detailId]/CandidateCV";
 import InterviewInformation from "../../_components/InterviewInformation";
 import { useParams } from "next/navigation";
+import FinalReportPage from "@/app/(dashboard)/intern/details/[detailId]/FinalReportPage";
 
 export default function CandidateDetailPage() {
   const params = useParams();
   const candidateId = params.detailId as string;
+
   return (
     <div className="flex h-full w-full flex-col p-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4">
@@ -37,7 +39,7 @@ export default function CandidateDetailPage() {
           <InterviewInformation candidateId={candidateId} />
         </Tab>
         <Tab key="4" title="Evaluation">
-          <CandidateInformationPage />
+          <FinalReportPage />
         </Tab>
       </Tabs>
     </div>

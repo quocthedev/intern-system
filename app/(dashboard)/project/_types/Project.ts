@@ -13,6 +13,7 @@ export type GroupUserRelated = {
 };
 
 export type Task = {
+  note: any;
   title: string;
   summary: string;
   description: string;
