@@ -55,23 +55,23 @@ export default function TaskModal(props: TaskModalProps) {
 
   const difficultyOptions = [
     {
-      key: "0",
+      key: "1",
       value: "Easy",
     },
     {
-      key: "1",
+      key: "2",
       value: "MediumEasy",
     },
     {
-      key: "2",
+      key: "3",
       value: "Medium",
     },
     {
-      key: "3",
+      key: "4",
       value: "MediumHard",
     },
     {
-      key: "4",
+      key: "5",
       value: "Hard",
     },
   ];
@@ -255,9 +255,9 @@ export default function TaskModal(props: TaskModalProps) {
                       defaultSelectedKeys={[
                         difficultyOptions.find(
                           (difficulty) =>
-                            Number(difficulty.value) ===
-                            props.selectedTaskInfo?.difficulty,
-                        )?.key ?? "0",
+                            String(difficulty.value) ===
+                            String(props.selectedTaskInfo?.difficulty),
+                        )?.key ?? "1",
                       ]}
                       name="difficulty"
                     >
@@ -268,20 +268,72 @@ export default function TaskModal(props: TaskModalProps) {
                       ))}
                     </Select>
                   </div>
-                  <Select
-                    label="Assignee"
-                    labelPlacement="outside"
-                    placeholder={"Select Assignee"}
-                    defaultSelectedKeys={[
-                      `${props.selectedTaskInfo?.memberId ?? ""}`,
-                    ]}
-                    name="userId"
-                    required
-                  >
-                    {(props.relatedUsers ?? []).map((user) => (
-                      <SelectItem key={user.id}>{user.fullName}</SelectItem>
-                    ))}
-                  </Select>
+                  <div className="grid grid-cols-2 gap-3">
+                    {props.mode === "edit" && (
+                      <>
+                        <Input
+                          type="number"
+                          label="Completion Progress"
+                          labelPlacement="outside"
+                          placeholder="Enter Completion Progress (0-100)"
+                          name="completionProgress"
+                          min={0}
+                          max={100}
+                          defaultValue={props.selectedTaskInfo?.completionProgress?.toString()}
+                        />
+
+                        <Input
+                          type="number"
+                          label="Progress Assessment"
+                          labelPlacement="outside"
+                          placeholder="Enter Progress Assessment"
+                          name="progressAssessment"
+                          min={0}
+                          max={100}
+                          defaultValue={props.selectedTaskInfo?.progressAssessment?.toString()}
+                        />
+                      </>
+                    )}
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <Select
+                      label="Assignee"
+                      labelPlacement="outside"
+                      placeholder={"Select Assignee"}
+                      defaultSelectedKeys={[
+                        `${props.selectedTaskInfo?.memberId ?? ""}`,
+                      ]}
+                      name="userId"
+                      required
+                    >
+                      {(props.relatedUsers ?? []).map((user) => (
+                        <SelectItem key={user.id}>{user.fullName}</SelectItem>
+                      ))}
+                    </Select>
+
+                    {
+                      // Only show status select for edit mode
+                      props.mode === "edit" && (
+                        <Select
+                          label="Status"
+                          labelPlacement="outside"
+                          defaultSelectedKeys={[
+                            statusOptions.find(
+                              (status) =>
+                                status.value === props.selectedTaskInfo?.status,
+                            )?.key ?? "0",
+                          ]}
+                          name="status"
+                        >
+                          {statusOptions.map((status) => (
+                            <SelectItem key={status.key}>
+                              {status.value}
+                            </SelectItem>
+                          ))}
+                        </Select>
+                      )
+                    }
+                  </div>
 
                   <Textarea
                     type="text"
@@ -294,29 +346,6 @@ export default function TaskModal(props: TaskModalProps) {
                     name="note"
                     // defaultValue={props.selectedTaskInfo?.description}
                   />
-
-                  {
-                    // Only show status select for edit mode
-                    props.mode === "edit" && (
-                      <Select
-                        label="Status"
-                        labelPlacement="outside"
-                        defaultSelectedKeys={[
-                          statusOptions.find(
-                            (status) =>
-                              status.value === props.selectedTaskInfo?.status,
-                          )?.key ?? "0",
-                        ]}
-                        name="status"
-                      >
-                        {statusOptions.map((status) => (
-                          <SelectItem key={status.key}>
-                            {status.value}
-                          </SelectItem>
-                        ))}
-                      </Select>
-                    )
-                  }
 
                   <div className="grid grid-cols-2 gap-4">
                     <Button color="primary" fullWidth type="submit">

@@ -20,6 +20,10 @@ export async function updateTask(formData: FormData) {
   const priority = Number(formData.get("priority")?.toString()) ?? null;
   const difficulty = Number(formData.get("difficulty")?.toString()) ?? null;
   const status = Number(formData.get("status")?.toString()) ?? null;
+  const completionProgress =
+    Number(formData.get("completionProgress")?.toString()) ?? null;
+  const progressAssessment =
+    Number(formData.get("progressAssessment")?.toString()) ?? null;
   const userId = formData.get("userId")?.toString() ?? null;
   const projectId = formData.get("projectId")?.toString() ?? null;
   const taskId = formData.get("taskId")?.toString() ?? null;
@@ -37,6 +41,8 @@ export async function updateTask(formData: FormData) {
     userId,
     projectId,
     status,
+    completionProgress,
+    progressAssessment,
     startDate: startDate ? new Date(startDate).toISOString() : null,
     dueDate: dueDate ? new Date(dueDate).toISOString() : null,
   });

@@ -87,8 +87,10 @@ export default function TaskList(props: TaskListProps) {
         return item.memberName;
       case "completionProgress":
         return item.completionProgress;
-      case "assessment":
+      case "progressAssessment":
         return item.progressAssessment;
+      case "note":
+        return item.note;
       case "actions":
         return (
           <div className="flex">

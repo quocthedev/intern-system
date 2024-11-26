@@ -94,7 +94,6 @@ const labelsToRemoveHR = [
 ];
 
 const labelsToRemoveMentor = [
-  "Projects",
   "Questions",
   "Interns",
   "Positions",
