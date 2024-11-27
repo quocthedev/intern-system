@@ -16,7 +16,7 @@ import { createNewTask } from "@/actions/create-new-task";
 import { EditIcon } from "../../_components/Icons";
 import { Task } from "../../_types/Project";
 import { updateTask } from "@/actions/update-task";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 
 export type TaskModalProps = {

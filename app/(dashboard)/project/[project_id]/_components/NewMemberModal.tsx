@@ -24,7 +24,7 @@ import { CandidateUser, GetCandidateUsersResponse } from "../_types/Candidate";
 import APIClient from "@/libs/api-client";
 import { API_ENDPOINTS } from "@/libs/config";
 import { addNewMembers } from "@/actions/add-new-members";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 const apiClient = new APIClient({
   onFulfilled: (response) => response,

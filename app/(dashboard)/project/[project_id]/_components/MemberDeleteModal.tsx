@@ -11,7 +11,7 @@ import React from "react";
 import { TrashIcon } from "@/components/icons/OtherIcons";
 import { deleteMember } from "@/actions/delete-member";
 import { useQueryClient } from "@tanstack/react-query";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 export type MemberDeleteModalProps = {
   projectId: string;
   memberId: string;

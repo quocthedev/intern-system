@@ -36,8 +36,7 @@ import { Select, SelectItem } from "@nextui-org/select";
 import { GetUsersByRoleResponse } from "../libs/_types/GetUsersResponse";
 import { sendEmail } from "@/actions/send-email-next";
 import { InterviewIcon } from "@/components/icons/ActionBarIcons";
-import { toast } from "react-toastify";
-
+import { toast } from "sonner";
 const apiClient = new APIClient({
   // onFulfilled: (response) => response,
   // onRejected: (error) => {
@@ -48,6 +47,7 @@ const apiClient = new APIClient({
 export type InterviewScheduleModalProps = {
   candidates?: { id: string; fullName: string }[];
   isAddingCandidate?: boolean;
+  callback?: () => void;
 };
 
 export default function InterviewScheduleModal(
@@ -257,8 +257,20 @@ export default function InterviewScheduleModal(
                         ).join(","),
                       );
                       formData.append("duration", duration);
-                      await sendEmail(formData);
-                      toast.success("Interview email send successfully! 🎉");
+                      try {
+                        await sendEmail(formData);
+
+                        toast.success("Interview email send successfully! 🎉");
+                      } catch (e) {
+                        console.log(e);
+
+                        toast.error("Failed to send email! 😢");
+                      }
+
+                      if (props.callback) {
+                        props.callback();
+                      }
+
                       onClose();
                     }}
                   >

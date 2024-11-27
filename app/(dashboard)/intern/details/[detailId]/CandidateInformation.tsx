@@ -11,13 +11,10 @@ import {
   useDisclosure,
 } from "@nextui-org/modal";
 import { Select, SelectItem } from "@nextui-org/select";
-import { Spinner } from "@nextui-org/spinner";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import Image from "next/image";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "sonner";
 export default function CandidateInformationPage() {
   const params = useParams();
   const candidateId = params.detailId as string;
@@ -514,13 +511,6 @@ export default function CandidateInformationPage() {
           </div>
         </div>
       </div>
-      <ToastContainer
-        position="bottom-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        closeOnClick
-        draggable
-      />
     </div>
   );
 }

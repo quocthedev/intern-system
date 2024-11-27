@@ -1,3 +1,4 @@
+"use client";
 import APIClient from "@/libs/api-client";
 import { API_ENDPOINTS } from "@/libs/config";
 import { useQuery } from "@tanstack/react-query";
@@ -9,16 +10,24 @@ import {
 } from "../_types/GetPositionPaginationResponse";
 import { Select, SelectItem } from "@nextui-org/select";
 import { Button } from "@nextui-org/button";
-import {
-  GetCandidateQuestionTemplateResponse,
-  QuestionTemplateDetail,
-  QuestionTemplateDetails,
-} from "../_types/GetCandidateQuestionTemplate";
+import { GetCandidateQuestionTemplateResponse } from "../_types/GetCandidateQuestionTemplate";
 import { Input, Textarea } from "@nextui-org/input";
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import { Chip } from "@nextui-org/chip";
+import { toast } from "sonner";
 
-const apiClient = new APIClient();
+const apiClient = new APIClient({
+  onFulfilled: (response) => response,
+  onRejected: (error) => {
+    if (error.response) {
+      console.log(error.response.data);
+    }
+
+    return {
+      data: error.response.data,
+    };
+  },
+});
 
 export type InterviewInformationProps = {
   candidateId: string;
@@ -78,6 +87,12 @@ export default function InterviewInformation(props: InterviewInformationProps) {
   });
 
   const createQuestions = async () => {
+    // make sure that selectedPosition and selectedTechnologies are not empty
+    if (!selectedPosition || selectedTechnologies.size === 0) {
+      toast.error("Please select position and technologies");
+      return;
+    }
+
     const params = {
       positionId: selectedPosition,
       technologyIds: Array.from(selectedTechnologies),
@@ -104,7 +119,12 @@ export default function InterviewInformation(props: InterviewInformationProps) {
     positions?.find((position) => position.id === selectedPosition)
       ?.tenologies || [];
 
-  const submitAnswers = async () => {
+  const submitAnswer = async (formData: FormData) => {
+    const answers = Array.from(formData.entries()).map(([key, value]) => ({
+      interviewQuestionId: key,
+      answer: value,
+    }));
+
     const response = await apiClient.post<{
       statusCode: string;
       message: string;
@@ -112,13 +132,25 @@ export default function InterviewInformation(props: InterviewInformationProps) {
       API_ENDPOINTS.questionTemplate +
         `/${candidateQuestionTemplateDetails?.id}/submit-answers`,
       answers,
+      {},
+      true,
     );
 
-    console.log(response);
-    refetchCandidateQuestionTemplateDetails();
+    if (response.statusCode === "200") {
+      toast.success("Successfully submitted answers");
+
+      refetchCandidateQuestionTemplateDetails();
+    } else {
+      toast.error(response.message);
+    }
   };
 
-  const submitEvaluation = async () => {
+  const submitEvaluation = async (formData: FormData) => {
+    const evaluation = Array.from(formData.entries()).map(([key, value]) => ({
+      questionTemplateDetailId: key,
+      answerScore: value,
+    }));
+
     const response = await apiClient.post<{
       statusCode: string;
       message: string;
@@ -130,9 +162,12 @@ export default function InterviewInformation(props: InterviewInformationProps) {
       true,
     );
 
-    console.log(response);
-
-    refetchCandidateQuestionTemplateDetails();
+    if (response.statusCode === "200") {
+      refetchCandidateQuestionTemplateDetails();
+      toast.success("Successfully submitted evaluation");
+    } else {
+      toast.error(response.message);
+    }
   };
 
   let status: QuestionTemplateStatus = QuestionTemplateStatus.NOT_CREATED;
@@ -221,7 +256,14 @@ export default function InterviewInformation(props: InterviewInformationProps) {
             </Card>
           )
         }
-        <div className="mt-2 flex flex-col gap-3">
+        <form
+          className="mt-2 flex flex-col gap-3"
+          action={
+            status === QuestionTemplateStatus.CREATED
+              ? submitAnswer
+              : submitEvaluation
+          }
+        >
           {candidateQuestionTemplateDetails?.questionTemplateDetails.map(
             (questionTemplateDetail, id) => (
               <Card key={questionTemplateDetail.id} shadow="sm">
@@ -239,6 +281,21 @@ export default function InterviewInformation(props: InterviewInformationProps) {
                           labelPlacement="outside-left"
                           type="number"
                           defaultValue={"0"}
+                          name={questionTemplateDetail.id}
+                          max={questionTemplateDetail.maxQuestionScore}
+                          min={0}
+                          validate={(value) => {
+                            if (Number(value) < 0) {
+                              return "Score must be greater than 0";
+                            }
+
+                            if (
+                              Number(value) >
+                              Number(questionTemplateDetail.maxQuestionScore)
+                            ) {
+                              return "Score must be less than max score";
+                            }
+                          }}
                           onChange={(e) => {
                             // remove the evaluation if it already exists
                             evaluation = evaluation.filter(
@@ -274,6 +331,7 @@ export default function InterviewInformation(props: InterviewInformationProps) {
                     }
                     maxRows={7}
                     minRows={5}
+                    name={questionTemplateDetail.interviewQuestion.id}
                     placeholder="Your Answer"
                     label="Your Answer:"
                     labelPlacement="outside"
@@ -303,21 +361,15 @@ export default function InterviewInformation(props: InterviewInformationProps) {
               </Card>
             ),
           )}
-          <Button
-            onClick={
-              status === QuestionTemplateStatus.CREATED
-                ? submitAnswers
-                : submitEvaluation
-            }
-            color="primary"
-            fullWidth
-            variant="shadow"
-          >
-            {status === QuestionTemplateStatus.CREATED
-              ? "Submit Answers"
-              : "Submit Evaluation"}
-          </Button>
-        </div>
+
+          {status !== QuestionTemplateStatus.EVALUATED && (
+            <Button type="submit" color="primary" fullWidth variant="shadow">
+              {status === QuestionTemplateStatus.CREATED
+                ? "Submit Answers"
+                : "Submit Evaluation"}
+            </Button>
+          )}
+        </form>
       </div>
     );
 }

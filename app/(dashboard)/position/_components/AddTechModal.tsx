@@ -12,7 +12,7 @@ import {
 import { API_ENDPOINTS } from "@/libs/config";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Select, SelectItem } from "@nextui-org/select";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 interface SelectedPostionIdProps {
   selectedPositionId: string;

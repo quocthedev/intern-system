@@ -12,8 +12,9 @@ const apiClient = new APIClient(
   // Add a response interceptor to handle errors
   {
     onRejected: (error) => {
-      console.log(error);
-      throw new Error(error);
+      return {
+        data: error.response.data,
+      };
     },
   },
 );

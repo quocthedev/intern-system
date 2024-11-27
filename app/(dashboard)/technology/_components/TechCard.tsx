@@ -21,7 +21,7 @@ import {
   useDisclosure,
 } from "@nextui-org/modal";
 import { Button } from "@nextui-org/button";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { Input } from "@nextui-org/input";
 
 export interface TechnologyInterface {

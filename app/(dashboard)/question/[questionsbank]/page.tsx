@@ -28,8 +28,7 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/modal";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "sonner";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 
@@ -357,13 +356,6 @@ export default function QuestionBankPage() {
           </ModalBody>
         </ModalContent>
       </Modal>
-      <ToastContainer
-        position="bottom-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        closeOnClick
-        draggable
-      />
 
       <Modal
         isOpen={isEditOpen}
