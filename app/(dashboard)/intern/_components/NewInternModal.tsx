@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import {
   Modal,
   ModalContent,
@@ -12,30 +12,9 @@ import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import { DatePicker } from "@nextui-org/date-picker";
 import { CreateIcon } from "@/app/(dashboard)/intern/_components/Icons";
-import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
-import { API_ENDPOINTS } from "@/libs/config";
 
 export default function NewInternModal() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
-  const [intern, setIntern] = useState({
-    name: "",
-    dob: "",
-    gender: "",
-    email: "",
-    phone: "",
-    address: "",
-    position: "",
-    startDate: "",
-    endDate: "",
-  });
-
-  const mutation = useMutation({
-    mutationFn: (newIntern) => {
-      return axios.post(API_ENDPOINTS.candidate, newIntern);
-    },
-  });
 
   return (
     <>
