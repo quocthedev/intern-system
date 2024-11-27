@@ -4,15 +4,13 @@ import APIClient from "@/libs/api-client";
 import { cookies } from "next/headers";
 import { API_ENDPOINTS } from "@/libs/config";
 import { parseZonedDateTime } from "@internationalized/date";
+import { revalidatePath } from "next/cache";
 const apiClient = new APIClient(
   // Add a response interceptor to handle errors
   {
     onRejected: (error) => {
-      console.error(error);
       return {
-        data: {
-          error: error.message,
-        },
+        data: error.response.data,
       };
     },
   },
@@ -64,10 +62,18 @@ export async function sendEmail(data: FormData) {
 
   const accessToken = cookies().get("accessToken");
 
-  const result = await apiClient.post(API_ENDPOINTS.sendEmail, formData, {
+  const result = await apiClient.post<{
+    statusCode: string;
+    message: string;
+    data: any;
+  }>(API_ENDPOINTS.sendEmail, formData, {
     "Content-Type": "multipart/form-data",
     Authorization: `Bearer ${accessToken?.value}`,
   });
 
-  console.log(result);
+  if (result.statusCode !== "200") {
+    throw new Error(result.message);
+  }
+
+  return result;
 }
