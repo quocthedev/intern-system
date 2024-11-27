@@ -15,8 +15,7 @@ import { CreateIcon } from "@/app/(dashboard)/intern/_components/Icons";
 import { parseDate } from "@internationalized/date"; // Parses a date string or Date object to DateValue
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { API_ENDPOINTS } from "@/libs/config";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "sonner";
 import { addMonths } from "date-fns";
 
 interface PeriodData {

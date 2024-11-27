@@ -30,10 +30,9 @@ import {
   useDisclosure,
 } from "@nextui-org/modal";
 import { Button } from "@nextui-org/button";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { Image } from "@nextui-org/image";
 import { getCookie } from "@/app/util";
+import { toast } from "sonner";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   Approved: "success",
@@ -313,13 +312,6 @@ export default function InternsTable({
           </ModalBody>
         </ModalContent>
       </Modal>
-      <ToastContainer
-        position="bottom-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        closeOnClick
-        draggable
-      />
 
       <Pagination
         className="m-4 flex justify-center"

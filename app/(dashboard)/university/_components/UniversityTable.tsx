@@ -8,7 +8,6 @@ import {
 import { Tooltip } from "@nextui-org/tooltip";
 import { useMutation, useQuery } from "@tanstack/react-query"; //get request
 import { API_ENDPOINTS } from "@/libs/config";
-import { Spinner } from "@nextui-org/spinner";
 import {
   Modal,
   ModalBody,
@@ -16,8 +15,7 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/modal";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "sonner";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import APIClient from "@/libs/api-client";
@@ -284,13 +282,6 @@ export default function UniversityTable() {
           </ModalBody>
         </ModalContent>
       </Modal>
-      <ToastContainer
-        position="bottom-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        closeOnClick
-        draggable
-      />
 
       <Modal isOpen={isEditOpen} onOpenChange={onOpenEditChange}>
         <ModalContent>

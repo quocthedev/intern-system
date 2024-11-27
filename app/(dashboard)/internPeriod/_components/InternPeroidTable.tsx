@@ -26,8 +26,7 @@ import {
   useDisclosure,
 } from "@nextui-org/modal";
 import { Button } from "@nextui-org/button";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "sonner";
 import Link from "next/link";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
@@ -225,13 +224,6 @@ export default function InternPeriodTable() {
           </ModalBody>
         </ModalContent>
       </Modal>
-      <ToastContainer
-        position="bottom-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        closeOnClick
-        draggable
-      />
     </>
   );
 }

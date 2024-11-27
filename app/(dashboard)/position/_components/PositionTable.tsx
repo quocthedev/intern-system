@@ -15,8 +15,7 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/modal";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "sonner";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import { PaginationResponse, PaginationResponseSuccess } from "@/libs/types";
@@ -364,14 +363,6 @@ export default function PositionTable() {
           </ModalBody>
         </ModalContent>
       </Modal>
-
-      <ToastContainer
-        position="bottom-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        closeOnClick
-        draggable
-      />
     </div>
   );
 }

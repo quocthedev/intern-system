@@ -1,3 +1,4 @@
+"use client";
 import APIClient from "@/libs/api-client";
 import { API_ENDPOINTS } from "@/libs/config";
 import { useQuery } from "@tanstack/react-query";
@@ -9,16 +10,24 @@ import {
 } from "../_types/GetPositionPaginationResponse";
 import { Select, SelectItem } from "@nextui-org/select";
 import { Button } from "@nextui-org/button";
-import {
-  GetCandidateQuestionTemplateResponse,
-  QuestionTemplateDetail,
-  QuestionTemplateDetails,
-} from "../_types/GetCandidateQuestionTemplate";
+import { GetCandidateQuestionTemplateResponse } from "../_types/GetCandidateQuestionTemplate";
 import { Input, Textarea } from "@nextui-org/input";
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import { Chip } from "@nextui-org/chip";
+import { toast } from "sonner";
 
-const apiClient = new APIClient();
+const apiClient = new APIClient({
+  onFulfilled: (response) => response,
+  onRejected: (error) => {
+    if (error.response) {
+      console.log(error.response.data);
+    }
+
+    return {
+      data: error.response.data,
+    };
+  },
+});
 
 export type InterviewInformationProps = {
   candidateId: string;
@@ -78,6 +87,12 @@ export default function InterviewInformation(props: InterviewInformationProps) {
   });
 
   const createQuestions = async () => {
+    // make sure that selectedPosition and selectedTechnologies are not empty
+    if (!selectedPosition || selectedTechnologies.size === 0) {
+      toast.error("Please select position and technologies");
+      return;
+    }
+
     const params = {
       positionId: selectedPosition,
       technologyIds: Array.from(selectedTechnologies),
@@ -130,9 +145,12 @@ export default function InterviewInformation(props: InterviewInformationProps) {
       true,
     );
 
-    console.log(response);
-
-    refetchCandidateQuestionTemplateDetails();
+    if (response.statusCode === "200") {
+      refetchCandidateQuestionTemplateDetails();
+      toast.success("Successfully submitted evaluation");
+    } else {
+      toast.error("Failed to submit evaluation");
+    }
   };
 
   let status: QuestionTemplateStatus = QuestionTemplateStatus.NOT_CREATED;
@@ -303,20 +321,23 @@ export default function InterviewInformation(props: InterviewInformationProps) {
               </Card>
             ),
           )}
-          <Button
-            onClick={
-              status === QuestionTemplateStatus.CREATED
-                ? submitAnswers
-                : submitEvaluation
-            }
-            color="primary"
-            fullWidth
-            variant="shadow"
-          >
-            {status === QuestionTemplateStatus.CREATED
-              ? "Submit Answers"
-              : "Submit Evaluation"}
-          </Button>
+
+          {status !== QuestionTemplateStatus.EVALUATED && (
+            <Button
+              onClick={
+                status === QuestionTemplateStatus.CREATED
+                  ? submitAnswers
+                  : submitEvaluation
+              }
+              color="primary"
+              fullWidth
+              variant="shadow"
+            >
+              {status === QuestionTemplateStatus.CREATED
+                ? "Submit Answers"
+                : "Submit Evaluation"}
+            </Button>
+          )}
         </div>
       </div>
     );

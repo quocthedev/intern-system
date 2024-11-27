@@ -8,10 +8,9 @@ import {
   useDisclosure,
 } from "@nextui-org/modal";
 import React from "react";
-import { DeleteIcon, EditIcon } from "../../_components/Icons";
 import { deleteTask } from "@/actions/delete-task";
 import { TrashIcon } from "@/components/icons/OtherIcons";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 export type TaskModalProps = {
   taskId: string;

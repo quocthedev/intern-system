@@ -36,8 +36,7 @@ import { Select, SelectItem } from "@nextui-org/select";
 import { GetUsersByRoleResponse } from "../libs/_types/GetUsersResponse";
 import { sendEmail } from "@/actions/send-email-next";
 import { InterviewIcon } from "@/components/icons/ActionBarIcons";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "sonner";
 const apiClient = new APIClient({
   // onFulfilled: (response) => response,
   // onRejected: (error) => {

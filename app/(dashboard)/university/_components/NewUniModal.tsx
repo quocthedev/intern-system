@@ -13,8 +13,7 @@ import { Input } from "@nextui-org/input";
 import { CreateIcon } from "@/app/(dashboard)/intern/_components/Icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { API_ENDPOINTS } from "@/libs/config";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "sonner";
 
 export default function NewUniverModal() {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();

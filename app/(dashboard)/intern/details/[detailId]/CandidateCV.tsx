@@ -4,8 +4,7 @@ import { Spinner } from "@nextui-org/spinner";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "sonner";
 
 interface PDFEmbedProps {
   pdfUrl: string;
@@ -116,13 +115,6 @@ export default function CandidateCVPage() {
           <PDFEmbed pdfUrl={candidateData.cvUri} />
         </div>
       )}
-      <ToastContainer
-        position="bottom-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        closeOnClick
-        draggable
-      />
     </div>
   );
 }

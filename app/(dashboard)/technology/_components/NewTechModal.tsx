@@ -13,8 +13,7 @@ import { Input } from "@nextui-org/input";
 import { AddIcon } from "@/app/(dashboard)/position/_components/Icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { API_ENDPOINTS } from "@/libs/config";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "sonner";
 import { getCookie } from "@/app/util";
 
 export default function NewTechModal() {
