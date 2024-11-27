@@ -29,6 +29,7 @@ export const oauth_google: Record<GOOGLE_AUTH_KEYS, string> = {
 };
 
 export const LoginForm = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [visible, setVisible] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -60,14 +61,17 @@ export const LoginForm = () => {
           </div>
 
           <form
+            onSubmit={() => setIsLoading(true)}
             action={async (formData) => {
               const result = await login(formData);
 
               if ("error" in result) {
                 setErrorMessage(result.error);
+                setIsLoading(false);
               } else {
                 // Set user info to the local storage
                 Object.entries(result).forEach(([key, value]) => {
+                  setIsLoading(false);
                   window.localStorage.setItem(key, value);
                 });
 
@@ -115,8 +119,14 @@ export const LoginForm = () => {
               </span>
             </div>
 
-            <Button type="submit" className="mt-4 w-[100%]" color="primary">
-              Sign in
+            <Button
+              isLoading={isLoading}
+              isDisabled={isLoading}
+              type="submit"
+              className="mt-4 w-[100%]"
+              color="primary"
+            >
+              {isLoading ? "Signing in..." : "Sign in"}
             </Button>
           </form>
 

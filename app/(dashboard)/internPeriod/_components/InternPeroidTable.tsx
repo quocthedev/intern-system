@@ -151,12 +151,11 @@ export default function InternPeriodTable() {
           return (
             <div className="flex gap-2">
               <Tooltip content="View detail">
-                <button
-                  className="cursor-pointer"
-                  onClick={() => window.open(`/internPeriod/${period.id}`)}
-                >
-                  <ViewIcon />
-                </button>
+                <Link href={`/internPeriod/${period.id}`}>
+                  <button className="cursor-pointer">
+                    <ViewIcon />
+                  </button>
+                </Link>
               </Tooltip>
               <Tooltip content="Delete">
                 <button

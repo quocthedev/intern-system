@@ -3,6 +3,8 @@
 import { Criteria } from "@/app/(dashboard)/intern/_types/GetCriterias";
 import { formatedDate } from "@/app/util";
 import { API_ENDPOINTS } from "@/libs/config";
+import { Button } from "@nextui-org/button";
+import { Input } from "@nextui-org/input";
 import { Spinner } from "@nextui-org/spinner";
 import {
   Table,
@@ -14,7 +16,7 @@ import {
 } from "@nextui-org/table";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
-import React, { Key, useMemo } from "react";
+import React, { Key, useMemo, useState } from "react";
 
 export default function FinalReportPage() {
   const params = useParams();
@@ -39,6 +41,7 @@ export default function FinalReportPage() {
   const complianceEvaluate = data?.data?.complianceEvaluation || {};
   const complianceCriterias = complianceEvaluate?.complianceCriterias || [];
   const workPerformance = data?.data?.workPerformanceEvaluationFinal || [];
+
   console.log(workPerformance);
   const columns = useMemo(
     () => [
@@ -53,6 +56,8 @@ export default function FinalReportPage() {
     ],
     [],
   );
+
+  const [isEditable, setIsEditable] = useState(false);
 
   const renderCell = (criterias: Criteria, columnKey: Key, index: number) => {
     const cellValue = criterias[columnKey as keyof Criteria];
@@ -69,7 +74,16 @@ export default function FinalReportPage() {
       case "maxScore":
         return <p className="text-xs">{criterias.maxScore}</p>;
       case "evaluateScore":
-        return <p className="text-xs">{criterias.evaluateScore}</p>;
+        return (
+          <Input
+            name={criterias.content}
+            readOnly={isEditable}
+            classNames={{
+              inputWrapper: `${isEditable ? "bg-transparent shadow-none" : ""}`,
+            }}
+            value={criterias.evaluateScore.toString()}
+          />
+        );
       case "finalScore":
         return <p className="text-xs">{criterias.finalScore}</p>;
       default:
@@ -109,6 +123,22 @@ export default function FinalReportPage() {
       </div>
 
       <h1 className="mb-3 mt-3 text-lg font-semibold">Compliance Evaluation</h1>
+      <Button
+        variant="solid"
+        color="primary"
+        className="mb-4"
+        onClick={() => setIsEditable(!isEditable)}
+      >
+        Edit
+      </Button>
+
+      <Button
+        variant="solid"
+        color="primary"
+        className={`mb-4 ${isEditable ? "hidden" : ""}`}
+      >
+        Update
+      </Button>
       <div>
         <div>
           <Table className="w-full">

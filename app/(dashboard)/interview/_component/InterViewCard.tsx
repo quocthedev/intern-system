@@ -9,11 +9,8 @@ import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import { Pagination } from "@nextui-org/pagination";
 import Link from "next/link";
 import { formatedDate, formatedTimeToMinutes } from "@/app/util";
-import {
-  CalendarIcon,
-  ScheduleIcon,
-} from "@/app/(dashboard)/intern/_components/Icons";
 import { Divider } from "@nextui-org/divider";
+import { useRouter } from "next/navigation";
 
 interface InterViewScheduleInterface {
   id: string;
@@ -66,8 +63,10 @@ export default function InterViewCard() {
     },
   });
 
+  const router = useRouter();
+
   const handlePress = (id: string) => {
-    window.open(`interview/details/${id}`);
+    router.push(`interview/details/${id}`);
   };
 
   return (
