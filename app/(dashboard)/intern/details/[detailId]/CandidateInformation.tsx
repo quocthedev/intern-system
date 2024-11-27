@@ -166,15 +166,7 @@ export default function CandidateInformationPage() {
     <div className="p-8">
       <div className="flex gap-4">
         <div className="mb-4 flex w-1/3 flex-col items-center">
-          {candidateData.image ? (
-            <img
-              width={200}
-              height={200}
-              alt="Default Candidate"
-              src="/icons/technology/noimg.png"
-              className="rounded-full object-contain"
-            />
-          ) : (
+          {candidateData?.image ? (
             <img
               width={200}
               height={200}
@@ -182,7 +174,16 @@ export default function CandidateInformationPage() {
               src={candidateData.avatar}
               className="rounded-2xl object-contain"
             />
+          ) : (
+            <img
+              width={200}
+              height={200}
+              alt="Default Candidate"
+              src="/icons/technology/no-avatar.png"
+              className="rounded-full object-contain"
+            />
           )}
+          {JSON.stringify(candidateData.image)}
 
           <div className="mt-4">
             <Button

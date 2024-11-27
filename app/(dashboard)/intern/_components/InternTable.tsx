@@ -174,7 +174,7 @@ export default function InternsTable({
               <Image
                 width={50}
                 alt="Default Candidate Image"
-                src="/icons/technology/noimg.png"
+                src="/icons/technology/no-avatar.png"
               />
             )}
           </div>

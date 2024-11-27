@@ -360,7 +360,6 @@ export const TechCard = () => {
                   <Button onClick={onCloseEdit}>Cancel</Button>
                 </div>
               </ModalBody>
-              <div></div>
             </ModalContent>
           </Modal>
         </div>
