@@ -23,11 +23,13 @@ const InterviewContext = createContext<{
   interviewPageId: number;
   setInterviewPageId: (pageId: number) => void;
   isListInterviewLoading: boolean;
-  listInterviewData: {
-    interviewSchedules: InterViewScheduleInterface[];
-    pageIndex: number;
-    totalPages: number;
-  } | null;
+  listInterviewData:
+    | {
+        interviewSchedules: InterViewScheduleInterface[];
+        pageIndex: number;
+        totalPages: number;
+      }
+    | undefined;
   refetchListInterview: () => void;
 } | null>(null);
 
