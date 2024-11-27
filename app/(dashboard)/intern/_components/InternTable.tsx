@@ -218,12 +218,11 @@ export default function InternsTable({
         return (
           <div className="flex gap-2">
             <Tooltip content="View detail">
-              <button
-                className="cursor-pointer"
-                onClick={() => window.open(`/intern/details/${candidate.id}`)}
-              >
-                <ViewIcon />
-              </button>
+              <Link href={`/intern/details/${candidate.id}`}>
+                <button className="cursor-pointer">
+                  <ViewIcon />
+                </button>
+              </Link>
             </Tooltip>
 
             {role === "Administrator" ||

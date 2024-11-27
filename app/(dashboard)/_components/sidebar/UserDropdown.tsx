@@ -17,6 +17,7 @@ export default function UserDropdown() {
     // window.localStorage.clear();
     await logout();
     router.push("/login");
+    window.location.reload();
   };
 
   return (
