@@ -3,7 +3,7 @@
 import APIClient from "@/libs/api-client";
 import { API_ENDPOINTS } from "@/libs/config";
 import { PaginationResponse, PaginationResponseSuccess } from "@/libs/types";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import { Pagination } from "@nextui-org/pagination";
@@ -11,6 +11,14 @@ import Link from "next/link";
 import { formatedDate, formatedTimeToMinutes } from "@/app/util";
 import { Divider } from "@nextui-org/divider";
 import { useRouter } from "next/navigation";
+import {
+  Modal,
+  ModalBody,
+  ModalContent,
+  useDisclosure,
+} from "@nextui-org/modal";
+import { Button } from "@nextui-org/button";
+import { DeleteIcon } from "@/app/(dashboard)/technology/_components/Icons";
 
 interface InterViewScheduleInterface {
   id: string;
@@ -35,6 +43,8 @@ const apiClient = new APIClient({
 
 export default function InterViewCard() {
   const [pageIndex, setPageIndex] = useState(1);
+  const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
+  const [selectedSchedule, setSelectedSchedule] = useState() as any;
 
   const pageSize = 6;
 
@@ -63,10 +73,34 @@ export default function InterViewCard() {
     },
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) =>
+      fetch(API_ENDPOINTS.interviewSchedule + "/" + id, {
+        method: "DELETE",
+      }).then((response) => response.json()),
+
+    onError: (error) => {},
+
+    onSuccess: () => {
+      refetch();
+    },
+  });
+
   const router = useRouter();
 
   const handlePress = (id: string) => {
     router.push(`interview/details/${id}`);
+  };
+
+  const openModalDelete = (id: any) => {
+    onOpen();
+    setSelectedSchedule(id);
+  };
+
+  const handleDelete = (id: string) => {
+    deleteMutation.mutate(id);
+
+    onClose();
   };
 
   return (
@@ -88,6 +122,13 @@ export default function InterViewCard() {
                       {interview.title}
                     </div>
                   </div>
+
+                  <button
+                    className="bg-transparent"
+                    onClick={() => openModalDelete(interview.id as string)}
+                  >
+                    <DeleteIcon />
+                  </button>
                 </CardHeader>
                 <Divider />
                 <CardBody>
@@ -135,6 +176,27 @@ export default function InterViewCard() {
               </Card>
             ),
           )}
+
+        <Modal
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+          className="max-w-fit"
+        >
+          <ModalContent>
+            <ModalBody className="mt-5">
+              Are you sure you want to delete?
+              <div className="mt-5 grid grid-cols-2 gap-5">
+                <Button
+                  onClick={() => handleDelete(selectedSchedule)}
+                  color="primary"
+                >
+                  Yes
+                </Button>
+                <Button onClick={onClose}>No</Button>
+              </div>
+            </ModalBody>
+          </ModalContent>
+        </Modal>
       </div>
 
       <Pagination

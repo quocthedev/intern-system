@@ -1,7 +1,11 @@
 "use client";
 
-import { Criteria } from "@/app/(dashboard)/intern/_types/GetCriterias";
+import {
+  Criteria,
+  SubmitScore,
+} from "@/app/(dashboard)/intern/_types/GetCriterias";
 import { formatedDate } from "@/app/util";
+import APIClient from "@/libs/api-client";
 import { API_ENDPOINTS } from "@/libs/config";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
@@ -14,13 +18,25 @@ import {
   TableHeader,
   TableRow,
 } from "@nextui-org/table";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
-import React, { Key, useMemo, useState } from "react";
+import React, { Key, useEffect, useMemo, useState } from "react";
+import { toast } from "react-toastify";
 
 export default function FinalReportPage() {
+  const statusColor: Record<string, string> = {
+    NotPassed: "text-danger font-medium",
+    Passed: "text-success",
+  };
   const params = useParams();
   const candidateId = params.detailId as string;
+
+  const apiClient = new APIClient({
+    onFulfilled: (response) => response,
+    onRejected: (error) => {
+      console.log(error.response.data);
+    },
+  });
 
   const { isLoading, data, refetch } = useQuery({
     queryKey: ["data", candidateId],
@@ -36,18 +52,65 @@ export default function FinalReportPage() {
 
   console.log(candidateId);
 
+  const { mutate } = useMutation({
+    mutationFn: async (submitScore: SubmitScore[]) => {
+      const response = await apiClient.post<{
+        statusCode: string;
+        message: string;
+      }>(
+        `${API_ENDPOINTS.internshipReport}/${candidateId}/record-compliance-evaluation`,
+        submitScore,
+        {},
+        true,
+      );
+
+      if (response.statusCode !== "200") {
+        const errorData = response.message;
+
+        throw new Error(errorData || "Failed to submit score");
+      }
+
+      return response;
+    },
+    onError: (error) => {
+      console.error("Error:", error); // Log the error to the console
+      toast.error(error.message);
+    },
+    onSuccess: () => {
+      setIsEditable(false);
+      toast.success("Submit score successfully!");
+      refetch();
+    },
+  });
+
   const internPeriodViewReport = data?.data?.internPeriodViewReport || {};
   const candidateInfor = data?.data || {};
   const complianceEvaluate = data?.data?.complianceEvaluation || {};
   const complianceCriterias = complianceEvaluate?.complianceCriterias || [];
-  const workPerformance = data?.data?.workPerformanceEvaluationFinal || [];
 
-  console.log(workPerformance);
-  const columns = useMemo(
+  const workPerformance =
+    data?.data?.workPerformanceEvaluationFinal?.projectEvaluation || [];
+
+  const workPerformanceEvaluationFinal =
+    data?.data?.workPerformanceEvaluationFinal;
+  const [isScored, setIsScored] = useState(false);
+
+  const handleGetIsScored = () => {
+    const result = complianceCriterias?.some((complianceCriteria: Criteria) => {
+      return complianceCriteria.evaluateScore > 0;
+    });
+
+    setIsScored(result);
+  };
+
+  useEffect(() => {
+    handleGetIsScored();
+  }, [data]);
+
+  const columnsCompany = useMemo(
     () => [
       { key: "no", label: "NO" },
       { key: "content", label: "Criteria content" },
-      { key: "unit", label: "Unit" },
       { key: "percent", label: "Percent" },
       { key: "maxScore", label: "Max score" },
       { key: "evaluateScore", label: "Evaluate score" },
@@ -57,10 +120,88 @@ export default function FinalReportPage() {
     [],
   );
 
+  const columnsProject = useMemo(
+    () => [
+      { key: "no", label: "NO" },
+      { key: "task", label: "Task name" },
+      { key: "difficulty", label: "Difficulty" },
+      { key: "target", label: "Target(%)" },
+      { key: "completionProgress", label: "Candidate(30%)" },
+      { key: "progressAssessment", label: "Mentor(70%)" },
+      { key: "kpiScore", label: "KPI score" },
+      { key: "note", label: "Note" },
+    ],
+    [],
+  );
+
   const [isEditable, setIsEditable] = useState(false);
+  const [criteriaArray, setcriteriaArray] = useState<Criteria[]>([]);
+
+  const renderCellTask = (task: any, columnKey: Key, index: number) => {
+    const cellValue = task[columnKey as keyof any];
+
+    switch (columnKey) {
+      case "no":
+        return <div>{index + 1}</div>;
+      case "task":
+        return <p className="text-xs">{task.title}</p>;
+      case "difficulty":
+        return <p className="text-xs">{task.difficulty}</p>;
+      case "target":
+        return <p className="text-xs">100</p>;
+      case "completionProgress":
+        return <p className="text-xs">{task.completionProgress}</p>;
+      case "progressAssessment":
+        return <p className="text-xs">{task.progressAssessment}</p>;
+      case "kpiScore":
+        return <p className="text-xs">{task.kpiScore}</p>;
+      case "note":
+        return <p className="text-xs">{task.note}</p>;
+      default:
+        return null;
+    }
+  };
 
   const renderCell = (criterias: Criteria, columnKey: Key, index: number) => {
     const cellValue = criterias[columnKey as keyof Criteria];
+
+    const cloneCriterias = () => {
+      if (
+        !criteriaArray.find((criteria) => {
+          return criteria.content === criterias.content;
+        })
+      ) {
+        criteriaArray.push(criterias);
+      }
+    };
+
+    const updateTheCriteriaScore = (content: string, newScore: number) => {
+      if (!newScore) return;
+
+      const clonedCriteriaArray = [...criteriaArray];
+      const criteriaInformation = clonedCriteriaArray.find(
+        (criteria) => criteria.content === content,
+      );
+
+      if (!criteriaInformation || newScore > 10 || newScore < 0) return;
+
+      criteriaInformation.evaluateScore = newScore;
+      setcriteriaArray(clonedCriteriaArray);
+    };
+
+    const updateTheCriteriaNote = (content: string, newNote: string) => {
+      const clonedCriteriaArray = [...criteriaArray];
+      const criteriaInformation = clonedCriteriaArray.find(
+        (criteria) => criteria.content === content,
+      );
+
+      if (!criteriaInformation) return;
+
+      criteriaInformation.notes = newNote;
+      setcriteriaArray(clonedCriteriaArray);
+    };
+
+    cloneCriterias();
 
     switch (columnKey) {
       case "no":
@@ -76,12 +217,38 @@ export default function FinalReportPage() {
       case "evaluateScore":
         return (
           <Input
+            type="number"
             name={criterias.content}
-            readOnly={isEditable}
+            readOnly={!isEditable}
             classNames={{
               inputWrapper: `${isEditable ? "bg-transparent shadow-none" : ""}`,
             }}
-            value={criterias.evaluateScore.toString()}
+            value={
+              isEditable
+                ? criteriaArray[index].evaluateScore?.toString()
+                : criterias.evaluateScore?.toString()
+            }
+            onValueChange={(value) =>
+              updateTheCriteriaScore(criterias.content, Number(value))
+            }
+          />
+        );
+      case "note":
+        return (
+          <Input
+            name={criterias.content}
+            readOnly={!isEditable}
+            classNames={{
+              inputWrapper: `${isEditable ? "bg-transparent shadow-none" : ""}`,
+            }}
+            value={
+              isEditable
+                ? criteriaArray[index].notes?.toString()
+                : criterias.notes?.toString()
+            }
+            onValueChange={(note) =>
+              updateTheCriteriaNote(criterias.content, note)
+            }
           />
         );
       case "finalScore":
@@ -91,58 +258,216 @@ export default function FinalReportPage() {
     }
   };
 
+  const handleUpdateCriteria = () => {
+    const criteriaRecord: {
+      complianceCriteriaId: string;
+      evaluateScore: number;
+      notes: string;
+    }[] = [];
+
+    criteriaArray.map((criteria: Criteria) => {
+      const criteriaObject = {
+        complianceCriteriaId: "",
+        evaluateScore: 0,
+        notes: "",
+      };
+
+      criteriaObject.complianceCriteriaId = criteria.id;
+      criteriaObject.evaluateScore = criteria.evaluateScore;
+      criteriaObject.notes = criteria.notes;
+
+      criteriaRecord.push(criteriaObject);
+    });
+
+    //.....
+    mutate(criteriaRecord);
+  };
+
   return (
     <div className="p-6">
       <div className="text-center text-3xl font-semibold">
         INTERNSHIP FINAL REPORT
       </div>
-      <h1 className="mb-3 mt-2 text-lg font-semibold">General Information</h1>
+      <h1 className="mb-3 mt-2 text-xl font-semibold">General Information</h1>
 
       <div className="mt-4 grid grid-cols-3 gap-6 text-sm">
         <div>
-          <h1 className="mb-3 font-semibold">Candidate Information</h1>
-          <div className="mb-2">Full name: {candidateInfor.candidateName}</div>
-          <div className="mb-2">University: {candidateInfor.university}</div>
-          <div>Student Code: {candidateInfor.studentCode}</div>
+          <h2 className="mb-4 text-lg font-semibold text-gray-800">
+            Candidate Details
+          </h2>
+          <div className="mb-2">
+            <span className="font-medium">Full Name:</span>{" "}
+            {candidateInfor.candidateName}
+          </div>
+          <div className="mb-2">
+            <span className="font-medium">University:</span>{" "}
+            {candidateInfor.university}
+          </div>
+          <div>
+            <span className="font-medium">Student Code:</span>{" "}
+            {candidateInfor.studentCode}
+          </div>
         </div>
-        <div>
-          <div className="mb-3 font-semibold">Candidate Information</div>
 
-          <div className="mb-2">
-            Internship Name: {internPeriodViewReport.name}
-          </div>
-          <div className="mb-2">
-            Start Date: {formatedDate(internPeriodViewReport.startDate)}
-          </div>
-          <div>End Date: {formatedDate(internPeriodViewReport.endDate)}</div>
-        </div>
         <div>
-          <h1 className="mb-3 font-semibold">Company Information</h1>
-          <div>Company Name: Amazing Tech</div>
+          <h2 className="mb-4 text-lg font-semibold text-gray-800">
+            Internship Details
+          </h2>
+          <div className="mb-2">
+            <span className="font-medium">Internship Name:</span>{" "}
+            {internPeriodViewReport.name}
+          </div>
+          <div className="mb-2">
+            <span className="font-medium">Start Date:</span>{" "}
+            {formatedDate(internPeriodViewReport.startDate)}
+          </div>
+          <div>
+            <span className="font-medium">End Date:</span>{" "}
+            {formatedDate(internPeriodViewReport.endDate)}
+          </div>
+        </div>
+
+        <div>
+          <h1 className="mb-4 text-lg font-semibold text-gray-800">
+            Company Information
+          </h1>
+          <div className="mb-2">
+            <span className="font-medium">Company Name:</span> Amazing Tech
+          </div>
         </div>
       </div>
 
-      <h1 className="mb-3 mt-3 text-lg font-semibold">Compliance Evaluation</h1>
-      <Button
-        variant="solid"
-        color="primary"
-        className="mb-4"
-        onClick={() => setIsEditable(!isEditable)}
-      >
-        Edit
-      </Button>
+      <h1 className="mt-3 text-lg font-semibold">
+        I. Work Performance Evaluation
+      </h1>
 
-      <Button
-        variant="solid"
-        color="primary"
-        className={`mb-4 ${isEditable ? "hidden" : ""}`}
-      >
-        Update
-      </Button>
+      <div>
+        {workPerformance?.map((workPerformance: any) => {
+          const projectTasks = workPerformance.tasks || [];
+
+          return (
+            <div key={workPerformance.title}>
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div className="mt-3">
+                  <span className="font-medium">Project:</span>{" "}
+                  {workPerformance.title}
+                </div>
+                <div className="mt-3">
+                  <span className="font-medium">Leader:</span>{" "}
+                  {workPerformance.leader}
+                </div>
+                <div className="mb-4">
+                  <span className="font-medium">State date:</span>{" "}
+                  {formatedDate(workPerformance.startDate)}
+                </div>
+                <div className="mb-4">
+                  <span className="font-medium">Release date:</span>{" "}
+                  {formatedDate(workPerformance.releaseDate)}
+                </div>
+              </div>
+
+              <div>
+                <Table className="w-full">
+                  <TableHeader columns={columnsProject}>
+                    {(column) => (
+                      <TableColumn key={column.key}>{column.label}</TableColumn>
+                    )}
+                  </TableHeader>
+                  <TableBody
+                    items={projectTasks}
+                    loadingState={isLoading ? "loading" : "idle"}
+                    loadingContent={
+                      <div className="flex items-center gap-2">
+                        <Spinner />
+                        Loading...
+                      </div>
+                    }
+                    emptyContent={<div>No tasks found for this project!</div>}
+                  >
+                    {projectTasks.map((task: any, index: number) => (
+                      <TableRow key={task.id}>
+                        {(colKey) => (
+                          <TableCell>
+                            {renderCellTask(task, colKey, index)}
+                          </TableCell>
+                        )}
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+
+              <div className="mt-3">
+                <span className="font-medium">Leader:</span>{" "}
+                {workPerformance.totalDifficulty}
+              </div>
+              <div className="mt-3">
+                <span className="font-medium">Leader:</span>{" "}
+                {workPerformance.totalKPI}
+              </div>
+              <div className="mt-3">
+                <span className="font-medium">Leader:</span>{" "}
+                {workPerformance.averageScore}
+              </div>
+              <div className="mt-3">
+                <span className="font-medium">Leader:</span>{" "}
+                {workPerformance.result}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <h1 className="text-md mb-1 mt-3 font-semibold">Final project score</h1>
+      <div className="mb-5 grid grid-cols-2 gap-2 text-sm">
+        <div>
+          <span className="font-medium">Total difficulty: </span>
+          {workPerformanceEvaluationFinal?.totalDifficulty}
+        </div>
+        <div>
+          <span className="font-medium">Total KPI: </span>
+          {workPerformanceEvaluationFinal?.totalKPI}
+        </div>
+        <div>
+          <span className="font-medium">Total average score: </span>
+          {workPerformanceEvaluationFinal?.averageScore}
+        </div>
+        <div>
+          <span className="font-medium">Result: </span>
+          {/* {statusColor(workPerformanceEvaluationFinal?.result)} */}
+          <span className={statusColor[workPerformanceEvaluationFinal?.result]}>
+            {workPerformanceEvaluationFinal?.result}
+          </span>
+        </div>
+      </div>
+
+      <div className="mb-4 flex items-center justify-between">
+        <h1 className="text-lg font-semibold">II. Compliance Evaluation</h1>
+        <div className="flex justify-end gap-2">
+          <Button
+            variant="solid"
+            color="primary"
+            className={`${isEditable === false ? "hidden" : ""}`}
+            onClick={handleUpdateCriteria}
+          >
+            Update
+          </Button>
+
+          <Button
+            variant="solid"
+            color="primary"
+            onClick={() => setIsEditable(!isEditable)}
+            className={`${isScored ? "hidden" : ""}`}
+          >
+            {isEditable ? "Cancel" : "Edit"}
+          </Button>
+        </div>
+      </div>
+
       <div>
         <div>
           <Table className="w-full">
-            <TableHeader columns={columns}>
+            <TableHeader columns={columnsCompany}>
               {(column) => (
                 <TableColumn key={column.key}>{column.label}</TableColumn>
               )}
@@ -169,21 +494,33 @@ export default function FinalReportPage() {
           </Table>
         </div>
 
-        <div>
+        <div className="mt-5 grid grid-cols-2 gap-2">
           <div>Total Percent: {complianceEvaluate.totalPercent}%</div>
           <div>
             Total Converted Score: {complianceEvaluate.totalConvertedScore}
           </div>
-          <div>Result: {complianceEvaluate.result}</div>
+          <div>
+            Result:{" "}
+            <span className={statusColor[complianceEvaluate.result]}>
+              {complianceEvaluate.result}
+            </span>
+          </div>
         </div>
       </div>
 
       <div>
-        <h1 className="mb-3 mt-3 text-lg font-semibold">Evaluation Total</h1>
         <h1 className="mb-3 mt-3 text-lg font-semibold">
-          Overall Score: {candidateInfor.overallScore}
+          III. Evaluation Total
         </h1>
-        <h1 className="mb-3 mt-3 text-lg font-semibold">Result</h1>
+        <h1 className="mb-3 mt-3 text-lg">
+          <span className="font-medium">Overall Score: </span>{" "}
+          {candidateInfor.overallScore}
+        </h1>
+        <div className="mb-3 mt-3 text-lg">
+          <span className={statusColor[candidateInfor?.result]}>
+            {candidateInfor?.result}
+          </span>
+        </div>
       </div>
     </div>
   );

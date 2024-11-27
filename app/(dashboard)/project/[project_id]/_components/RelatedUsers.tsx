@@ -29,6 +29,8 @@ export default function RelatedUsers(props?: RelatedUsersProps) {
         return <p className="text-sm">{item.fullName}</p>;
       case "role":
         return <p className="text-sm">{item.role}</p>;
+      case "position":
+        return <p className="text-sm">{item.position}</p>;
       case "totalTasks":
         return <p className="text-sm">{item.totalTask}</p>;
       case "completedTasks":
@@ -62,6 +64,10 @@ export default function RelatedUsers(props?: RelatedUsersProps) {
     {
       key: "role",
       title: "Role",
+    },
+    {
+      key: "position",
+      title: "Position",
     },
     {
       key: "totalTasks",
