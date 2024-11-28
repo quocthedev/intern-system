@@ -35,9 +35,11 @@ import { getCookie } from "@/app/util";
 import { toast } from "sonner";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
-  Approved: "success",
+  Approved: "warning",
+  InProgress: "success",
   Rejected: "danger",
-  Pending: "warning",
+  InterviewEmailSent: "warning",
+  CompletedOjt: "secondary",
 };
 
 export type AccountTableProps = {

@@ -19,7 +19,7 @@ export const CreateIcon = ({ size = 20, className }: ActionBarIconsProps) => (
   />
 );
 
-export const DeleteIcon = ({ size = 20, className }: ActionBarIconsProps) => (
+export const DeleteIcon = ({ size = 30, className }: ActionBarIconsProps) => (
   <Image
     alt="Delete Icon"
     width={size}

@@ -99,11 +99,20 @@ const labelsToRemoveMentor = [
   "Positions",
   "Technologies",
   "Accounts",
-  "Interviews",
 ];
 
 const labelsToRemoveUniver = [
   "Projects",
+  "Questions",
+  "Interns",
+  "Positions",
+  "Technologies",
+  "Accounts",
+  "Interviews",
+];
+
+const labelsToRemoveCandidate = [
+  "Dashboard",
   "Questions",
   "Interns",
   "Positions",
@@ -147,18 +156,11 @@ if (role === "Mentor") {
       NavigationItems.splice(index, 1);
     }
   }
-  NavigationItems.push(
-    {
-      label: "Candidates",
-      href: "/intern",
-      icon: InternManagementIcon,
-    },
-    {
-      label: "Intern periods",
-      href: "/internPeriod",
-      icon: InternManagementIcon,
-    },
-  );
+  NavigationItems.push({
+    label: "Candidates",
+    href: "/intern",
+    icon: InternManagementIcon,
+  });
 }
 
 if (role === "University Official") {
@@ -181,6 +183,21 @@ if (role === "University Official") {
       icon: InterviewManagementIcon,
     },
   );
+}
+
+if (role === "Candidate") {
+  for (const label of labelsToRemoveCandidate) {
+    const index = NavigationItems.findIndex((item) => item.label === label);
+
+    if (index !== -1) {
+      NavigationItems.splice(index, 1);
+    }
+  }
+  NavigationItems.push({
+    label: "Candidates",
+    href: "/intern",
+    icon: InternManagementIcon,
+  });
 }
 
 export default function Navigation(props: NavigationProps) {

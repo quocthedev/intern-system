@@ -21,25 +21,6 @@ export default function ActionBar(props: ActionBarProps) {
       />
       <div className="flex min-w-max gap-3">
         <Button
-          color="success"
-          size="md"
-          startContent={<ExcelIcon />}
-          className="text-white"
-          variant="shadow"
-        >
-          Export to Excel
-        </Button>
-
-        <Button
-          color="danger"
-          size="md"
-          startContent={<DeleteIcon />}
-          className="text-white"
-          variant="shadow"
-        >
-          Delete
-        </Button>
-        <Button
           color="primary"
           size="md"
           startContent={<AddIcon />}

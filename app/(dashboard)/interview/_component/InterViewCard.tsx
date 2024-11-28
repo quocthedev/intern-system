@@ -17,6 +17,9 @@ import {
 } from "@nextui-org/modal";
 import { Button } from "@nextui-org/button";
 import { DeleteIcon } from "@/app/(dashboard)/technology/_components/Icons";
+
+import { toast } from "sonner";
+
 import { useInterviewContext } from "../_providers/InterviewProvider";
 
 interface InterViewScheduleInterface {
@@ -52,7 +55,12 @@ export default function InterViewCard() {
     onError: (error) => {},
 
     onSuccess: () => {
+
+      toast.success("Schedule deleted successfully");
+      refetch();
+
       (refetchListInterview as () => void)();
+
     },
   });
 
@@ -83,25 +91,23 @@ export default function InterViewCard() {
                 key={interview.id as string}
                 className="w-full"
                 shadow="lg"
-                onPress={() => handlePress(interview.id)}
                 isPressable
               >
                 <CardHeader>
-                  <div>
+                  <div className="flex w-full items-center justify-between">
                     <div className="text-md mt-1 text-lg font-semibold">
                       {interview.title}
                     </div>
+                    <button
+                      className="bg-transparent"
+                      onClick={() => openModalDelete(interview.id as string)}
+                    >
+                      <DeleteIcon />
+                    </button>
                   </div>
-
-                  <button
-                    className="bg-transparent"
-                    onClick={() => openModalDelete(interview.id as string)}
-                  >
-                    <DeleteIcon />
-                  </button>
                 </CardHeader>
                 <Divider />
-                <CardBody>
+                <CardBody onClick={() => handlePress(interview.id)}>
                   <div className="mb-2 grid grid-cols-2">
                     <div className="flex items-center gap-2">
                       <span className="font-semibold">Start date: </span>

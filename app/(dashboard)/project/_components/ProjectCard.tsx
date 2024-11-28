@@ -92,7 +92,7 @@ export default function ProjectCard(
                 .join(", ")}
             </p>
           </div>
-          <div className="flex gap-1 text-xs">
+          {/* <div className="flex gap-1 text-xs">
             <p className="font-semibold">Mentor:</p>
             <p>
               {props.groupUserRelated
@@ -100,7 +100,7 @@ export default function ProjectCard(
                 ?.users.map((user) => user.fullName)
                 .join(", ")}
             </p>
-          </div>
+          </div> */}
           <div className="flex items-center gap-1 text-xs">
             <p className="font-semibold">Zalo Group:</p>
             <Link href={props.zaloUri} isExternal className="text-xs">
