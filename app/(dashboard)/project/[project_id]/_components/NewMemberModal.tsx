@@ -72,13 +72,11 @@ export default function NewMemberModal(props: NewMemberModalProps) {
     try {
       const candidates = Array.from(selectedKeys).map((key) => ({
         userId: key,
-        role: Number(roleMapping[key] || "4"),
+        role: Number(roleMapping[key] || "3"),
       }));
 
       await addNewMembers(props.projectId, candidates);
-
       toast.success("New members added successfully");
-
       queryClient.invalidateQueries();
     } catch (error) {
       console.log(error);
@@ -111,22 +109,18 @@ export default function NewMemberModal(props: NewMemberModalProps) {
   const roles = [
     {
       key: "0",
-      name: "Creator",
-    },
-    {
-      key: "1",
       name: "Leader",
     },
     {
-      key: "2",
+      key: "1",
       name: "Subleader",
     },
     {
-      key: "3",
+      key: "2",
       name: "Mentor",
     },
     {
-      key: "4",
+      key: "3",
       name: "Member",
     },
   ];
@@ -144,7 +138,7 @@ export default function NewMemberModal(props: NewMemberModalProps) {
       case "role":
         return (
           <Select
-            defaultSelectedKeys={["4"]}
+            defaultSelectedKeys={["3"]}
             onSelectionChange={(selectedKeys) => {
               roleMapping[item.id] = selectedKeys.currentKey as string;
             }}
