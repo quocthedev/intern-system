@@ -57,6 +57,7 @@ export default function CandidateInformationPage() {
   });
 
   const candidateData = data?.data || {};
+  console.log(candidateData?.status);
 
   const updateMutation = useMutation({
     mutationFn: async () => {
