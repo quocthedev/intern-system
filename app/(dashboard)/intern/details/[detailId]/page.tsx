@@ -8,11 +8,24 @@ import CandidateCVPage from "@/app/(dashboard)/intern/details/[detailId]/Candida
 import InterviewInformation from "../../_components/InterviewInformation";
 import { useParams } from "next/navigation";
 import FinalReportPage from "@/app/(dashboard)/intern/details/[detailId]/FinalReportPage";
+import { useQuery } from "@tanstack/react-query";
+import { API_ENDPOINTS } from "@/libs/config";
 
 export default function CandidateDetailPage() {
   const params = useParams();
   const candidateId = params.detailId as string;
 
+  const { isLoading, data, refetch } = useQuery({
+    queryKey: ["data", candidateId],
+    queryFn: async () => {
+      const response = await fetch(API_ENDPOINTS.candidate + "/" + candidateId);
+      const candidate = await response.json();
+
+      return candidate;
+    },
+  });
+
+  const candidateData = data?.data || {};
   return (
     <div className="flex h-full w-full flex-col p-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4">

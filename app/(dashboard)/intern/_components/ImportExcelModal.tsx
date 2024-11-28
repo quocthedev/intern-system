@@ -72,8 +72,8 @@ function ImportExcelModal() {
         },
       );
       toast.success("Upload file successfully!");
+      refetch();
       onClose();
-      await refetch();
     } catch (error) {
       toast.error("Error uploading file");
     }

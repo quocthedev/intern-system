@@ -42,7 +42,7 @@ export default function MemberUpdate(props: MemberUpdateProps) {
   const queryClient = useQueryClient();
 
   const [role, setRole] = React.useState<string>(
-    roles.find((role) => role.name === props.role)?.key || "4",
+    roles.find((role) => role.name === props.role)?.key || "3",
   );
 
   const submit = async () => {

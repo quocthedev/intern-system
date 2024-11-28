@@ -71,7 +71,7 @@ export default function InterviewConfirmation() {
                 </Radio>
 
                 <Radio
-                  value={"0"}
+                  value={"2"}
                   onClick={() => setIsReject(true)}
                   isDisabled={isSending}
                 >
