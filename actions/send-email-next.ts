@@ -4,7 +4,6 @@ import APIClient from "@/libs/api-client";
 import { cookies } from "next/headers";
 import { API_ENDPOINTS } from "@/libs/config";
 import { parseZonedDateTime } from "@internationalized/date";
-import { revalidatePath } from "next/cache";
 const apiClient = new APIClient(
   // Add a response interceptor to handle errors
   {
@@ -19,14 +18,13 @@ const apiClient = new APIClient(
 export async function sendEmail(data: FormData) {
   const recipients = data.get("recipients")?.toString().split(",") as string[];
   const subject = data.get("subject")?.toString() as string;
-  // const dateTime = new Time(data.get("dateTime")?.toString())
-  // const time = data.get("time")?.toString();
+
   const dateTime = parseZonedDateTime(
     data.get("dateTime")?.toString() as string,
-  ).toDate() as Date;
+  );
 
-  const date = dateTime.toISOString().split("T")[0];
-  const time = `${dateTime.getHours()}:${dateTime.getMinutes()}`;
+  const date = `${dateTime.year}-${dateTime.month}-${dateTime.day}`;
+  const time = `${dateTime.hour}:${dateTime.minute}`;
 
   const format = Number(data.get("format")) as number;
   const location = data.get("location")?.toString() as string;
