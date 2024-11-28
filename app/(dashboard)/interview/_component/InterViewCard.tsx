@@ -55,12 +55,9 @@ export default function InterViewCard() {
     onError: (error) => {},
 
     onSuccess: () => {
-
       toast.success("Schedule deleted successfully");
-      refetch();
 
       (refetchListInterview as () => void)();
-
     },
   });
 
