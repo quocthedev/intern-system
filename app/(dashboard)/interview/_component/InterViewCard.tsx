@@ -1,9 +1,7 @@
 "use client";
 
-import APIClient from "@/libs/api-client";
 import { API_ENDPOINTS } from "@/libs/config";
-import { PaginationResponse, PaginationResponseSuccess } from "@/libs/types";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import { Pagination } from "@nextui-org/pagination";
@@ -19,7 +17,10 @@ import {
 } from "@nextui-org/modal";
 import { Button } from "@nextui-org/button";
 import { DeleteIcon } from "@/app/(dashboard)/technology/_components/Icons";
+
 import { toast } from "sonner";
+
+import { useInterviewContext } from "../_providers/InterviewProvider";
 
 interface InterViewScheduleInterface {
   id: string;
@@ -35,13 +36,6 @@ interface InterViewScheduleInterface {
   interviewer: any;
 }
 
-const apiClient = new APIClient({
-  onFulfilled: (response) => response,
-  onRejected: (error) => {
-    console.log(error.response.data);
-  },
-});
-
 export default function InterViewCard() {
   const [pageIndex, setPageIndex] = useState(1);
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
@@ -49,30 +43,8 @@ export default function InterViewCard() {
 
   const pageSize = 6;
 
-  const { isLoading, data, refetch } = useQuery({
-    queryKey: ["interviewSchedule", pageIndex, pageSize],
-    queryFn: async () => {
-      const response = await apiClient.get<
-        PaginationResponse<InterViewScheduleInterface>
-      >(API_ENDPOINTS.interviewSchedule, {
-        params: new URLSearchParams({
-          PageIndex: pageIndex.toString(),
-          PageSize: pageSize.toString(),
-        }),
-      });
-
-      if (response?.statusCode === "200") {
-        const { data } =
-          response as PaginationResponseSuccess<InterViewScheduleInterface>;
-
-        return {
-          interviewSchedules: data.pagingData,
-          pageIndex: data.pageIndex,
-          totalPages: data.totalPages,
-        };
-      }
-    },
-  });
+  const { listInterviewData, refetchListInterview } =
+    useInterviewContext() || {};
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) =>
@@ -83,8 +55,12 @@ export default function InterViewCard() {
     onError: (error) => {},
 
     onSuccess: () => {
+
       toast.success("Schedule deleted successfully");
       refetch();
+
+      (refetchListInterview as () => void)();
+
     },
   });
 
@@ -108,8 +84,8 @@ export default function InterViewCard() {
   return (
     <div>
       <div className="grid h-full grid-cols-3 gap-6">
-        {data?.interviewSchedules &&
-          data.interviewSchedules.map(
+        {listInterviewData?.interviewSchedules &&
+          listInterviewData.interviewSchedules.map(
             (interview: InterViewScheduleInterface) => (
               <Card
                 key={interview.id as string}
@@ -204,7 +180,11 @@ export default function InterViewCard() {
         isCompact
         loop
         showControls
-        total={data?.totalPages ? Number(data.totalPages) : 0}
+        total={
+          listInterviewData?.totalPages
+            ? Number(listInterviewData.totalPages)
+            : 0
+        }
         initialPage={pageIndex}
         onChange={(page) => {
           setPageIndex(page);
