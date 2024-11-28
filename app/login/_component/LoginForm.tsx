@@ -57,7 +57,7 @@ export const LoginForm = () => {
       <div className="flex min-h-screen items-center justify-center">
         <div className="w-[30%] rounded-xl bg-white p-10 shadow-xl">
           <div className="mb-10 text-center text-2xl font-semibold">
-            Welcome!
+            Welcome to InternS!
           </div>
 
           <form
@@ -111,13 +111,13 @@ export const LoginForm = () => {
               <div className="mb-4 text-red-500">{errorMessage}</div>
             )}
 
-            <div className="mt-4">
+            {/* <div className="mt-4">
               <Checkbox defaultSelected size="md"></Checkbox>
               <span className="-ml-1 mr-20 mt-0.5 text-xs">Remember me</span>
               <span className="mt-0.5 text-xs text-blue-500">
                 Forgot password?
               </span>
-            </div>
+            </div> */}
 
             <Button
               isLoading={isLoading}

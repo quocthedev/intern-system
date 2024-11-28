@@ -121,10 +121,10 @@ export default function TaskModal(props: TaskModalProps) {
           return;
         }
 
-        if (startDate >= dueDate) {
-          toast.warning("Due date must be after start date");
-          return;
-        }
+        // if (startDate >= dueDate) {
+        //   toast.warning("Due date must be after start date");
+        //   return;
+        // }
 
         await createNewTask(formData);
         toast.success("Task created successfully!");

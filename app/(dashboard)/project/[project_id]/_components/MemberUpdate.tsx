@@ -12,6 +12,8 @@ import { Select, SelectItem } from "@nextui-org/select";
 import React from "react";
 import { EditIcon } from "../../_components/Icons";
 import { updateMember } from "@/actions/update-member";
+import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 
 export type MemberUpdateProps = {
   projectName: string;
@@ -23,10 +25,6 @@ export type MemberUpdateProps = {
 export default function MemberUpdate(props: MemberUpdateProps) {
   const roles = [
     {
-      key: "0",
-      name: "Creator",
-    },
-    {
       key: "1",
       name: "Leader",
     },
@@ -36,26 +34,29 @@ export default function MemberUpdate(props: MemberUpdateProps) {
     },
     {
       key: "3",
-      name: "Mentor",
-    },
-    {
-      key: "4",
       name: "Member",
     },
   ];
 
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+  const queryClient = useQueryClient();
 
   const [role, setRole] = React.useState<string>(
     roles.find((role) => role.name === props.role)?.key || "4",
   );
 
   const submit = async () => {
-    await updateMember({
+    const result = await updateMember({
       userId: props.memberId,
       role,
       projectId: props.projectId,
     });
+
+    if (result) {
+      toast.success("Member updated successfully");
+      queryClient.invalidateQueries();
+      onClose();
+    }
   };
 
   return (

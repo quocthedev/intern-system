@@ -8,6 +8,7 @@ import { formatedDate } from "@/app/util";
 import APIClient from "@/libs/api-client";
 import { API_ENDPOINTS } from "@/libs/config";
 import { Button } from "@nextui-org/button";
+import { Divider } from "@nextui-org/divider";
 import { Input } from "@nextui-org/input";
 import { Spinner } from "@nextui-org/spinner";
 import {
@@ -26,8 +27,18 @@ import { toast } from "react-toastify";
 export default function FinalReportPage() {
   const statusColor: Record<string, string> = {
     NotPassed: "text-danger font-medium",
-    Passed: "text-success",
+    Passed: "text-success font-medium",
+    Excellent: "text-success font-medium",
   };
+
+  const difficultyMap: any = {
+    Easy: 1,
+    MediumEasy: 2,
+    Medium: 3,
+    MediumHard: 4,
+    Hard: 5,
+  };
+
   const params = useParams();
   const candidateId = params.detailId as string;
 
@@ -146,7 +157,11 @@ export default function FinalReportPage() {
       case "task":
         return <p className="text-xs">{task.title}</p>;
       case "difficulty":
-        return <p className="text-xs">{task.difficulty}</p>;
+        return (
+          <p className="text-xs">
+            {difficultyMap[task.difficulty] ?? task.difficulty}
+          </p>
+        );
       case "target":
         return <p className="text-xs">100</p>;
       case "completionProgress":
@@ -337,7 +352,7 @@ export default function FinalReportPage() {
         </div>
       </div>
 
-      <h1 className="mt-3 text-lg font-semibold">
+      <h1 className="mt-8 text-lg font-semibold">
         I. Work Performance Evaluation
       </h1>
 
@@ -347,9 +362,9 @@ export default function FinalReportPage() {
 
           return (
             <div key={workPerformance.title}>
-              <div className="grid grid-cols-2 gap-4 text-sm">
+              <div className="grid grid-cols-2 gap-4">
                 <div className="mt-3">
-                  <span className="font-medium">Project:</span>{" "}
+                  <span className="font-medium">Project name:</span>{" "}
                   {workPerformance.title}
                 </div>
                 <div className="mt-3">
@@ -357,7 +372,7 @@ export default function FinalReportPage() {
                   {workPerformance.leader}
                 </div>
                 <div className="mb-4">
-                  <span className="font-medium">State date:</span>{" "}
+                  <span className="font-medium">Start date:</span>{" "}
                   {formatedDate(workPerformance.startDate)}
                 </div>
                 <div className="mb-4">
@@ -397,28 +412,34 @@ export default function FinalReportPage() {
                 </Table>
               </div>
 
-              <div className="mt-3">
-                <span className="font-medium">Leader:</span>{" "}
-                {workPerformance.totalDifficulty}
+              <div className="mb-4 grid grid-cols-2 text-sm">
+                {" "}
+                <div className="mt-3">
+                  <span className="font-medium">Total difficulty: </span>{" "}
+                  {workPerformance.totalDifficulty}
+                </div>
+                <div className="mt-3">
+                  <span className="font-medium">Total KPI: </span>{" "}
+                  {workPerformance.totalKPI}
+                </div>
+                <div className="mt-2">
+                  <span className="font-medium">Total average score: </span>{" "}
+                  {workPerformance.averageScore}
+                </div>
+                <div className="mt-2">
+                  <span className="font-medium">Result: </span>{" "}
+                  <span className={statusColor[workPerformance.result]}>
+                    {workPerformance.result}
+                  </span>
+                </div>
               </div>
-              <div className="mt-3">
-                <span className="font-medium">Leader:</span>{" "}
-                {workPerformance.totalKPI}
-              </div>
-              <div className="mt-3">
-                <span className="font-medium">Leader:</span>{" "}
-                {workPerformance.averageScore}
-              </div>
-              <div className="mt-3">
-                <span className="font-medium">Leader:</span>{" "}
-                {workPerformance.result}
-              </div>
+              <Divider className="mb-8" />
             </div>
           );
         })}
       </div>
 
-      <h1 className="text-md mb-1 mt-3 font-semibold">Final project score</h1>
+      <h1 className="mb-1 mt-3 text-lg font-semibold">Final project score</h1>
       <div className="mb-5 grid grid-cols-2 gap-2 text-sm">
         <div>
           <span className="font-medium">Total difficulty: </span>
@@ -459,7 +480,7 @@ export default function FinalReportPage() {
             onClick={() => setIsEditable(!isEditable)}
             className={`${isScored ? "hidden" : ""}`}
           >
-            {isEditable ? "Cancel" : "Edit"}
+            {isEditable ? "Cancel" : "Evaluate"}
           </Button>
         </div>
       </div>
@@ -508,18 +529,23 @@ export default function FinalReportPage() {
         </div>
       </div>
 
-      <div>
-        <h1 className="mb-3 mt-3 text-lg font-semibold">
-          III. Evaluation Total
-        </h1>
-        <h1 className="mb-3 mt-3 text-lg">
-          <span className="font-medium">Overall Score: </span>{" "}
-          {candidateInfor.overallScore}
-        </h1>
-        <div className="mb-3 mt-3 text-lg">
-          <span className={statusColor[candidateInfor?.result]}>
-            {candidateInfor?.result}
-          </span>
+      <h1 className="mt-8 text-xl font-semibold">Evaluation Total</h1>
+      <div className="mt-2 grid grid-cols-2 gap-72">
+        <div>
+          <h1 className="text-lg">
+            <span className="font-medium">Overall Score: </span>{" "}
+            {candidateInfor.overallScore}
+          </h1>
+          <div className="text-lg">
+            <span className="font-medium"> Final result: </span>
+            <span className={statusColor[candidateInfor?.result]}>
+              {candidateInfor?.result}
+            </span>
+          </div>
+        </div>
+        <div>
+          <div className="text-center font-semibold">Evaluator name </div>
+          <div className="text-center">(Sign and write full name) </div>
         </div>
       </div>
     </div>
