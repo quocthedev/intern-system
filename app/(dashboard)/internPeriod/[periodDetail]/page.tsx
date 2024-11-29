@@ -20,13 +20,17 @@ import { Tooltip } from "@nextui-org/tooltip";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 import { Skeleton } from "@nextui-org/skeleton";
 import { Button } from "@nextui-org/button";
+import ImportExcelModal2 from "@/app/(dashboard)/internPeriod/[periodDetail]/ImportExcelModal2";
 
 export default function PeriodDetailPage() {
   const params = useParams();
   const internPeriodId = params.periodDetail as string;
+  const [universityId, setUniversityId] = useState();
+
+  console.log(universityId);
 
   const { isLoading, data } = useQuery({
     queryKey: ["data", internPeriodId],
@@ -50,8 +54,6 @@ export default function PeriodDetailPage() {
 
   const universitesData = data?.candidateData || [];
   const internPeriodData = data?.internPeriodData || [];
-
-  console.log(internPeriodData);
 
   const columnCandidate = [
     {
@@ -259,7 +261,9 @@ export default function PeriodDetailPage() {
               <span>{internPeriodData?.currentUniversityQuantity}</span>
             </div>
             <div className="flex items-center border-b pb-2">
-              <span className="w-1/2 font-medium">Current Candidates:</span>
+              <span className="w-1/2 font-medium">
+                Total number of current candidates:
+              </span>
               <span>{internPeriodData?.currentCandidateQuantity}</span>
             </div>
 
@@ -299,8 +303,13 @@ export default function PeriodDetailPage() {
                     e.universityName,
                     e.candidateQuantity,
                   )}
+                  onPress={() => setUniversityId(e.id)}
                 >
                   <div>
+                    <ImportExcelModal2
+                      internPeriodId={internPeriodId}
+                      universityId={e.id}
+                    />
                     <Table
                       classNames={{
                         wrapper: "p-0",

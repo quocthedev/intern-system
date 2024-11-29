@@ -123,7 +123,7 @@ export default function InternPeriodTable() {
         case "currentUniversityQuantity":
           return (
             <div className="text-center text-xs">
-              {period.currentUniversityQuantity}{" "}
+              {period.currentUniversityQuantity}
             </div>
           );
         case "currentCandidateQuantity":
@@ -156,10 +156,12 @@ export default function InternPeriodTable() {
                   </button>
                 </Link>
               </Tooltip>
+
               <Tooltip content="Delete">
                 <button
                   onClick={() => handleDeleteConfirmation(period.id)}
                   className="-mt-1 cursor-pointer"
+                  hidden={period.currentCandidateQuantity > 0}
                 >
                   <DeleteIcon />
                 </button>
