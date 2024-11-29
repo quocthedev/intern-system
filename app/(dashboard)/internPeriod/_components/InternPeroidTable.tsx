@@ -28,6 +28,7 @@ import {
 import { Button } from "@nextui-org/button";
 import { toast } from "sonner";
 import Link from "next/link";
+import { useInternPeriodContext } from "../_providers/InternPeriodProvider";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   InProgress: "warning",
@@ -39,18 +40,14 @@ export default function InternPeriodTable() {
   const [selectedPeriod, setSelectedPeriod] = useState<string | null>(null);
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
 
-  const { isLoading, error, data, refetch } = useQuery({
-    queryKey: ["data"],
-    queryFn: async () => {
-      const internPeriod = await fetch(API_ENDPOINTS.internPeriod).then((res) =>
-        res.json(),
-      );
+  const {
+    isListInternPeriodLoading,
+    listInternPeriodData,
+    refetchListInternPeriod,
+    setInternPeriodPageId,
+  } = useInternPeriodContext();
 
-      return { period: internPeriod?.data?.pagingData || [] };
-    },
-  });
-
-  const periodData = data?.period || [];
+  const periodData = listInternPeriodData?.periods || [];
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) =>
@@ -60,7 +57,7 @@ export default function InternPeriodTable() {
 
     onSuccess: () => {
       toast.success("Deleted period successfully!");
-      refetch();
+      refetchListInternPeriod();
     },
     onError: (error) => {
       console.error("Error:", error);
@@ -181,8 +178,6 @@ export default function InternPeriodTable() {
     return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
   };
 
-  if (error) return <div>Error: {error.message}</div>;
-
   return (
     <>
       <Table>
@@ -193,7 +188,7 @@ export default function InternPeriodTable() {
         </TableHeader>
         <TableBody
           items={periodData}
-          loadingState={isLoading ? "loading" : "idle"}
+          loadingState={isListInternPeriodLoading ? "loading" : "idle"}
           loadingContent={
             <div className="flex items-center gap-2">
               <Spinner /> Loading...

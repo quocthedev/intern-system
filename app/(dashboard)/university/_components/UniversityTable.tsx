@@ -18,18 +18,11 @@ import {
 import { toast } from "sonner";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
-import APIClient from "@/libs/api-client";
-import { PaginationResponse, PaginationResponseSuccess } from "@/libs/types";
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import { Divider } from "@nextui-org/divider";
 import { Pagination } from "@nextui-org/pagination";
 import Image from "next/image";
-const apiClient = new APIClient({
-  onFulfilled: (response) => response,
-  onRejected: (error) => {
-    console.log(error.response.data);
-  },
-});
+import { useUniversity } from "@/data-store/university";
 
 interface UniversityInterface {
   id: string;
@@ -66,30 +59,8 @@ export default function UniversityTable() {
   const pageSize = 6;
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  const { isLoading, error, data, refetch } = useQuery({
-    queryKey: ["university", pageIndex, pageSize],
-    queryFn: async () => {
-      const response = await apiClient.get<
-        PaginationResponse<UniversityInterface>
-      >(API_ENDPOINTS.university, {
-        params: new URLSearchParams({
-          PageIndex: pageIndex.toString(),
-          PageSize: pageSize.toString(),
-        }),
-      });
+  const { isLoading, error, data, refetch } = useUniversity({ pageSize });
 
-      if (response?.statusCode === "200") {
-        const { data } =
-          response as PaginationResponseSuccess<UniversityInterface>;
-
-        return {
-          universitites: data.pagingData,
-          pageIndex: data.pageIndex,
-          totalPages: data.totalPages,
-        };
-      }
-    },
-  });
   const mutation = useMutation({
     mutationFn: (id: string) =>
       fetch(API_ENDPOINTS.university + "/" + id, {
