@@ -31,12 +31,14 @@ export default function InterviewConfirmation() {
 
   const handleAccept = () => {
     setIsReject(false);
-    redirect("/");
+    window.history.replaceState(null, "", "/interview-confirmation/detail");
+    redirect("/interview-confirmation/detail");
   };
 
   const handleRefuse = () => {
     setIsReject(true);
-    redirect("/");
+    window.history.replaceState(null, "", "/interview-confirmation/detail");
+    redirect("//interview-confirmation/detail");
   };
 
   return (
