@@ -29,9 +29,10 @@ const apiClient = new APIClient({
 
 export function useInternPeriod(params: { pageSize: number }) {
   const [pageIndex, setPageIndex] = useState(1);
+  const [search, setSearch] = useState("");
 
   const { isLoading, error, data, refetch } = useQuery({
-    queryKey: ["university", pageIndex, params.pageSize],
+    queryKey: ["university", pageIndex, params.pageSize, search],
     queryFn: async () => {
       const response = await apiClient.get<PaginationResponse<InternPeriod>>(
         API_ENDPOINTS.internPeriod,
@@ -39,6 +40,7 @@ export function useInternPeriod(params: { pageSize: number }) {
           params: new URLSearchParams({
             PageIndex: pageIndex.toString(),
             PageSize: params.pageSize.toString(),
+            Search: search,
           }),
         },
       );
@@ -63,5 +65,6 @@ export function useInternPeriod(params: { pageSize: number }) {
     data,
     refetch,
     setPageIndex,
+    setSearch,
   };
 }

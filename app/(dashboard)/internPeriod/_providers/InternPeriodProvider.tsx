@@ -22,6 +22,7 @@ export interface InternPeriodContextInterface {
     | null;
   refetchListInternPeriod: () => void;
   setInternPeriodPageId: (pageId: number) => void;
+  setSearch: (search: string) => void;
 }
 
 const InternPeriodContext = createContext<InternPeriodContextInterface>(
@@ -38,6 +39,7 @@ export default function InternPeriodProvider({
     data: listInternPeriodData,
     refetch: refetchListInternPeriod,
     setPageIndex: setInternPeriodPageId,
+    setSearch,
   } = useInternPeriod({
     pageSize: 10,
   });
@@ -49,6 +51,7 @@ export default function InternPeriodProvider({
         listInternPeriodData,
         refetchListInternPeriod,
         setInternPeriodPageId,
+        setSearch,
       }}
     >
       {children}
