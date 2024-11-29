@@ -1,26 +1,25 @@
 "use client";
 
 import { Card, CardBody } from "@nextui-org/card";
-import { Checkbox } from "@nextui-org/checkbox";
 import { Textarea } from "@nextui-org/input";
-import { redirect, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 import { RadioGroup, Radio } from "@nextui-org/radio";
 import { Button } from "@nextui-org/button";
 import { confirmAttendance } from "@/actions/confirm-attendance";
-import { useFormStatus } from "react-dom";
-import { stat } from "fs";
 import { Spinner } from "@nextui-org/spinner";
 
 export default function InterviewConfirmation() {
   const searchParams = useSearchParams();
-  // Get query params from the URL
+  const router = useRouter(); // For navigation
+
   const scheduleId = searchParams.get("scheduleId");
   const candidateId = searchParams.get("candidateId");
+
   const [isSending, setIsSending] = React.useState(false);
   const [isReject, setIsReject] = React.useState(true);
 
-  // Makesure the scheduleId and candidateId are not null
+  // Ensure the scheduleId and candidateId are not null
   if (!scheduleId || !candidateId) {
     return (
       <div>
@@ -29,14 +28,22 @@ export default function InterviewConfirmation() {
     );
   }
 
-  const handleAccept = () => {
-    setIsReject(false);
-    redirect("/");
-  };
+  const handleSubmit = async (formData: FormData) => {
+    setIsSending(true);
+    formData.append("candidateId", candidateId);
+    formData.append("scheduleId", scheduleId);
 
-  const handleRefuse = () => {
-    setIsReject(true);
-    redirect("/");
+    await confirmAttendance(formData);
+
+    // Navigate to the home page if the user accepted
+    if (!isReject) {
+      window.history.replaceState(null, "", "interview-confirmation/detail");
+      router.push("/interview-confirmation/detail");
+    } else {
+      setIsSending(false);
+      window.history.replaceState(null, "", "/reject");
+      router.push("/reject");
+    }
   };
 
   return (
@@ -48,13 +55,10 @@ export default function InterviewConfirmation() {
           ) : (
             <form
               className="flex w-full flex-col gap-3 p-3"
-              action={(formData: FormData) => {
-                formData.append("candidateId", candidateId);
-                formData.append("scheduleId", scheduleId);
-
-                setIsSending(true);
-                confirmAttendance(formData);
-                setIsSending(false);
+              onSubmit={(e) => {
+                e.preventDefault();
+                const formData = new FormData(e.currentTarget);
+                handleSubmit(formData);
               }}
             >
               <h1 className="font-bold">Interview Confirmation</h1>
@@ -66,15 +70,13 @@ export default function InterviewConfirmation() {
               </p>
 
               <RadioGroup
-                label="
-              Proceed to the interview?
-            "
+                label="Proceed to the interview?"
                 name="status"
                 defaultValue="0"
               >
                 <Radio
                   value={"1"}
-                  onClick={handleAccept}
+                  onClick={() => setIsReject(false)}
                   isDisabled={isSending}
                 >
                   Accept
@@ -82,7 +84,7 @@ export default function InterviewConfirmation() {
 
                 <Radio
                   value={"2"}
-                  onClick={handleRefuse}
+                  onClick={() => setIsReject(true)}
                   isDisabled={isSending}
                 >
                   Reject
@@ -96,8 +98,8 @@ export default function InterviewConfirmation() {
                   name="reason"
                 />
               )}
-              <Button color="primary" type="submit">
-                Send
+              <Button color="primary" type="submit" isDisabled={isSending}>
+                {isSending ? "Sending..." : "Send"}
               </Button>
             </form>
           )}
