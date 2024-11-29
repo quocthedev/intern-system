@@ -19,6 +19,7 @@ import NewPeriodModal from "@/app/(dashboard)/internPeriod/_components/NewPeriod
 import { formatedDate } from "@/app/util";
 import { Divider } from "@nextui-org/divider";
 import Link from "next/link";
+import NewPeriodModalNext from "../../internPeriod/_components/NewPeriodModal_next";
 
 function ImportExcelModal() {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
@@ -143,7 +144,7 @@ function ImportExcelModal() {
             <ModalHeader className="flex items-center justify-between">
               <span>Import candidate list</span>
               <div className="mr-4">
-                <NewPeriodModal />
+                <NewPeriodModalNext />
               </div>
             </ModalHeader>
             <Divider />
