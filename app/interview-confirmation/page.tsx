@@ -3,7 +3,7 @@
 import { Card, CardBody } from "@nextui-org/card";
 import { Checkbox } from "@nextui-org/checkbox";
 import { Textarea } from "@nextui-org/input";
-import { useSearchParams } from "next/navigation";
+import { redirect, useSearchParams } from "next/navigation";
 import React from "react";
 import { RadioGroup, Radio } from "@nextui-org/radio";
 import { Button } from "@nextui-org/button";
@@ -28,6 +28,16 @@ export default function InterviewConfirmation() {
       </div>
     );
   }
+
+  const handleAccept = () => {
+    setIsReject(false);
+    redirect("/");
+  };
+
+  const handleRefuse = () => {
+    setIsReject(true);
+    redirect("/");
+  };
 
   return (
     <div className="flex h-screen w-screen flex-col items-center justify-center">
@@ -64,7 +74,7 @@ export default function InterviewConfirmation() {
               >
                 <Radio
                   value={"1"}
-                  onClick={() => setIsReject(false)}
+                  onClick={handleAccept}
                   isDisabled={isSending}
                 >
                   Accept
@@ -72,7 +82,7 @@ export default function InterviewConfirmation() {
 
                 <Radio
                   value={"2"}
-                  onClick={() => setIsReject(true)}
+                  onClick={handleRefuse}
                   isDisabled={isSending}
                 >
                   Reject
