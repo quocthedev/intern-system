@@ -29,6 +29,7 @@ import { Button } from "@nextui-org/button";
 import { toast } from "sonner";
 import Link from "next/link";
 import { useInternPeriodContext } from "../_providers/InternPeriodProvider";
+import { Pagination } from "@nextui-org/pagination";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   InProgress: "warning",
@@ -179,7 +180,7 @@ export default function InternPeriodTable() {
   };
 
   return (
-    <>
+    <div className="flex flex-col items-center gap-3">
       <Table>
         <TableHeader columns={columns}>
           {(column) => (
@@ -206,6 +207,18 @@ export default function InternPeriodTable() {
           ))}
         </TableBody>
       </Table>
+
+      <Pagination
+        isCompact
+        loop
+        showControls
+        total={Number(listInternPeriodData?.totalPages) || 1}
+        initialPage={1}
+        onChange={(page) => {
+          setInternPeriodPageId(page);
+        }}
+      />
+
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="max-w-fit">
         <ModalContent>
           <ModalBody className="mt-4 text-center">
@@ -221,6 +234,6 @@ export default function InternPeriodTable() {
           </ModalBody>
         </ModalContent>
       </Modal>
-    </>
+    </div>
   );
 }
