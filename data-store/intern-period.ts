@@ -3,6 +3,8 @@ import { PaginationResponse, PaginationResponseSuccess } from "./../libs/types";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { API_ENDPOINTS } from "@/libs/config";
+import { create } from "zustand";
+import { toast } from "sonner";
 
 interface InternPeriod {
   name: string;
@@ -20,6 +22,12 @@ interface InternPeriod {
   isDeleted: boolean;
 }
 
+export type InternPeriodFilter = Partial<{
+  FromDate: string;
+  ToDate: string;
+  Status: string;
+}>;
+
 const apiClient = new APIClient({
   onFulfilled: (response) => response,
   onRejected: (error) => {
@@ -27,21 +35,73 @@ const apiClient = new APIClient({
   },
 });
 
+// Make sure the filter is valid
+const validate = (filter: InternPeriodFilter) => {
+  if (filter.FromDate && filter.ToDate) {
+    const fromDate = new Date(filter.FromDate);
+    const toDate = new Date(filter.ToDate);
+
+    return fromDate < toDate;
+  }
+  return true;
+};
+
+const useFilterStore = create<{
+  filter: InternPeriodFilter | null;
+  setFilter: (newFilter: InternPeriodFilter | null) => void;
+  removeOneFilter: (key: keyof InternPeriodFilter) => void;
+  removeAllFilter: () => void;
+}>((set) => ({
+  filter: null,
+  setFilter: (newFilter: InternPeriodFilter | null) => {
+    if (!newFilter) {
+      toast.error("Please select at least one filter");
+
+      return;
+    }
+
+    if (newFilter && !validate(newFilter)) {
+      toast.error("From date must be less than To Date");
+
+      return;
+    }
+    set({ filter: newFilter });
+  },
+  removeOneFilter: (key: keyof InternPeriodFilter) =>
+    set((state) => {
+      const newFilter = { ...state.filter };
+
+      delete newFilter[key];
+
+      return { filter: newFilter };
+    }),
+
+  removeAllFilter: () => set({ filter: null }),
+}));
+
 export function useInternPeriod(params: { pageSize: number }) {
   const [pageIndex, setPageIndex] = useState(1);
   const [search, setSearch] = useState("");
 
+  const { filter, setFilter, removeOneFilter, removeAllFilter } =
+    useFilterStore();
+
   const { isLoading, error, data, refetch } = useQuery({
-    queryKey: ["university", pageIndex, params.pageSize, search],
+    queryKey: ["university", pageIndex, params.pageSize, search, filter],
     queryFn: async () => {
       const response = await apiClient.get<PaginationResponse<InternPeriod>>(
         API_ENDPOINTS.internPeriod,
         {
-          params: new URLSearchParams({
-            PageIndex: pageIndex.toString(),
-            PageSize: params.pageSize.toString(),
-            Search: search,
-          }),
+          params: new URLSearchParams(
+            Object.assign(
+              {
+                PageIndex: pageIndex.toString(),
+                PageSize: params.pageSize.toString(),
+                Search: search,
+              },
+              filter ?? {},
+            ),
+          ),
         },
       );
 
@@ -66,5 +126,9 @@ export function useInternPeriod(params: { pageSize: number }) {
     refetch,
     setPageIndex,
     setSearch,
+    filter,
+    setFilter,
+    removeOneFilter,
+    removeAllFilter,
   };
 }
