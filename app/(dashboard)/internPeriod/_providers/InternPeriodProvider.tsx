@@ -1,5 +1,8 @@
 "use client";
-import { useInternPeriod } from "@/data-store/intern-period";
+import {
+  InternPeriodFilter,
+  useInternPeriod,
+} from "@/data-store/intern-period";
 import { createContext, useContext } from "react";
 
 export interface InternPeriodContextInterface {
@@ -23,6 +26,10 @@ export interface InternPeriodContextInterface {
   refetchListInternPeriod: () => void;
   setInternPeriodPageId: (pageId: number) => void;
   setSearch: (search: string) => void;
+  filter: InternPeriodFilter;
+  setFilter: (newFilter: InternPeriodFilter | null) => void;
+  removeOneFilter: (key: keyof InternPeriodFilter) => void;
+  removeAllFilter: () => void;
 }
 
 const InternPeriodContext = createContext<InternPeriodContextInterface>(
@@ -39,7 +46,12 @@ export default function InternPeriodProvider({
     data: listInternPeriodData,
     refetch: refetchListInternPeriod,
     setPageIndex: setInternPeriodPageId,
+
     setSearch,
+    filter,
+    setFilter,
+    removeOneFilter,
+    removeAllFilter,
   } = useInternPeriod({
     pageSize: 10,
   });
@@ -52,6 +64,10 @@ export default function InternPeriodProvider({
         refetchListInternPeriod,
         setInternPeriodPageId,
         setSearch,
+        filter: filter as InternPeriodFilter,
+        setFilter,
+        removeOneFilter,
+        removeAllFilter,
       }}
     >
       {children}
