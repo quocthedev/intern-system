@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import {
   Modal,
   ModalContent,
@@ -18,6 +18,8 @@ import { toast } from "sonner";
 import { useUniversity } from "@/data-store/university";
 import { Select, SelectItem } from "@nextui-org/select";
 import { useInternPeriodContext } from "../_providers/InternPeriodProvider";
+import { parseDate } from "@internationalized/date";
+import { addMonths } from "date-fns";
 
 interface CreatePeriodData {
   internPeriod: {
@@ -66,6 +68,33 @@ export default function NewPeriodModalNext() {
   });
 
   const { isLoading, error, data } = useUniversity({ pageSize: 12 });
+
+  const [startDate, setStartDate] = useState(
+    parseDate(
+      new Date(Date.now() + 1 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split("T")[0],
+    ),
+  );
+  const [endDate, setEndDate] = useState(
+    parseDate(new Date().toISOString().split("T")[0]),
+  );
+  const [internshipDuration, setInternshipDuration] = useState("");
+
+  const handleDurationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newDuration = e.target.value;
+
+    setInternshipDuration(newDuration);
+
+    const durationInMonths = parseInt(newDuration, 10);
+
+    const updatedEndDate = addMonths(
+      new Date(startDate.toString()),
+      durationInMonths,
+    );
+
+    setEndDate(parseDate(updatedEndDate.toISOString().split("T")[0]));
+  };
 
   const formAction = async (data: FormData) => {
     const name = data.get("name") as string;
@@ -132,6 +161,8 @@ export default function NewPeriodModalNext() {
                   label="Internship Duration"
                   placeholder="Enter duration (months)"
                   labelPlacement="outside"
+                  value={internshipDuration}
+                  onChange={handleDurationChange}
                   isRequired
                   type="number"
                   min="1"
@@ -150,12 +181,15 @@ export default function NewPeriodModalNext() {
                 <DatePicker
                   label="Start date"
                   labelPlacement="outside"
+                  value={startDate}
+                  onChange={(newDate) => setStartDate(newDate)}
                   isRequired
                   name="startDate"
                 />
                 <DatePicker
                   label="End date"
                   labelPlacement="outside"
+                  value={endDate}
                   isRequired
                   name="endDate"
                 />

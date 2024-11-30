@@ -156,9 +156,16 @@ export default function InternPeriodTable() {
 
               <Tooltip content="Delete">
                 <button
-                  onClick={() => handleDeleteConfirmation(period.id)}
+                  onClick={() => {
+                    if (period.currentCandidateQuantity > 0) {
+                      toast.error(
+                        "Cannot delete a period with active candidates.",
+                      );
+                      return;
+                    }
+                    handleDeleteConfirmation(period.id);
+                  }}
                   className="-mt-1 cursor-pointer"
-                  hidden={period.currentCandidateQuantity > 0}
                 >
                   <DeleteIcon />
                 </button>
