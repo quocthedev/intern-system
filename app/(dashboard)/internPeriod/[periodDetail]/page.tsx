@@ -37,6 +37,9 @@ export default function PeriodDetailPage() {
     description: "",
     startDate: "",
     endDate: "",
+    currentCandidateQuantity: "",
+    currentUniversityQuantity: "",
+    internshipDuration: "",
   });
 
   console.log(universityId);
@@ -64,6 +67,8 @@ export default function PeriodDetailPage() {
   const universitesData = data?.candidateData || [];
   const internPeriodData = data?.internPeriodData || [];
 
+  console.log(internPeriodData?.startDate);
+
   const updateMutation = useMutation({
     mutationFn: async () => {
       await fetch(API_ENDPOINTS.internPeriod + "/" + internPeriodId, {
@@ -86,6 +91,11 @@ export default function PeriodDetailPage() {
         description: internPeriodData.description || "",
         startDate: internPeriodData.startDate || "",
         endDate: internPeriodData.endDate || "",
+        currentCandidateQuantity:
+          internPeriodData.currentCandidateQuantity || "",
+        currentUniversityQuantity:
+          internPeriodData.currentUniversityQuantity || "",
+        internshipDuration: internPeriodData.internshipDuration || "",
       });
     }
   }, [internPeriodData]);
@@ -275,7 +285,7 @@ export default function PeriodDetailPage() {
             <div className="flex items-center border-b pb-2">
               <span className="w-1/2 font-medium">Name:</span>
               <Input
-                className="w-1/2 font-bold"
+                value={updateData.name}
                 onChange={(e) =>
                   setUpdateData((prev) => ({ ...prev, name: e.target.value }))
                 }
@@ -283,35 +293,21 @@ export default function PeriodDetailPage() {
             </div>
             <div className="flex items-center border-b pb-2">
               <span className="w-1/2 font-medium">Duration :</span>
-              <span>{internPeriodData?.internshipDuration} months</span>
+              <Input value={updateData.internshipDuration}>
+                {internPeriodData?.internshipDuration} months
+              </Input>
             </div>
 
             <div className="flex items-center border-b pb-2">
               <span className="w-1/2 font-medium">Start Date:</span>
-              <Input
-                // value={formatedDate(internPeriodData?.startDate)}
-                onChange={(e) =>
-                  setUpdateData((prev) => ({
-                    ...prev,
-                    startDate: e.target.value,
-                  }))
-                }
-              >
+              <Input value={formatedDate(updateData?.startDate)}>
                 {formatedDate(internPeriodData?.startDate)}
               </Input>
             </div>
 
             <div className="flex items-center border-b pb-2">
               <span className="w-1/2 font-medium">End Date:</span>
-              <Input
-                // value={formatedDate(internPeriodData?.endDate)}
-                onChange={(e) =>
-                  setUpdateData((prev) => ({
-                    ...prev,
-                    endDate: e.target.value,
-                  }))
-                }
-              >
+              <Input value={formatedDate(updateData?.endDate)}>
                 {formatedDate(internPeriodData?.endDate)}
               </Input>
             </div>
@@ -331,13 +327,17 @@ export default function PeriodDetailPage() {
 
             <div className="flex items-center border-b pb-2">
               <span className="w-1/2 font-medium">Current Universitites:</span>
-              <span>{internPeriodData?.currentUniversityQuantity}</span>
+              <Input value={internPeriodData?.currentCandidateQuantity}>
+                {internPeriodData?.currentUniversityQuantity}
+              </Input>
             </div>
             <div className="flex items-center border-b pb-2">
               <span className="w-1/2 font-medium">
                 Total number of current candidates:
               </span>
-              <span>{internPeriodData?.currentCandidateQuantity}</span>
+              <Input value={internPeriodData?.currentCandidateQuantity}>
+                {internPeriodData?.currentCandidateQuantity}
+              </Input>
             </div>
 
             <div className="flex items-center">
@@ -351,7 +351,7 @@ export default function PeriodDetailPage() {
             <div className="flex items-center border-b pb-2">
               <span className="w-1/2 font-medium">Description:</span>
               <Input
-                value={internPeriodData?.description}
+                value={updateData.description}
                 onChange={(e) =>
                   setUpdateData({ ...updateData, description: e.target.value })
                 }
