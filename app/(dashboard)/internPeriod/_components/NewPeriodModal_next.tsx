@@ -77,7 +77,11 @@ export default function NewPeriodModalNext() {
     ),
   );
   const [endDate, setEndDate] = useState(
-    parseDate(new Date().toISOString().split("T")[0]),
+    parseDate(
+      new Date(Date.now() + 1 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split("T")[0],
+    ),
   );
   const [internshipDuration, setInternshipDuration] = useState("");
 
