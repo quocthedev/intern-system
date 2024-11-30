@@ -195,7 +195,7 @@ export default function InternsTable({
         return (
           <Link
             className="text-xs text-blue-500 underline"
-            href={candidate.cvUri}
+            href={`/intern/details/${candidate.id}?tab=2`}
           >
             Link
           </Link>
