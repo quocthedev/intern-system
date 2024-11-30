@@ -17,22 +17,31 @@ import {
   TableRow,
 } from "@nextui-org/table";
 import { Tooltip } from "@nextui-org/tooltip";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Skeleton } from "@nextui-org/skeleton";
 import { Button } from "@nextui-org/button";
 import ImportExcelModal2 from "@/app/(dashboard)/internPeriod/[periodDetail]/ImportExcelModal2";
+import { Input } from "@nextui-org/input";
+import { toast } from "sonner";
 
 export default function PeriodDetailPage() {
   const params = useParams();
   const internPeriodId = params.periodDetail as string;
   const [universityId, setUniversityId] = useState();
+  const [updateData, setUpdateData] = useState({
+    name: "",
+    maxCandidateQuantity: "",
+    description: "",
+    startDate: "",
+    endDate: "",
+  });
 
   console.log(universityId);
 
-  const { isLoading, data } = useQuery({
+  const { isLoading, data, refetch } = useQuery({
     queryKey: ["data", internPeriodId],
     queryFn: async () => {
       const [candidateResponse, internPeriodResponse] = await Promise.all([
@@ -54,6 +63,32 @@ export default function PeriodDetailPage() {
 
   const universitesData = data?.candidateData || [];
   const internPeriodData = data?.internPeriodData || [];
+
+  const updateMutation = useMutation({
+    mutationFn: async () => {
+      await fetch(API_ENDPOINTS.internPeriod + "/" + internPeriodId, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updateData),
+      });
+    },
+    onSuccess: () => {
+      toast.success("Updated successfully!");
+      refetch();
+    },
+  });
+
+  useEffect(() => {
+    if (internPeriodData) {
+      setUpdateData({
+        name: internPeriodData.name || "",
+        maxCandidateQuantity: internPeriodData.maxCandidateQuantity || "",
+        description: internPeriodData.description || "",
+        startDate: internPeriodData.startDate || "",
+        endDate: internPeriodData.endDate || "",
+      });
+    }
+  }, [internPeriodData]);
 
   const columnCandidate = [
     {
@@ -226,7 +261,12 @@ export default function PeriodDetailPage() {
             <h2 className="text-2xl font-semibold text-amber-600">
               Intern Period Details
             </h2>
-            <Button color="primary" size="md">
+            <Button
+              color="primary"
+              size="md"
+              onClick={() => updateMutation.mutate()}
+              // isLoading={updateMutation.isLoading}
+            >
               Update intern period
             </Button>
           </div>
@@ -234,7 +274,12 @@ export default function PeriodDetailPage() {
           <div className="grid grid-cols-2 gap-3 text-sm text-gray-600">
             <div className="flex items-center border-b pb-2">
               <span className="w-1/2 font-medium">Name:</span>
-              <span className="w-1/2 font-bold">{internPeriodData?.name}</span>
+              <Input
+                className="w-1/2 font-bold"
+                onChange={(e) =>
+                  setUpdateData((prev) => ({ ...prev, name: e.target.value }))
+                }
+              />
             </div>
             <div className="flex items-center border-b pb-2">
               <span className="w-1/2 font-medium">Duration :</span>
@@ -243,17 +288,45 @@ export default function PeriodDetailPage() {
 
             <div className="flex items-center border-b pb-2">
               <span className="w-1/2 font-medium">Start Date:</span>
-              <span>{formatedDate(internPeriodData?.startDate)}</span>
+              <Input
+                // value={formatedDate(internPeriodData?.startDate)}
+                onChange={(e) =>
+                  setUpdateData((prev) => ({
+                    ...prev,
+                    startDate: e.target.value,
+                  }))
+                }
+              >
+                {formatedDate(internPeriodData?.startDate)}
+              </Input>
             </div>
 
             <div className="flex items-center border-b pb-2">
               <span className="w-1/2 font-medium">End Date:</span>
-              <span>{formatedDate(internPeriodData?.endDate)}</span>
+              <Input
+                // value={formatedDate(internPeriodData?.endDate)}
+                onChange={(e) =>
+                  setUpdateData((prev) => ({
+                    ...prev,
+                    endDate: e.target.value,
+                  }))
+                }
+              >
+                {formatedDate(internPeriodData?.endDate)}
+              </Input>
             </div>
 
             <div className="flex items-center border-b pb-2">
               <span className="w-1/2 font-medium">Max Candidates:</span>
-              <span>{internPeriodData?.maxCandidateQuantity}</span>
+              <Input
+                value={internPeriodData?.maxCandidateQuantity}
+                onChange={(e) =>
+                  setUpdateData({
+                    ...updateData,
+                    maxCandidateQuantity: e.target.value,
+                  })
+                }
+              />
             </div>
 
             <div className="flex items-center border-b pb-2">
@@ -277,7 +350,12 @@ export default function PeriodDetailPage() {
             </div>
             <div className="flex items-center border-b pb-2">
               <span className="w-1/2 font-medium">Description:</span>
-              <span>{internPeriodData?.description}</span>
+              <Input
+                value={internPeriodData?.description}
+                onChange={(e) =>
+                  setUpdateData({ ...updateData, description: e.target.value })
+                }
+              />
             </div>
           </div>
         </div>
