@@ -8,6 +8,7 @@ import { RadioGroup, Radio } from "@nextui-org/radio";
 import { Button } from "@nextui-org/button";
 import { confirmAttendance } from "@/actions/confirm-attendance";
 import { Spinner } from "@nextui-org/spinner";
+import { toast } from "sonner";
 
 export default function InterviewConfirmation() {
   const searchParams = useSearchParams();
@@ -37,10 +38,12 @@ export default function InterviewConfirmation() {
 
     // Navigate to the home page if the user accepted
     if (!isReject) {
+      toast.success("You have accepted to an interview");
       window.history.replaceState(null, "", "interview-confirmation/detail");
       router.push("/interview-confirmation/detail");
     } else {
       setIsSending(false);
+      toast.success("You have delinced to an interview");
       window.history.replaceState(null, "", "/reject");
       router.push("/reject");
     }
