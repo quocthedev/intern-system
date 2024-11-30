@@ -19,9 +19,10 @@ import {
   TableHeader,
   TableRow,
 } from "@nextui-org/table";
+import { PDFExport } from "@progress/kendo-react-pdf";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
-import React, { Key, useEffect, useMemo, useState } from "react";
+import React, { Key, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
 export default function FinalReportPage() {
@@ -298,256 +299,278 @@ export default function FinalReportPage() {
     mutate(criteriaRecord);
   };
 
+  const pdfExportComponent = useRef<PDFExport>(null);
+
+  const exportPDFWithComponent = () => {
+    if (pdfExportComponent.current) {
+      pdfExportComponent.current.save();
+    }
+  };
+
   return (
     <div className="p-6">
-      <div className="text-center text-3xl font-semibold">
-        INTERNSHIP FINAL REPORT
-      </div>
-      <h1 className="mb-3 mt-2 text-xl font-semibold">General Information</h1>
-
-      <div className="mt-4 grid grid-cols-3 gap-6 text-sm">
+      <Button type="button" onClick={exportPDFWithComponent}>
+        Export with component
+      </Button>
+      <PDFExport ref={pdfExportComponent} paperSize="auto" margin={40}>
         <div>
-          <h2 className="mb-4 text-lg font-semibold text-gray-800">
-            Candidate Details
-          </h2>
-          <div className="mb-2">
-            <span className="font-medium">Full Name:</span>{" "}
-            {candidateInfor.candidateName}
+          <div className="text-center text-3xl font-semibold">
+            INTERNSHIP FINAL REPORT
           </div>
-          <div className="mb-2">
-            <span className="font-medium">University:</span>{" "}
-            {candidateInfor.university}
-          </div>
-          <div>
-            <span className="font-medium">Student Code:</span>{" "}
-            {candidateInfor.studentCode}
-          </div>
-        </div>
-
-        <div>
-          <h2 className="mb-4 text-lg font-semibold text-gray-800">
-            Internship Details
-          </h2>
-          <div className="mb-2">
-            <span className="font-medium">Internship Name:</span>{" "}
-            {internPeriodViewReport.name}
-          </div>
-          <div className="mb-2">
-            <span className="font-medium">Start Date:</span>{" "}
-            {formatedDate(internPeriodViewReport.startDate)}
-          </div>
-          <div>
-            <span className="font-medium">End Date:</span>{" "}
-            {formatedDate(internPeriodViewReport.endDate)}
-          </div>
-        </div>
-
-        <div>
-          <h1 className="mb-4 text-lg font-semibold text-gray-800">
-            Company Information
+          <h1 className="mb-3 mt-2 text-xl font-semibold">
+            General Information
           </h1>
-          <div className="mb-2">
-            <span className="font-medium">Company Name:</span> Amazing Tech
-          </div>
-        </div>
-      </div>
-
-      <h1 className="mt-8 text-lg font-semibold">
-        I. Work Performance Evaluation
-      </h1>
-
-      <div>
-        {workPerformance?.map((workPerformance: any) => {
-          const projectTasks = workPerformance.tasks || [];
-
-          return (
-            <div key={workPerformance.title}>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="mt-3">
-                  <span className="font-medium">Project name:</span>{" "}
-                  {workPerformance.title}
-                </div>
-                <div className="mt-3">
-                  <span className="font-medium">Leader:</span>{" "}
-                  {workPerformance.leader}
-                </div>
-                <div className="mb-4">
-                  <span className="font-medium">Start date:</span>{" "}
-                  {formatedDate(workPerformance.startDate)}
-                </div>
-                <div className="mb-4">
-                  <span className="font-medium">Release date:</span>{" "}
-                  {formatedDate(workPerformance.releaseDate)}
-                </div>
+          <div className="mt-4 grid grid-cols-3 gap-6 text-sm">
+            <div>
+              <h2 className="mb-4 text-lg font-semibold text-gray-800">
+                Candidate Details
+              </h2>
+              <div className="mb-2">
+                <span className="font-medium">Full Name:</span>{" "}
+                {candidateInfor.candidateName}
               </div>
-
+              <div className="mb-2">
+                <span className="font-medium">University:</span>{" "}
+                {candidateInfor.university}
+              </div>
               <div>
-                <Table className="w-full">
-                  <TableHeader columns={columnsProject}>
-                    {(column) => (
-                      <TableColumn key={column.key}>{column.label}</TableColumn>
-                    )}
-                  </TableHeader>
-                  <TableBody
-                    items={projectTasks}
-                    loadingState={isLoading ? "loading" : "idle"}
-                    loadingContent={
-                      <div className="flex items-center gap-2">
-                        <Spinner />
-                        Loading...
-                      </div>
-                    }
-                    emptyContent={<div>No tasks found for this project!</div>}
-                  >
-                    {projectTasks.map((task: any, index: number) => (
-                      <TableRow key={task.id}>
+                <span className="font-medium">Student Code:</span>{" "}
+                {candidateInfor.studentCode}
+              </div>
+            </div>
+
+            <div>
+              <h2 className="mb-4 text-lg font-semibold text-gray-800">
+                Internship Details
+              </h2>
+              <div className="mb-2">
+                <span className="font-medium">Internship Name:</span>{" "}
+                {internPeriodViewReport.name}
+              </div>
+              <div className="mb-2">
+                <span className="font-medium">Start Date:</span>{" "}
+                {formatedDate(internPeriodViewReport.startDate)}
+              </div>
+              <div>
+                <span className="font-medium">End Date:</span>{" "}
+                {formatedDate(internPeriodViewReport.endDate)}
+              </div>
+            </div>
+
+            <div>
+              <h1 className="mb-4 text-lg font-semibold text-gray-800">
+                Company Information
+              </h1>
+              <div className="mb-2">
+                <span className="font-medium">Company Name:</span> Amazing Tech
+              </div>
+            </div>
+          </div>
+          <h1 className="mt-8 text-lg font-semibold">
+            I. Work Performance Evaluation
+          </h1>
+          <div>
+            {workPerformance?.map((workPerformance: any) => {
+              const projectTasks = workPerformance.tasks || [];
+
+              return (
+                <div key={workPerformance.title}>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="mt-3">
+                      <span className="font-medium">Project name:</span>{" "}
+                      {workPerformance.title}
+                    </div>
+                    <div className="mt-3">
+                      <span className="font-medium">Leader:</span>{" "}
+                      {workPerformance.leader}
+                    </div>
+                    <div className="mb-4">
+                      <span className="font-medium">Start date:</span>{" "}
+                      {formatedDate(workPerformance.startDate)}
+                    </div>
+                    <div className="mb-4">
+                      <span className="font-medium">Release date:</span>{" "}
+                      {formatedDate(workPerformance.releaseDate)}
+                    </div>
+                  </div>
+
+                  <div>
+                    <Table className="w-full">
+                      <TableHeader columns={columnsProject}>
+                        {(column) => (
+                          <TableColumn key={column.key}>
+                            {column.label}
+                          </TableColumn>
+                        )}
+                      </TableHeader>
+                      <TableBody
+                        items={projectTasks}
+                        loadingState={isLoading ? "loading" : "idle"}
+                        loadingContent={
+                          <div className="flex items-center gap-2">
+                            <Spinner />
+                            Loading...
+                          </div>
+                        }
+                        emptyContent={
+                          <div>No tasks found for this project!</div>
+                        }
+                      >
+                        {projectTasks.map((task: any, index: number) => (
+                          <TableRow key={task.id}>
+                            {(colKey) => (
+                              <TableCell>
+                                {renderCellTask(task, colKey, index)}
+                              </TableCell>
+                            )}
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+
+                  <div className="mb-4 grid grid-cols-2 text-sm">
+                    {" "}
+                    <div className="mt-3">
+                      <span className="font-medium">Total difficulty: </span>{" "}
+                      {workPerformance.totalDifficulty}
+                    </div>
+                    <div className="mt-3">
+                      <span className="font-medium">Total KPI: </span>{" "}
+                      {workPerformance.totalKPI}
+                    </div>
+                    <div className="mt-2">
+                      <span className="font-medium">Total average score: </span>{" "}
+                      {workPerformance.averageScore}
+                    </div>
+                    <div className="mt-2">
+                      <span className="font-medium">Result: </span>{" "}
+                      <span className={statusColor[workPerformance.result]}>
+                        {workPerformance.result}
+                      </span>
+                    </div>
+                  </div>
+                  <Divider className="mb-8" />
+                </div>
+              );
+            })}
+          </div>
+          <h1 className="mb-1 mt-3 text-lg font-semibold">
+            Final project score
+          </h1>
+          <div className="mb-5 grid grid-cols-2 gap-2 text-sm">
+            <div>
+              <span className="font-medium">Total difficulty: </span>
+              {workPerformanceEvaluationFinal?.totalDifficulty}
+            </div>
+            <div>
+              <span className="font-medium">Total KPI: </span>
+              {workPerformanceEvaluationFinal?.totalKPI}
+            </div>
+            <div>
+              <span className="font-medium">Total average score: </span>
+              {workPerformanceEvaluationFinal?.averageScore}
+            </div>
+            <div>
+              <span className="font-medium">Result: </span>
+              {/* {statusColor(workPerformanceEvaluationFinal?.result)} */}
+              <span
+                className={statusColor[workPerformanceEvaluationFinal?.result]}
+              >
+                {workPerformanceEvaluationFinal?.result}
+              </span>
+            </div>
+          </div>
+          <div className="mb-4 flex items-center justify-between">
+            <h1 className="text-lg font-semibold">II. Compliance Evaluation</h1>
+            <div className="flex justify-end gap-2">
+              <Button
+                variant="solid"
+                color="primary"
+                className={`${isEditable === false ? "hidden" : ""}`}
+                onClick={handleUpdateCriteria}
+              >
+                Update
+              </Button>
+
+              <Button
+                variant="solid"
+                color="primary"
+                onClick={() => setIsEditable(!isEditable)}
+                className={`${isScored ? "hidden" : ""}`}
+              >
+                {isEditable ? "Cancel" : "Evaluate"}
+              </Button>
+            </div>
+          </div>
+          <div>
+            <div>
+              <Table className="w-full">
+                <TableHeader columns={columnsCompany}>
+                  {(column) => (
+                    <TableColumn key={column.key}>{column.label}</TableColumn>
+                  )}
+                </TableHeader>
+                <TableBody
+                  items={complianceCriterias}
+                  loadingState={isLoading ? "loading" : "idle"}
+                  loadingContent={
+                    <div className="flex items-center gap-2">
+                      <Spinner />
+                      Loading...
+                    </div>
+                  }
+                  emptyContent={<div>No evaluate found!</div>}
+                >
+                  {complianceCriterias.map(
+                    (criteria: Criteria, index: number) => (
+                      <TableRow key={criteria.id}>
                         {(colKey) => (
                           <TableCell>
-                            {renderCellTask(task, colKey, index)}
+                            {renderCell(criteria, colKey, index)}
                           </TableCell>
                         )}
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-
-              <div className="mb-4 grid grid-cols-2 text-sm">
-                {" "}
-                <div className="mt-3">
-                  <span className="font-medium">Total difficulty: </span>{" "}
-                  {workPerformance.totalDifficulty}
-                </div>
-                <div className="mt-3">
-                  <span className="font-medium">Total KPI: </span>{" "}
-                  {workPerformance.totalKPI}
-                </div>
-                <div className="mt-2">
-                  <span className="font-medium">Total average score: </span>{" "}
-                  {workPerformance.averageScore}
-                </div>
-                <div className="mt-2">
-                  <span className="font-medium">Result: </span>{" "}
-                  <span className={statusColor[workPerformance.result]}>
-                    {workPerformance.result}
-                  </span>
-                </div>
-              </div>
-              <Divider className="mb-8" />
-            </div>
-          );
-        })}
-      </div>
-
-      <h1 className="mb-1 mt-3 text-lg font-semibold">Final project score</h1>
-      <div className="mb-5 grid grid-cols-2 gap-2 text-sm">
-        <div>
-          <span className="font-medium">Total difficulty: </span>
-          {workPerformanceEvaluationFinal?.totalDifficulty}
-        </div>
-        <div>
-          <span className="font-medium">Total KPI: </span>
-          {workPerformanceEvaluationFinal?.totalKPI}
-        </div>
-        <div>
-          <span className="font-medium">Total average score: </span>
-          {workPerformanceEvaluationFinal?.averageScore}
-        </div>
-        <div>
-          <span className="font-medium">Result: </span>
-          {/* {statusColor(workPerformanceEvaluationFinal?.result)} */}
-          <span className={statusColor[workPerformanceEvaluationFinal?.result]}>
-            {workPerformanceEvaluationFinal?.result}
-          </span>
-        </div>
-      </div>
-
-      <div className="mb-4 flex items-center justify-between">
-        <h1 className="text-lg font-semibold">II. Compliance Evaluation</h1>
-        <div className="flex justify-end gap-2">
-          <Button
-            variant="solid"
-            color="primary"
-            className={`${isEditable === false ? "hidden" : ""}`}
-            onClick={handleUpdateCriteria}
-          >
-            Update
-          </Button>
-
-          <Button
-            variant="solid"
-            color="primary"
-            onClick={() => setIsEditable(!isEditable)}
-            className={`${isScored ? "hidden" : ""}`}
-          >
-            {isEditable ? "Cancel" : "Evaluate"}
-          </Button>
-        </div>
-      </div>
-
-      <div>
-        <div>
-          <Table className="w-full">
-            <TableHeader columns={columnsCompany}>
-              {(column) => (
-                <TableColumn key={column.key}>{column.label}</TableColumn>
-              )}
-            </TableHeader>
-            <TableBody
-              items={complianceCriterias}
-              loadingState={isLoading ? "loading" : "idle"}
-              loadingContent={
-                <div className="flex items-center gap-2">
-                  <Spinner />
-                  Loading...
-                </div>
-              }
-              emptyContent={<div>No evaluate found!</div>}
-            >
-              {complianceCriterias.map((criteria: Criteria, index: number) => (
-                <TableRow key={criteria.id}>
-                  {(colKey) => (
-                    <TableCell>{renderCell(criteria, colKey, index)}</TableCell>
+                    ),
                   )}
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+                </TableBody>
+              </Table>
+            </div>
 
-        <div className="mt-5 grid grid-cols-2 gap-2">
-          <div>Total Percent: {complianceEvaluate.totalPercent}%</div>
-          <div>
-            Total Converted Score: {complianceEvaluate.totalConvertedScore}
+            <div className="mt-5 grid grid-cols-2 gap-2">
+              <div>Total Percent: {complianceEvaluate.totalPercent}%</div>
+              <div>
+                Total Converted Score: {complianceEvaluate.totalConvertedScore}
+              </div>
+              <div>
+                Result:{" "}
+                <span className={statusColor[complianceEvaluate.result]}>
+                  {complianceEvaluate.result}
+                </span>
+              </div>
+            </div>
           </div>
-          <div>
-            Result:{" "}
-            <span className={statusColor[complianceEvaluate.result]}>
-              {complianceEvaluate.result}
-            </span>
+          <h1 className="mt-8 text-xl font-semibold">Evaluation Total</h1>
+          <div className="mt-2 grid grid-cols-2 gap-72">
+            <div>
+              <h1 className="text-lg">
+                <span className="font-medium">Overall Score: </span>{" "}
+                {candidateInfor.overallScore}
+              </h1>
+              <div className="text-lg">
+                <span className="font-medium"> Final result: </span>
+                <span className={statusColor[candidateInfor?.result]}>
+                  {candidateInfor?.result}
+                </span>
+              </div>
+            </div>
+            <div>
+              <div className="text-center font-semibold">Evaluator name </div>
+              <div className="text-center">(Sign and write full name) </div>
+            </div>
           </div>
         </div>
-      </div>
-
-      <h1 className="mt-8 text-xl font-semibold">Evaluation Total</h1>
-      <div className="mt-2 grid grid-cols-2 gap-72">
-        <div>
-          <h1 className="text-lg">
-            <span className="font-medium">Overall Score: </span>{" "}
-            {candidateInfor.overallScore}
-          </h1>
-          <div className="text-lg">
-            <span className="font-medium"> Final result: </span>
-            <span className={statusColor[candidateInfor?.result]}>
-              {candidateInfor?.result}
-            </span>
-          </div>
-        </div>
-        <div>
-          <div className="text-center font-semibold">Evaluator name </div>
-          <div className="text-center">(Sign and write full name) </div>
-        </div>
-      </div>
+      </PDFExport>
     </div>
   );
 }
