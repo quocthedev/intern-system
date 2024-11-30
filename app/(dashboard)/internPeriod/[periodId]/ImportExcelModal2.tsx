@@ -85,7 +85,6 @@ function ImportExcelModal2({
           color="success"
           size="md"
           startContent={<ExcelIcon />}
-          className="mb-6 text-white"
           onPress={handleOpen}
         >
           Import excel file
