@@ -1,31 +1,21 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Tabs, Tab } from "@nextui-org/tabs";
 import CandidateInformationPage from "@/app/(dashboard)/intern/details/[detailId]/CandidateInformation";
 import Link from "next/link";
 import CandidateCVPage from "@/app/(dashboard)/intern/details/[detailId]/CandidateCV";
 import InterviewInformation from "../../_components/InterviewInformation";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import FinalReportPage from "@/app/(dashboard)/intern/details/[detailId]/FinalReportPage";
-import { useQuery } from "@tanstack/react-query";
-import { API_ENDPOINTS } from "@/libs/config";
 
 export default function CandidateDetailPage() {
   const params = useParams();
+  const searchParams = useSearchParams();
+
   const candidateId = params.detailId as string;
+  const activeTab = searchParams.get("tab") || "1";
 
-  const { isLoading, data, refetch } = useQuery({
-    queryKey: ["data", candidateId],
-    queryFn: async () => {
-      const response = await fetch(API_ENDPOINTS.candidate + "/" + candidateId);
-      const candidate = await response.json();
-
-      return candidate;
-    },
-  });
-
-  const candidateData = data?.data || {};
   return (
     <div className="flex h-full w-full flex-col p-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4">
@@ -41,7 +31,13 @@ export default function CandidateDetailPage() {
         </div>
       </div>
 
-      <Tabs aria-label="Options" radius="sm" color="primary" className="mt-3">
+      <Tabs
+        aria-label="Options"
+        radius="sm"
+        color="primary"
+        className="mt-3"
+        selectedKey={activeTab} // Controlled by state
+      >
         <Tab key="1" title="Information">
           <CandidateInformationPage />
         </Tab>
