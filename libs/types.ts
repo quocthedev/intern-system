@@ -59,3 +59,16 @@ export type PaginationResponseFailed = {
 export type PaginationResponse<T> =
   | PaginationResponseSuccess<T>
   | PaginationResponseFailed;
+
+export type BaseResponseSuccess<T> = {
+  statusCode: "200";
+  message: string;
+  data: T;
+};
+
+export type BaseResponseFailed = {
+  statusCode: Exclude<string, "200">;
+  message: string;
+};
+
+export type BaseResponse<T> = BaseResponseSuccess<T> | BaseResponseFailed;
