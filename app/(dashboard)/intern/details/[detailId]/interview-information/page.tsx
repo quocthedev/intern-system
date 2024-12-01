@@ -16,6 +16,7 @@ import {
   Position,
 } from "../../../_types/GetPositionPaginationResponse";
 import { GetCandidateQuestionTemplateResponse } from "../../../_types/GetCandidateQuestionTemplate";
+import { useParams } from "next/navigation";
 
 const apiClient = new APIClient({
   onFulfilled: (response) => response,
@@ -30,10 +31,6 @@ const apiClient = new APIClient({
   },
 });
 
-export type InterviewInformationProps = {
-  candidateId: string;
-};
-
 enum QuestionTemplateStatus {
   NOT_CREATED = "NOT_CREATED",
   CREATED = "CREATED",
@@ -41,9 +38,9 @@ enum QuestionTemplateStatus {
   EVALUATED = "EVALUATED",
 }
 
-export default function InterviewInformationPage(
-  props: InterviewInformationProps,
-) {
+export default function InterviewInformationPage() {
+  const { detailId: candidateId } = useParams();
+
   const [selectedPosition, setSelectedPosition] = React.useState<string | null>(
     null,
   );
@@ -57,12 +54,12 @@ export default function InterviewInformationPage(
     isLoading: isCandidateQuestionTemplateDetailsLoading,
     refetch: refetchCandidateQuestionTemplateDetails,
   } = useQuery({
-    queryKey: ["candidateQuestionTemplateDetails", props.candidateId],
+    queryKey: ["candidateQuestionTemplateDetails", candidateId],
     queryFn: async () => {
       const response =
         await apiClient.get<GetCandidateQuestionTemplateResponse>(
           API_ENDPOINTS.questionTemplate +
-            `/${props.candidateId}/question-template-details`,
+            `/${candidateId}/question-template-details`,
         );
 
       if (response.statusCode == "200") {
@@ -104,13 +101,13 @@ export default function InterviewInformationPage(
     const response = await apiClient.post<{
       statusCode: string;
       message: string;
-    }>(
-      API_ENDPOINTS.questionTemplate + `/candidate/${props.candidateId}`,
-      params,
-    );
+    }>(API_ENDPOINTS.questionTemplate + `/candidate/${candidateId}`, params);
 
     if (response.statusCode == "200") {
+      toast.success("Successfully created questions");
       refetchCandidateQuestionTemplateDetails();
+    } else {
+      toast.error(response.message);
     }
   };
 
@@ -203,7 +200,7 @@ export default function InterviewInformationPage(
 
   if (status === QuestionTemplateStatus.NOT_CREATED)
     return (
-      <form className="flex flex-col">
+      <form className="flex flex-col gap-3">
         <Select
           placeholder="Select position"
           items={positions || []}
