@@ -23,7 +23,7 @@ import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { Skeleton } from "@nextui-org/skeleton";
 import { Button } from "@nextui-org/button";
-import ImportExcelModal2 from "@/app/(dashboard)/internPeriod/[periodId]/ImportExcelModal2";
+import ImportExcelModal2 from "@/app/(dashboard)/internPeriod/(details)/[periodId]/ImportExcelModal2";
 import { Input } from "@nextui-org/input";
 import { toast } from "sonner";
 

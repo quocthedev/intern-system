@@ -1,3 +1,4 @@
+"use client";
 import { formatDate } from "@/app/util";
 import { API_ENDPOINTS } from "@/libs/config";
 import { Button } from "@nextui-org/button";

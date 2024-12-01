@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { formatDate } from "@/app/util";
 import { Skeleton } from "@nextui-org/skeleton";
 import { useToggle } from "usehooks-ts";
-import { EditIcon } from "../../_components/Icons";
+import { EditIcon } from "../../../_components/Icons";
 import { InternPeriod } from "@/data-store/intern-period/detail";
 
 export default function InternPeriodInformation() {

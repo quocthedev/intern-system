@@ -4,17 +4,19 @@ import { API_ENDPOINTS } from "@/libs/config";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import { PaginationResponseSuccess } from "@/libs/types";
-import {
-  GetPositionPaginationResponse,
-  Position,
-} from "../_types/GetPositionPaginationResponse";
+
 import { Select, SelectItem } from "@nextui-org/select";
 import { Button } from "@nextui-org/button";
-import { GetCandidateQuestionTemplateResponse } from "../_types/GetCandidateQuestionTemplate";
 import { Input, Textarea } from "@nextui-org/input";
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import { Chip } from "@nextui-org/chip";
 import { toast } from "sonner";
+import {
+  GetPositionPaginationResponse,
+  Position,
+} from "../../../_types/GetPositionPaginationResponse";
+import { GetCandidateQuestionTemplateResponse } from "../../../_types/GetCandidateQuestionTemplate";
+import { useParams } from "next/navigation";
 
 const apiClient = new APIClient({
   onFulfilled: (response) => response,
@@ -29,10 +31,6 @@ const apiClient = new APIClient({
   },
 });
 
-export type InterviewInformationProps = {
-  candidateId: string;
-};
-
 enum QuestionTemplateStatus {
   NOT_CREATED = "NOT_CREATED",
   CREATED = "CREATED",
@@ -40,7 +38,9 @@ enum QuestionTemplateStatus {
   EVALUATED = "EVALUATED",
 }
 
-export default function InterviewInformation(props: InterviewInformationProps) {
+export default function InterviewInformationPage() {
+  const { detailId: candidateId } = useParams();
+
   const [selectedPosition, setSelectedPosition] = React.useState<string | null>(
     null,
   );
@@ -54,12 +54,12 @@ export default function InterviewInformation(props: InterviewInformationProps) {
     isLoading: isCandidateQuestionTemplateDetailsLoading,
     refetch: refetchCandidateQuestionTemplateDetails,
   } = useQuery({
-    queryKey: ["candidateQuestionTemplateDetails", props.candidateId],
+    queryKey: ["candidateQuestionTemplateDetails", candidateId],
     queryFn: async () => {
       const response =
         await apiClient.get<GetCandidateQuestionTemplateResponse>(
           API_ENDPOINTS.questionTemplate +
-            `/${props.candidateId}/question-template-details`,
+            `/${candidateId}/question-template-details`,
         );
 
       if (response.statusCode == "200") {
@@ -101,13 +101,13 @@ export default function InterviewInformation(props: InterviewInformationProps) {
     const response = await apiClient.post<{
       statusCode: string;
       message: string;
-    }>(
-      API_ENDPOINTS.questionTemplate + `/candidate/${props.candidateId}`,
-      params,
-    );
+    }>(API_ENDPOINTS.questionTemplate + `/candidate/${candidateId}`, params);
 
     if (response.statusCode == "200") {
+      toast.success("Successfully created questions");
       refetchCandidateQuestionTemplateDetails();
+    } else {
+      toast.error(response.message);
     }
   };
 
@@ -200,7 +200,7 @@ export default function InterviewInformation(props: InterviewInformationProps) {
 
   if (status === QuestionTemplateStatus.NOT_CREATED)
     return (
-      <form className="flex flex-col">
+      <form className="flex flex-col gap-3">
         <Select
           placeholder="Select position"
           items={positions || []}

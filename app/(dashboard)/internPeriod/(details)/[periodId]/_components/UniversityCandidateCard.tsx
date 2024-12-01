@@ -11,7 +11,7 @@ import {
 } from "@nextui-org/table";
 import { Spinner } from "@nextui-org/spinner";
 import { Tooltip } from "@nextui-org/tooltip";
-import { DeleteIcon, ViewIcon } from "../../_components/Icons";
+import { DeleteIcon, ViewIcon } from "../../../_components/Icons";
 import { useUniversityCandidateContext } from "../_providers/UniversityCandidateProvider";
 import ActionBar from "./ActionBar";
 import { Pagination } from "@nextui-org/pagination";
@@ -125,7 +125,15 @@ export default function UniversityCandidateCard() {
       case "gender":
         return <div>{candidate.gender}</div>;
       case "cvUri":
-        return <Link href={candidate.cvUri}>Link</Link>;
+        return (
+          <Link
+            href={`
+          /intern/details/${candidate.id}/cv
+          `}
+          >
+            Link
+          </Link>
+        );
       case "status":
         return (
           <Chip
@@ -143,12 +151,12 @@ export default function UniversityCandidateCard() {
         return (
           <div className="flex gap-2">
             <Tooltip content="View detail">
-              <button
+              <Link
                 className="cursor-pointer"
-                onClick={() => window.open(`/intern/details/${candidate.id}`)}
+                href={`/intern/details/${candidate.id}`}
               >
                 <ViewIcon />
-              </button>
+              </Link>
             </Tooltip>
 
             {role === "Administrator" ||
