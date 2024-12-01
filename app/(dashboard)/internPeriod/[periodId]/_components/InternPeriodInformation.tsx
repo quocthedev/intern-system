@@ -55,7 +55,10 @@ export default function InternPeriodInformation() {
   const handleUpdate = async (formData: FormData) => {
     const data = Object.fromEntries(formData.entries());
 
-    const params = Object.assign({}, internPeriodData, data);
+    const params = Object.assign({}, internPeriodData, data, {
+      startDate: internPeriodData?.startDate.split("T")[0],
+      endDate: internPeriodData?.endDate.split("T")[0],
+    });
 
     console.log(params);
 
@@ -189,12 +192,12 @@ export default function InternPeriodInformation() {
 
             <div className="flex items-center border-b pb-2">
               <span className="w-1/3 font-medium">Start Date:</span>
-              <p>{formatedDate(internPeriodData?.startDate as string)}</p>
+              <p>{internPeriodData?.startDate.split("T")[0]} </p>
             </div>
 
             <div className="flex items-center border-b pb-2">
               <span className="w-1/3 font-medium">End Date:</span>
-              <p>{formatedDate(internPeriodData?.endDate as string)}</p>
+              <p>{internPeriodData?.endDate.split("T")[0]}</p>
             </div>
 
             <div className="flex items-center border-b pb-2">
