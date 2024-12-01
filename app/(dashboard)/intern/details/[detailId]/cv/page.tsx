@@ -1,3 +1,4 @@
+"use client";
 import { API_ENDPOINTS } from "@/libs/config";
 import { Button } from "@nextui-org/button";
 import { Spinner } from "@nextui-org/spinner";
@@ -22,7 +23,7 @@ const PDFEmbed: React.FC<PDFEmbedProps> = ({ pdfUrl }) => {
   );
 };
 
-export default function CandidateCV() {
+export default function CandidateCVPage() {
   const params = useParams();
   const candidateId = params.detailId as string;
   const [selectedFile, setSelectedFile] = useState<File | null>(null);

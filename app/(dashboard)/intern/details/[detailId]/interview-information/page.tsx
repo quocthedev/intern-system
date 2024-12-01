@@ -4,17 +4,18 @@ import { API_ENDPOINTS } from "@/libs/config";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import { PaginationResponseSuccess } from "@/libs/types";
-import {
-  GetPositionPaginationResponse,
-  Position,
-} from "../_types/GetPositionPaginationResponse";
+
 import { Select, SelectItem } from "@nextui-org/select";
 import { Button } from "@nextui-org/button";
-import { GetCandidateQuestionTemplateResponse } from "../_types/GetCandidateQuestionTemplate";
 import { Input, Textarea } from "@nextui-org/input";
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import { Chip } from "@nextui-org/chip";
 import { toast } from "sonner";
+import {
+  GetPositionPaginationResponse,
+  Position,
+} from "../../../_types/GetPositionPaginationResponse";
+import { GetCandidateQuestionTemplateResponse } from "../../../_types/GetCandidateQuestionTemplate";
 
 const apiClient = new APIClient({
   onFulfilled: (response) => response,
@@ -40,7 +41,9 @@ enum QuestionTemplateStatus {
   EVALUATED = "EVALUATED",
 }
 
-export default function InterviewInformation(props: InterviewInformationProps) {
+export default function InterviewInformationPage(
+  props: InterviewInformationProps,
+) {
   const [selectedPosition, setSelectedPosition] = React.useState<string | null>(
     null,
   );

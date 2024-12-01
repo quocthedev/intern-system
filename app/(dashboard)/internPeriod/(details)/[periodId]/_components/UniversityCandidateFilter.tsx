@@ -6,7 +6,7 @@ import { Select, SelectItem } from "@nextui-org/select";
 import { removeEmptyFields } from "@/libs/utils";
 import { Chip } from "@nextui-org/chip";
 import { useUniversityCandidateContext } from "../_providers/UniversityCandidateProvider";
-import { FilterIcon } from "../../_components/Icons";
+import { FilterIcon } from "../../../_components/Icons";
 
 const CandidateStatusMapping = {
   0: "Pending",
