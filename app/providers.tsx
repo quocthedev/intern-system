@@ -15,6 +15,7 @@ export interface ProvidersProps {
 
 export function Providers({ children, themeProps }: ProvidersProps) {
   const router = useRouter();
+
   const queryClient = new QueryClient({});
 
   return (
