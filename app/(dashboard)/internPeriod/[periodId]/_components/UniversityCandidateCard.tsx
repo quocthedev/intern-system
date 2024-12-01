@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 
 import {
   Table,
@@ -11,13 +11,71 @@ import {
 } from "@nextui-org/table";
 import { Spinner } from "@nextui-org/spinner";
 import { Tooltip } from "@nextui-org/tooltip";
-import { ViewIcon } from "../../_components/Icons";
+import { DeleteIcon, ViewIcon } from "../../_components/Icons";
 import { useUniversityCandidateContext } from "../_providers/UniversityCandidateProvider";
 import ActionBar from "./ActionBar";
 import { Pagination } from "@nextui-org/pagination";
+import { Link } from "@nextui-org/link";
+import { Chip, ChipProps } from "@nextui-org/chip";
+import { getCookie } from "@/app/util";
+import { useMutation } from "@tanstack/react-query";
+import { API_ENDPOINTS } from "@/libs/config";
+import {
+  Modal,
+  ModalBody,
+  ModalContent,
+  useDisclosure,
+} from "@nextui-org/modal";
+import { Button } from "@nextui-org/button";
+import { toast } from "sonner";
+
+const statusColorMap: Record<string, ChipProps["color"]> = {
+  Approved: "success",
+  InProgress: "warning",
+  Rejected: "danger",
+  InterviewEmailSent: "warning",
+  CompletedOjt: "success",
+};
+
+const role = getCookie("userRole");
 
 export default function UniversityCandidateCard() {
-  const { isLoading, data, setPageIndex } = useUniversityCandidateContext();
+  const { isLoading, data, setPageIndex, refetch } =
+    useUniversityCandidateContext();
+
+  const {
+    isOpen: isDeleteOpen,
+    onOpen: onOpenDelete,
+    onClose: onCloseDelete,
+    onOpenChange: onOpenDeleteChange,
+  } = useDisclosure();
+
+  const [selectedCandidate, setSelectedCandidate] = useState("");
+
+  const deleteInternMutation = useMutation({
+    mutationFn: (id: string) =>
+      fetch(`${API_ENDPOINTS.candidate}/${id}`, { method: "DELETE" }).then(
+        (response) => response.json(),
+      ),
+    onError: (error) => {
+      console.log(error);
+      toast.error(error.message);
+    },
+    onSuccess: () => {
+      refetch();
+      toast.success("Delete success");
+    },
+  });
+
+  const handleDelete = (id: string) => {
+    deleteInternMutation.mutate(id);
+    onCloseDelete();
+  };
+
+  const openDeleteModal = (id: string) => {
+    onOpenDelete();
+    setSelectedCandidate(id);
+  };
 
   const columnCandidate = [
     {
@@ -28,24 +86,20 @@ export default function UniversityCandidateCard() {
       key: "fullName",
       label: "Full Name",
     },
-    {
-      key: "phoneNumber",
-      label: "Phone",
-    },
+
     {
       key: "personalEmail",
       label: "Email",
     },
     {
-      key: "gender",
-      label: "Gender",
+      key: "universityEmail",
+      label: "University Email",
+    },
+    {
+      key: "cvUri",
+      label: "CV",
     },
     { key: "status", label: "Status" },
-
-    {
-      key: "desiredPosition",
-      label: "Desired Position",
-    },
     {
       key: "action",
       label: "ACTION",
@@ -70,9 +124,24 @@ export default function UniversityCandidateCard() {
         return <div>{candidate.universityEmail}</div>;
       case "gender":
         return <div>{candidate.gender}</div>;
+      case "cvUri":
+        return <Link href={candidate.cvUri}>Link</Link>;
+      case "status":
+        return (
+          <Chip
+            className="text-xs capitalize"
+            color={statusColorMap[candidate.status]}
+            size="sm"
+            variant="flat"
+          >
+            {typeof cellValue === "object"
+              ? JSON.stringify(cellValue)
+              : cellValue}
+          </Chip>
+        );
       case "action":
         return (
-          <div>
+          <div className="flex gap-2">
             <Tooltip content="View detail">
               <button
                 className="cursor-pointer"
@@ -81,6 +150,21 @@ export default function UniversityCandidateCard() {
                 <ViewIcon />
               </button>
             </Tooltip>
+
+            {role === "Administrator" ||
+            role === "HR Manager" ||
+            role === "University Offical" ? (
+              <Tooltip content="Delete">
+                <button
+                  onClick={() => openDeleteModal(candidate.id)}
+                  className="-mt-1 cursor-pointer active:opacity-50"
+                >
+                  <DeleteIcon />
+                </button>
+              </Tooltip>
+            ) : (
+              <></>
+            )}
           </div>
         );
       default:
@@ -134,6 +218,27 @@ export default function UniversityCandidateCard() {
           setPageIndex(page);
         }}
       />
+
+      <Modal
+        isOpen={isDeleteOpen}
+        onOpenChange={onOpenDeleteChange}
+        className="max-w-fit"
+      >
+        <ModalContent>
+          <ModalBody className="mt-5">
+            Are you sure you want to delete?
+            <div className="mt-5 grid grid-cols-2 gap-5">
+              <Button
+                onClick={() => handleDelete(selectedCandidate)}
+                color="primary"
+              >
+                Yes
+              </Button>
+              <Button onClick={onCloseDelete}>No</Button>
+            </div>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </div>
   );
 }
