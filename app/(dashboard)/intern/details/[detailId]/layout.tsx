@@ -3,12 +3,7 @@ import { Tab, Tabs } from "@nextui-org/tabs";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 
-export default function Layout({
-  children,
-}: {
-  children: React.ReactNode;
-  information: React.ReactNode;
-}) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   const { detailId } = useParams();
 
   const subRoutes = [
