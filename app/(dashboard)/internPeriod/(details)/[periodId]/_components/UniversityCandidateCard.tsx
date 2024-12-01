@@ -151,12 +151,12 @@ export default function UniversityCandidateCard() {
         return (
           <div className="flex gap-2">
             <Tooltip content="View detail">
-              <button
+              <Link
                 className="cursor-pointer"
-                onClick={() => window.open(`/intern/details/${candidate.id}`)}
+                href={`/intern/details/${candidate.id}`}
               >
                 <ViewIcon />
-              </button>
+              </Link>
             </Tooltip>
 
             {role === "Administrator" ||
