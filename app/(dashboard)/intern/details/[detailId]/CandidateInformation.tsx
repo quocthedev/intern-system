@@ -1,4 +1,4 @@
-import { formatedDate } from "@/app/util";
+import { formatDate } from "@/app/util";
 import { API_ENDPOINTS } from "@/libs/config";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
@@ -255,7 +255,7 @@ export default function CandidateInformationPage() {
                     />
                     <Input
                       label="Date of Birth"
-                      value={formatedDate(updateData.doB)}
+                      value={formatDate(updateData.doB)}
                       onChange={(e) =>
                         setUpdateData({ ...updateData, doB: e.target.value })
                       }
@@ -432,7 +432,7 @@ export default function CandidateInformationPage() {
                 <span className="font-medium text-gray-900">
                   Date of Birth:
                 </span>{" "}
-                {formatedDate(candidateData?.doB) || "N/A"}
+                {formatDate(candidateData?.doB) || "N/A"}
               </div>
               <div>
                 <span className="font-medium text-gray-900">Phone:</span>{" "}

@@ -37,7 +37,7 @@ const apiClient = new APIClient({
 
 // Make sure the filter is valid
 const validate = (filter: InternPeriodFilter) => {
-  if (filter.FromDate && filter.ToDate) {
+  if (filter.FromDate && filter.ToDate && filter.FromDate !== filter.ToDate) {
     const fromDate = new Date(filter.FromDate);
     const toDate = new Date(filter.ToDate);
 

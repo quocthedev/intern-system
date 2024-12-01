@@ -1,6 +1,6 @@
 "use client";
 import { ViewIcon } from "@/app/(dashboard)/intern/_components/Icons";
-import { formatedDate, formatedTimeToMinutes } from "@/app/util/format";
+import { formatDate, formatedTimeToMinutes } from "@/app/util/format";
 import { API_ENDPOINTS } from "@/libs/config";
 import { Chip, ChipProps } from "@nextui-org/chip";
 import { Skeleton } from "@nextui-org/skeleton";
@@ -92,7 +92,7 @@ export default function InterViewDetailPage() {
         case "candidateEmail":
           return <div>{candidate.candidatePersonalEmail}</div>;
         case "interviewDate":
-          return <div>{formatedDate(candidate.interviewDate)}</div>;
+          return <div>{formatDate(candidate.interviewDate)}</div>;
         case "startTime":
           return <div>{candidate.startTime}</div>;
         case "timeDuration":
@@ -186,7 +186,7 @@ export default function InterViewDetailPage() {
 
             <div className="flex items-center border-b pb-2">
               <span className="w-1/2 font-medium">Interview Date:</span>
-              <span>{formatedDate(interviewScheduleData?.interviewDate)}</span>
+              <span>{formatDate(interviewScheduleData?.interviewDate)}</span>
             </div>
 
             <div className="flex items-center border-b pb-2">

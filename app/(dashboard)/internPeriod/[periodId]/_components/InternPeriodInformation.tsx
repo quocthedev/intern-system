@@ -6,7 +6,7 @@ import { useMutation } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { useInternPeriodContext } from "../_providers/InternPeriodDetailProvider";
 import { toast } from "sonner";
-import { formatedDate } from "@/app/util";
+import { formatDate } from "@/app/util";
 import { Skeleton } from "@nextui-org/skeleton";
 import { useToggle } from "usehooks-ts";
 import { EditIcon } from "../../_components/Icons";
@@ -192,12 +192,12 @@ export default function InternPeriodInformation() {
 
             <div className="flex items-center border-b pb-2">
               <span className="w-1/3 font-medium">Start Date:</span>
-              <p>{internPeriodData?.startDate.split("T")[0]} </p>
+              <p> {formatDate(internPeriodData?.startDate as string)}</p>
             </div>
 
             <div className="flex items-center border-b pb-2">
               <span className="w-1/3 font-medium">End Date:</span>
-              <p>{internPeriodData?.endDate.split("T")[0]}</p>
+              <p>{formatDate(internPeriodData?.endDate as string)}</p>
             </div>
 
             <div className="flex items-center border-b pb-2">

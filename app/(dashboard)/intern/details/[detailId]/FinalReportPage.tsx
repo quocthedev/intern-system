@@ -4,7 +4,7 @@ import {
   Criteria,
   SubmitScore,
 } from "@/app/(dashboard)/intern/_types/GetCriterias";
-import { formatedDate } from "@/app/util";
+import { formatDate } from "@/app/util";
 import APIClient from "@/libs/api-client";
 import { API_ENDPOINTS } from "@/libs/config";
 import { Button } from "@nextui-org/button";
@@ -349,11 +349,11 @@ export default function FinalReportPage() {
               </div>
               <div className="mb-2">
                 <span className="font-medium">Start Date:</span>{" "}
-                {formatedDate(internPeriodViewReport.startDate)}
+                {formatDate(internPeriodViewReport.startDate)}
               </div>
               <div>
                 <span className="font-medium">End Date:</span>{" "}
-                {formatedDate(internPeriodViewReport.endDate)}
+                {formatDate(internPeriodViewReport.endDate)}
               </div>
             </div>
 
@@ -386,11 +386,11 @@ export default function FinalReportPage() {
                     </div>
                     <div className="mb-4">
                       <span className="font-medium">Start date:</span>{" "}
-                      {formatedDate(workPerformance.startDate)}
+                      {formatDate(workPerformance.startDate)}
                     </div>
                     <div className="mb-4">
                       <span className="font-medium">Release date:</span>{" "}
-                      {formatedDate(workPerformance.releaseDate)}
+                      {formatDate(workPerformance.releaseDate)}
                     </div>
                   </div>
 

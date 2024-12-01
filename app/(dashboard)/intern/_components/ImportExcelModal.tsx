@@ -15,8 +15,7 @@ import { API_ENDPOINTS } from "@/libs/config";
 import { Select, SelectItem } from "@nextui-org/select";
 import { toast } from "sonner";
 import { ExcelIcon } from "@/app/(dashboard)/intern/_components/Icons";
-import NewPeriodModal from "@/app/(dashboard)/internPeriod/_components/NewPeriodModal";
-import { formatedDate } from "@/app/util";
+import { formatDate } from "@/app/util";
 import { Divider } from "@nextui-org/divider";
 import Link from "next/link";
 import NewPeriodModalNext from "../../internPeriod/_components/NewPeriodModal_next";
@@ -208,7 +207,7 @@ function ImportExcelModal() {
                             Start Date:
                           </span>
                           <span className="text-gray-600">
-                            {formatedDate(selectedPeriodData.startDate)}
+                            {formatDate(selectedPeriodData.startDate)}
                           </span>
                         </div>
 
@@ -217,7 +216,7 @@ function ImportExcelModal() {
                             End Date:
                           </span>
                           <span className="text-gray-600">
-                            {formatedDate(selectedPeriodData.endDate)}
+                            {formatDate(selectedPeriodData.endDate)}
                           </span>
                         </div>
 
