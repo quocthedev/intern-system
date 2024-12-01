@@ -23,8 +23,13 @@ type InternPeriodFilter = Partial<{
 }>;
 
 export default function InternPeriodFilter() {
-  const { filter, setFilter, removeOneFilter, removeAllFilter } =
-    useInternPeriodContext() || {};
+  const {
+    filter,
+    setFilter,
+    removeOneFilter,
+    removeAllFilter,
+    setInternPeriodPageId,
+  } = useInternPeriodContext() || {};
 
   const applyFilter = (data: FormData) => {
     const fromDate = data.get("fromDate");
@@ -42,6 +47,8 @@ export default function InternPeriodFilter() {
     } else {
       setFilter(newFilter);
     }
+
+    setInternPeriodPageId(1);
   };
 
   return (
