@@ -22,7 +22,7 @@ const PDFEmbed: React.FC<PDFEmbedProps> = ({ pdfUrl }) => {
   );
 };
 
-export default function CandidateCVPage() {
+export default function CandidateCV() {
   const params = useParams();
   const candidateId = params.detailId as string;
   const [selectedFile, setSelectedFile] = useState<File | null>(null);

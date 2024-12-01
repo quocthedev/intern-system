@@ -6,7 +6,7 @@ import React, { useState } from "react";
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import { Pagination } from "@nextui-org/pagination";
 import Link from "next/link";
-import { formatedDate, formatedTimeToMinutes } from "@/app/util";
+import { formatDate, formatedTimeToMinutes } from "@/app/util";
 import { Divider } from "@nextui-org/divider";
 import { useRouter } from "next/navigation";
 import {
@@ -108,7 +108,7 @@ export default function InterViewCard() {
                   <div className="mb-2 grid grid-cols-2">
                     <div className="flex items-center gap-2">
                       <span className="font-semibold">Start date: </span>
-                      {formatedDate(interview.interviewDate)}
+                      {formatDate(interview.interviewDate)}
                     </div>
                     <div className="ml-4 flex items-center gap-2">
                       <span className="font-semibold">Start time: </span>

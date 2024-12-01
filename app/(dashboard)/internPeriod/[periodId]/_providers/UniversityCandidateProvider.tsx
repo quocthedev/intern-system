@@ -53,7 +53,7 @@ export default function UniversityCandidateProvider({
     removeOneFilter,
     removeAllFilter,
   } = useUniversityCandidate({
-    pageSize: 5,
+    pageSize: 10,
     universityId,
   });
 

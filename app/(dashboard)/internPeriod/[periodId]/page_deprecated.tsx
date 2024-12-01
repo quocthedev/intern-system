@@ -4,7 +4,7 @@ import {
   CandidateIcon,
   ViewIcon,
 } from "@/app/(dashboard)/internPeriod/_components/Icons";
-import { formatedDate } from "@/app/util";
+import { formatDate } from "@/app/util";
 import { API_ENDPOINTS } from "@/libs/config";
 import { Accordion, AccordionItem } from "@nextui-org/accordion";
 import { Spinner } from "@nextui-org/spinner";
@@ -300,15 +300,15 @@ export default function PeriodDetailPage() {
 
             <div className="flex items-center border-b pb-2">
               <span className="w-1/2 font-medium">Start Date:</span>
-              <Input value={formatedDate(updateData?.startDate)}>
-                {formatedDate(internPeriodData?.startDate)}
+              <Input value={formatDate(updateData?.startDate)}>
+                {formatDate(internPeriodData?.startDate)}
               </Input>
             </div>
 
             <div className="flex items-center border-b pb-2">
               <span className="w-1/2 font-medium">End Date:</span>
-              <Input value={formatedDate(updateData?.endDate)}>
-                {formatedDate(internPeriodData?.endDate)}
+              <Input value={formatDate(updateData?.endDate)}>
+                {formatDate(internPeriodData?.endDate)}
               </Input>
             </div>
 
