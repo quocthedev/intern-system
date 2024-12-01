@@ -28,7 +28,7 @@ type CandidateFilter = Partial<{
 }>;
 
 export default function UniversityCandidateFilter() {
-  const { filter, setFilter, removeOneFilter, removeAllFilter } =
+  const { filter, setFilter, removeOneFilter, removeAllFilter, setPageIndex } =
     useUniversityCandidateContext();
 
   const applyFilter = (data: FormData) => {
@@ -41,6 +41,8 @@ export default function UniversityCandidateFilter() {
     } else {
       setFilter(filter);
     }
+
+    setPageIndex(1);
   };
 
   return (
