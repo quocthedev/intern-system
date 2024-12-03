@@ -21,6 +21,7 @@ import { DeleteIcon } from "@/app/(dashboard)/technology/_components/Icons";
 import { toast } from "sonner";
 
 import { useInterviewContext } from "../_providers/InterviewProvider";
+import { Spinner } from "@nextui-org/spinner";
 
 interface InterViewScheduleInterface {
   id: string;
@@ -43,8 +44,10 @@ export default function InterViewCard() {
 
   const pageSize = 6;
 
-  const { listInterviewData, refetchListInterview } =
+  const { listInterviewData, refetchListInterview, isListInterviewLoading } =
     useInterviewContext() || {};
+
+  const interViewData = listInterviewData?.interviews || [];
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) =>
@@ -80,75 +83,82 @@ export default function InterViewCard() {
 
   return (
     <div>
-      <div className="grid h-full grid-cols-3 gap-6">
-        {listInterviewData?.interviewSchedules &&
-          listInterviewData.interviewSchedules.map(
-            (interview: InterViewScheduleInterface) => (
-              <Card
-                key={interview.id as string}
-                className="w-full"
-                shadow="lg"
-                isPressable
-              >
-                <CardHeader>
-                  <div className="flex w-full items-center justify-between">
-                    <div className="text-md mt-1 text-lg font-semibold">
-                      {interview.title}
-                    </div>
-                    <button
-                      className="bg-transparent"
-                      onClick={() => openModalDelete(interview.id as string)}
-                    >
-                      <DeleteIcon />
-                    </button>
-                  </div>
-                </CardHeader>
-                <Divider />
-                <CardBody onClick={() => handlePress(interview.id)}>
-                  <div className="mb-2 grid grid-cols-2">
-                    <div className="flex items-center gap-2">
-                      <span className="font-semibold">Start date: </span>
-                      {formatDate(interview.interviewDate)}
-                    </div>
-                    <div className="ml-4 flex items-center gap-2">
-                      <span className="font-semibold">Start time: </span>
-                      {interview.startTime}
-                    </div>
-                  </div>
-                  <div className="mb-2 mt-1">
-                    {" "}
-                    <span className="font-semibold">Interviewed by: </span>
-                    {interview.interviewer?.fullName}
-                  </div>
-
-                  <div className="mb-2 mt-1">
-                    <span className="font-semibold">Duration: </span>
-                    {formatedTimeToMinutes(interview.timeDuration)} mins
-                  </div>
-                  <div className="mb-2 mt-1 flex gap-2">
-                    <span className="font-semibold">Interview type: </span>
-                    <div className="text-blue-600">
-                      {interview.interviewFormat}
-                    </div>
-                  </div>
-                  <div className="mb-2 mt-1 flex gap-2">
-                    <span className="font-semibold">Interview location: </span>
-
-                    {interview.interviewFormat === "Online" ? (
-                      <Link
-                        href="http://localhost:3000"
-                        className="text-blue-600 underline"
+      <div>
+        {isListInterviewLoading ? (
+          <Spinner className="flex items-center gap-4">Loading...</Spinner>
+        ) : (
+          <div className="grid h-fit grid-cols-3 gap-6">
+            {" "}
+            {interViewData &&
+              interViewData.map((interview: InterViewScheduleInterface) => (
+                <Card
+                  key={interview.id as string}
+                  className="h-fit w-full"
+                  shadow="lg"
+                  isPressable
+                >
+                  <CardHeader>
+                    <div className="flex w-full items-center justify-between">
+                      <div className="text-md mt-1 text-lg font-semibold">
+                        {interview.title}
+                      </div>
+                      <button
+                        className="bg-transparent"
+                        onClick={() => openModalDelete(interview.id as string)}
                       >
-                        Link
-                      </Link>
-                    ) : (
-                      interview.interviewLocation
-                    )}
-                  </div>
-                </CardBody>
-              </Card>
-            ),
-          )}
+                        <DeleteIcon />
+                      </button>
+                    </div>
+                  </CardHeader>
+                  <Divider />
+                  <CardBody onClick={() => handlePress(interview.id)}>
+                    <div className="mb-2 grid grid-cols-2">
+                      <div className="flex items-center gap-2">
+                        <span className="font-semibold">Start date: </span>
+                        {formatDate(interview.interviewDate)}
+                      </div>
+                      <div className="ml-4 flex items-center gap-2">
+                        <span className="font-semibold">Start time: </span>
+                        {interview.startTime}
+                      </div>
+                    </div>
+                    <div className="mb-2 mt-1">
+                      {" "}
+                      <span className="font-semibold">Interviewed by: </span>
+                      {interview.interviewer?.fullName}
+                    </div>
+
+                    <div className="mb-2 mt-1">
+                      <span className="font-semibold">Duration: </span>
+                      {formatedTimeToMinutes(interview.timeDuration)} mins
+                    </div>
+                    <div className="mb-2 mt-1 flex gap-2">
+                      <span className="font-semibold">Interview type: </span>
+                      <div className="text-blue-600">
+                        {interview.interviewFormat}
+                      </div>
+                    </div>
+                    <div className="mb-2 mt-1 flex gap-2">
+                      <span className="font-semibold">
+                        Interview location:{" "}
+                      </span>
+
+                      {interview.interviewFormat === "Online" ? (
+                        <Link
+                          href="http://localhost:3000"
+                          className="text-blue-600 underline"
+                        >
+                          Link
+                        </Link>
+                      ) : (
+                        interview.interviewLocation
+                      )}
+                    </div>
+                  </CardBody>
+                </Card>
+              ))}
+          </div>
+        )}
 
         <Modal
           isOpen={isOpen}

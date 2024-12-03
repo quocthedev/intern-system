@@ -21,7 +21,7 @@ import React from "react";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   Confirmed: "success",
-  Rejected: "danger",
+  Refused: "danger",
   Pending: "warning",
   NotYet: "primary",
 };
@@ -65,14 +65,13 @@ export default function InterViewDetailPage() {
       key: "startTime",
       label: "Start time",
     },
-
-    {
-      key: "timeDuration",
-      label: "Duration",
-    },
     {
       key: "status",
       label: "Status",
+    },
+    {
+      key: "reason",
+      label: "Reason",
     },
     {
       key: "action",
@@ -110,6 +109,12 @@ export default function InterViewDetailPage() {
               {candidate.status}
             </Chip>
           );
+        case "reason":
+          return (
+            <Chip size="sm">
+              <Tooltip content={candidate.reason}>Show reason</Tooltip>
+            </Chip>
+          );
         case "action":
           return (
             <Tooltip content="View candidate detail">
@@ -129,7 +134,7 @@ export default function InterViewDetailPage() {
   );
 
   return (
-    <div className="flex h-full w-full flex-col p-6">
+    <div>
       <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4">
         <div className="flex items-center">
           <Link
@@ -139,7 +144,7 @@ export default function InterViewDetailPage() {
             Interview Schedules
           </Link>
           <span className="mx-2"> &gt; </span>
-          <span className="font-semibold">Internship schedule information</span>
+          <span className="font-semibold">Internship schedule details</span>
         </div>
       </div>
       {isLoading ? (
@@ -174,7 +179,7 @@ export default function InterViewDetailPage() {
         <div className="rounded-lg bg-white p-4 shadow-md">
           <div className="grid grid-cols-2 gap-3 text-sm text-gray-600">
             <div className="flex items-center border-b pb-2">
-              <span className="w-1/2 font-medium">Name:</span>
+              <span className="w-1/2 font-medium">Interviewer name:</span>
               <span className="w-1/2 font-bold">
                 {interviewScheduleData?.interviewerName}
               </span>
@@ -183,15 +188,27 @@ export default function InterViewDetailPage() {
               <span className="w-1/2 font-medium">Interview type :</span>
               <span>{interviewScheduleData?.interviewFormat} </span>
             </div>
-
             <div className="flex items-center border-b pb-2">
+              <span className="w-1/2 font-medium">Duration :</span>
+              <span>
+                {formatedTimeToMinutes(interviewScheduleData?.timeDuration)}{" "}
+                minutes
+              </span>
+            </div>
+            {/* <div className="flex items-center border-b pb-2">
               <span className="w-1/2 font-medium">Interview Date:</span>
               <span>{formatDate(interviewScheduleData?.interviewDate)}</span>
-            </div>
+            </div> */}
 
             <div className="flex items-center border-b pb-2">
               <span className="w-1/2 font-medium">Location:</span>
-              <span>{interviewScheduleData?.interviewLocation}</span>
+              {interviewScheduleData?.interviewFormat == "Online" ? (
+                <div className="text-blue-600 underline">
+                  {interviewScheduleData?.interviewLocation}
+                </div>
+              ) : (
+                <div>{interviewScheduleData?.interviewLocation}</div>
+              )}
             </div>
           </div>
         </div>
