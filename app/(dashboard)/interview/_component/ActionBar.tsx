@@ -2,7 +2,7 @@
 import { Input } from "@nextui-org/input";
 import InterviewScheduleModal from "@/components/InterviewScheduleModal";
 import { useInterviewContext } from "../_providers/InterviewProvider";
-import InterviewFilter from "@/app/(dashboard)/interview/_component/InterViewFilter";
+import InterviewFilter from "@/app/(dashboard)/interview/_component/InterviewFilter";
 export default function ActionBar() {
   const { refetchListInterview, setInterviewPageId } =
     useInterviewContext() || {};
