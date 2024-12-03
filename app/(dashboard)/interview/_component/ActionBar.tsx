@@ -1,14 +1,13 @@
 "use client";
-import { Button } from "@nextui-org/button";
-
-import { FilterIcon } from "@/app/(dashboard)/intern/_components/Icons";
-
 import { Input } from "@nextui-org/input";
 import InterviewScheduleModal from "@/components/InterviewScheduleModal";
 import { useInterviewContext } from "../_providers/InterviewProvider";
+import InterviewFilter from "@/app/(dashboard)/interview/_component/InterViewFilter";
 export default function ActionBar() {
   const { refetchListInterview, setInterviewPageId } =
     useInterviewContext() || {};
+
+  const { setSearch } = useInterviewContext();
 
   return (
     <div className="mb-5 mt-3 flex w-full items-center gap-2">
@@ -16,6 +15,7 @@ export default function ActionBar() {
         type="name"
         placeholder="Search by name, group, technology,..."
         size="md"
+        onChange={(e) => setSearch(e.target.value)}
       />
       <InterviewScheduleModal
         isAddingCandidate
@@ -26,10 +26,7 @@ export default function ActionBar() {
       />
 
       <div className="flex min-w-max gap-3">
-        <Button color="default" size="md" variant="shadow">
-          <FilterIcon />
-          Filter
-        </Button>
+        <InterviewFilter />
       </div>
     </div>
   );

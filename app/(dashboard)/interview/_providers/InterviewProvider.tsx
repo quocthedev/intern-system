@@ -1,91 +1,74 @@
 "use client";
-import APIClient from "@/libs/api-client";
-import { API_ENDPOINTS } from "@/libs/config";
-import { PaginationResponse, PaginationResponseSuccess } from "@/libs/types";
-import { useQuery } from "@tanstack/react-query";
-import { createContext, useContext, useState } from "react";
+import { InterviewFilter, useInterview } from "@/data-store/interview";
+import { createContext, useContext } from "react";
 
-interface InterViewScheduleInterface {
-  id: string;
-  title: string;
-  interviewDate: string;
-  startTime: string;
-  timeDuration: string;
-  interviewFormat: string;
-  interviewLocation: string;
-  createdByUserId: string;
-  interviewerId: string;
-  createdByUser: any;
-  interviewer: any;
-}
-
-const InterviewContext = createContext<{
-  interviewPageId: number;
+export interface InterviewContextInterface {
   setInterviewPageId: (pageId: number) => void;
   isListInterviewLoading: boolean;
   listInterviewData:
     | {
-        interviewSchedules: InterViewScheduleInterface[];
+        interviews: {
+          id: string;
+          title: string;
+          interviewDate: string;
+          startTime: string;
+          timeDuration: string;
+          interviewFormat: string;
+          interviewLocation: string;
+          createdByUserId: string;
+          interviewerId: string;
+          createdByUser: any;
+          interviewer: any;
+        }[];
         pageIndex: number;
         totalPages: number;
       }
-    | undefined;
+    | undefined
+    | null;
   refetchListInterview: () => void;
-} | null>(null);
+  setSearch: (search: string) => void;
+  filter: InterviewFilter;
+  setFilter: (newFilter: InterviewFilter | null) => void;
+  removeOneFilter: (key: keyof InterviewFilter) => void;
+  removeAllFilter: () => void;
+}
+
+const InterviewContext = createContext<InterviewContextInterface>(
+  {} as InterviewContextInterface,
+);
 
 export const useInterviewContext = () => useContext(InterviewContext);
-
-const apiClient = new APIClient({
-  onFulfilled: (response) => response,
-  onRejected: (error) => {
-    console.log(error.response.data);
-  },
-});
 
 export default function InterviewProvider({
   children,
 }: React.PropsWithChildren<{}>) {
-  const [interviewPageId, setInterviewPageId] = useState(1);
-
-  const pageSize = 6;
-
   const {
     isLoading: isListInterviewLoading,
     data: listInterviewData,
     refetch: refetchListInterview,
-  } = useQuery({
-    queryKey: ["interviewSchedule", interviewPageId, pageSize],
-    queryFn: async () => {
-      const response = await apiClient.get<
-        PaginationResponse<InterViewScheduleInterface>
-      >(API_ENDPOINTS.interviewSchedule, {
-        params: new URLSearchParams({
-          PageIndex: interviewPageId.toString(),
-          PageSize: pageSize.toString(),
-        }),
-      });
+    setPageIndex: setInterviewPageId,
 
-      if (response?.statusCode === "200") {
-        const { data } =
-          response as PaginationResponseSuccess<InterViewScheduleInterface>;
-
-        return {
-          interviewSchedules: data.pagingData,
-          pageIndex: data.pageIndex,
-          totalPages: data.totalPages,
-        };
-      }
-    },
+    setSearch,
+    filter,
+    setFilter,
+    removeOneFilter,
+    removeAllFilter,
+  } = useInterview({
+    pageSize: 10,
   });
 
   return (
     <InterviewContext.Provider
       value={{
-        interviewPageId,
-        setInterviewPageId,
         isListInterviewLoading,
         listInterviewData,
         refetchListInterview,
+        setInterviewPageId,
+        setSearch,
+        filter: filter as InterviewFilter,
+        setFilter,
+        removeOneFilter,
+        removeAllFilter,
       }}
     >
       {children}
