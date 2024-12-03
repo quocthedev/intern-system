@@ -194,22 +194,22 @@ export default function NewPeriodModalNext() {
                   label="End date"
                   labelPlacement="outside"
                   value={endDate}
+                  onChange={(newDate) => setEndDate(newDate)}
                   isRequired
                   name="endDate"
                 />
-
-                <Select
-                  label="University Attended"
-                  name="universities"
-                  selectionMode="multiple"
-                >
-                  {(data?.universitites ?? []).map((university) => (
-                    <SelectItem key={university.id} value={university.id}>
-                      {university.name}
-                    </SelectItem>
-                  ))}
-                </Select>
               </div>
+              <Select
+                label="University Attended"
+                name="universities"
+                selectionMode="multiple"
+              >
+                {(data?.universitites ?? []).map((university) => (
+                  <SelectItem key={university.id} value={university.id}>
+                    {university.name}
+                  </SelectItem>
+                ))}
+              </Select>
             </ModalBody>
 
             <ModalFooter>

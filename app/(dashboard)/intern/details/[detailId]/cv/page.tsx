@@ -77,8 +77,7 @@ export default function CandidateCVPage() {
       await refetch();
     } catch (error) {
       setUploadError("Failed to upload CV.");
-      toast.error("Error uploading CV");
-      console.error(error);
+      toast.error("Error uploading CV", error as any);
     } finally {
       setUploading(false);
     }
@@ -107,7 +106,7 @@ export default function CandidateCVPage() {
             <input
               id="uploadCV"
               type="file"
-              accept=".pdf, .docx"
+              accept=".pdf"
               onChange={handleFileChange}
               disabled={uploading}
               hidden
