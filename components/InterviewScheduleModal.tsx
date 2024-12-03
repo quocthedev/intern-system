@@ -45,7 +45,7 @@ const apiClient = new APIClient({
 });
 
 export type InterviewScheduleModalProps = {
-  candidates?: { id: string; fullName: string; universityEmail: string }[];
+  candidates?: { id: string; fullName: string }[];
   isAddingCandidate?: boolean;
   callback?: () => void;
 };
@@ -278,10 +278,9 @@ export default function InterviewScheduleModal(
                       <p>
                         To:{" "}
                         {(props.candidates
-                          ? props.candidates.map(
-                              (student) =>
-                                `${student.fullName}<${student.universityEmail}>`,
-                            )
+                          ? props.candidates.map((student) => {
+                              student.fullName;
+                            })
                           : Array.from(selectedKeys).map((key) => {
                               const candidate = candidates?.find(
                                 (c) => c.id === key,

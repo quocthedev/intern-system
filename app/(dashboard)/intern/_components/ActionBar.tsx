@@ -12,7 +12,6 @@ type ActionBarProps = {
   selectedInterns: Set<{
     id: string;
     fullName: string;
-    universityEmail: string;
   }>;
 };
 
