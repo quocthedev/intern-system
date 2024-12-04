@@ -13,7 +13,7 @@ export default function ActionBar() {
     <div className="mb-5 mt-3 flex w-full items-center gap-2">
       <Input
         type="name"
-        placeholder="Search by name, group, technology,..."
+        placeholder="Search by title, interviewer name"
         size="md"
         onChange={(e) => setSearch(e.target.value)}
       />
@@ -24,10 +24,7 @@ export default function ActionBar() {
           setInterviewPageId && setInterviewPageId(1);
         }}
       />
-
-      <div className="flex min-w-max gap-3">
-        <InterviewFilter />
-      </div>
+      <InterviewFilter />
     </div>
   );
 }

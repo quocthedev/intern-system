@@ -4,10 +4,11 @@ import { DatePicker } from "@nextui-org/date-picker";
 import { Popover, PopoverContent, PopoverTrigger } from "@nextui-org/popover";
 import { Button } from "@nextui-org/button";
 import { FilterIcon } from "@/app/(dashboard)/internPeriod/_components/Icons";
-import { Select, SelectItem } from "@nextui-org/select";
 import { removeEmptyFields } from "@/libs/utils";
 import { useInterviewContext } from "@/app/(dashboard)/interview/_providers/InterviewProvider";
 import { Chip } from "@nextui-org/chip";
+import { getLocalTimeZone, today } from "@internationalized/date";
+import { isWeekend, addDays } from "date-fns";
 
 type InterViewFilter = Partial<{
   FromDate: string;
@@ -26,7 +27,6 @@ export default function InterviewFilter() {
   const applyFilter = (data: FormData) => {
     const fromDate = data.get("fromDate");
     const toDate = data.get("toDate");
-    const status = data.get("status");
 
     const newFilter = removeEmptyFields<InterViewFilter>({
       FromDate: fromDate as string,
@@ -42,20 +42,30 @@ export default function InterviewFilter() {
     setInterviewPageId(1);
   };
 
+  let isDateUnavailable = (date: Date) => {
+    // Adjust for Vietnam timezone (UTC+7)
+    const vietnamDate = addDays(date, 1);
+
+    // Check if the adjusted date is a weekend
+    return isWeekend(vietnamDate);
+  };
+
   return (
     <div className="flex items-center gap-3">
       <>
         {!(filter as InterViewFilter) ||
-          Object.entries(filter as Record<string, unknown>).map(([key]) => (
-            <Chip
-              color="primary"
-              variant="bordered"
-              onClose={() => removeOneFilter(key as keyof InterViewFilter)}
-              key={key}
-            >
-              {key}:{" "}
-            </Chip>
-          ))}
+          Object.entries(filter as Record<string, unknown>).map(
+            ([key, value]) => (
+              <Chip
+                color="primary"
+                variant="bordered"
+                onClose={() => removeOneFilter(key as keyof InterViewFilter)}
+                key={key}
+              >
+                {key}:{value as string}
+              </Chip>
+            ),
+          )}
       </>
       <Popover placement="bottom-end">
         <PopoverTrigger>
@@ -79,12 +89,17 @@ export default function InterviewFilter() {
             name="fromDate"
             showMonthAndYearPickers
             granularity="day"
+            maxValue={today(getLocalTimeZone())}
+            defaultValue={today(getLocalTimeZone())}
+            isDateUnavailable={isDateUnavailable as any}
           />
           <DatePicker
             label="To date"
             name="toDate"
             showMonthAndYearPickers
             granularity="day"
+            minValue={today(getLocalTimeZone())}
+            defaultValue={today(getLocalTimeZone())}
           />
 
           <Button color="primary" variant="shadow" fullWidth type="submit">
