@@ -98,6 +98,7 @@ const useFilterStore = create<{
 
 export function useUniversityCandidate(params: {
   pageSize: number;
+  internPeriodId: string;
   universityId: string;
 }) {
   const [pageIndex, setPageIndex] = useState(1);
@@ -117,18 +118,21 @@ export function useUniversityCandidate(params: {
     queryFn: async () => {
       const response = await apiClient.get<
         PaginationResponse<UniversityCandidate>
-      >(`${API_ENDPOINTS.candidate}/${params.universityId}/university`, {
-        params: new URLSearchParams(
-          Object.assign(
-            {
-              PageIndex: pageIndex.toString(),
-              PageSize: params.pageSize.toString(),
-              Search: search,
-            },
-            filter ?? {},
+      >(
+        `${API_ENDPOINTS.candidate}/${params.internPeriodId}/university/${params.universityId}/candidates`,
+        {
+          params: new URLSearchParams(
+            Object.assign(
+              {
+                PageIndex: pageIndex.toString(),
+                PageSize: params.pageSize.toString(),
+                Search: search,
+              },
+              filter ?? {},
+            ),
           ),
-        ),
-      });
+        },
+      );
 
       if (response?.statusCode === "200") {
         const { data } =

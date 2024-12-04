@@ -13,11 +13,20 @@ import {
   TableHeader,
   TableRow,
 } from "@nextui-org/table";
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+} from "@nextui-org/dropdown";
 import { Tooltip } from "@nextui-org/tooltip";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import React from "react";
+import { Button } from "@nextui-org/button";
+import { EllipsisIcon } from "@/app/(dashboard)/internPeriod/_components/Icons";
+import { keys } from "ramda";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   Confirmed: "success",
@@ -50,12 +59,16 @@ export default function InterViewDetailPage() {
 
   const columnCandidate = [
     {
+      key: "no",
+      label: "No",
+    },
+    {
       key: "candidateName",
       label: "Candidate name",
     },
     {
-      key: "candidateEmail",
-      label: "Candidate email",
+      key: "universityEmail",
+      label: "University email",
     },
     {
       key: "interviewDate",
@@ -78,18 +91,18 @@ export default function InterViewDetailPage() {
       label: "Action",
     },
   ];
-  const handleMove = (id: string) => {
-    window.open(`/intern/details/${id}`);
-  };
+
   const renderCellCandidate = React.useCallback(
-    (candidate: any, columnKey: React.Key) => {
+    (candidate: any, columnKey: React.Key, index: number) => {
       const cellValue = candidate[columnKey as keyof typeof candidate];
 
       switch (columnKey) {
+        case "no":
+          return <div>{index + 1}</div>;
         case "candidateName":
           return <div>{candidate.candidateName}</div>;
-        case "candidateEmail":
-          return <div>{candidate.candidatePersonalEmail}</div>;
+        case "universityEmail":
+          return <div>{candidate.candidateUniversityEmail}</div>;
         case "interviewDate":
           return <div>{formatDate(candidate.interviewDate)}</div>;
         case "startTime":
@@ -110,21 +123,37 @@ export default function InterViewDetailPage() {
             </Chip>
           );
         case "reason":
-          return (
-            <Chip size="sm">
-              <Tooltip content={candidate.reason}>Show reason</Tooltip>
-            </Chip>
-          );
+          if (candidate.status === "Refused") {
+            return (
+              <Chip size="sm">
+                <Tooltip content={candidate.reason}>Show reason</Tooltip>
+              </Chip>
+            );
+          } else {
+            return <></>;
+          }
         case "action":
           return (
-            <Tooltip content="View candidate detail">
-              <button
-                className="cursor-pointer"
-                onClick={() => handleMove(candidate.candidateId)}
-              >
-                <ViewIcon />
-              </button>
-            </Tooltip>
+            <div className="flex items-center">
+              <Dropdown>
+                <DropdownTrigger>
+                  <Button variant="light" isIconOnly>
+                    <EllipsisIcon />
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu aria-label="Dynamic Actions">
+                  <DropdownItem key="view" className="flex items-center">
+                    <Tooltip content="View candidate detail">
+                      <Link href={`/intern/details/${candidate.candidateId}`}>
+                        <button className="flex cursor-pointer items-center">
+                          <ViewIcon className="mr-2" /> View detail
+                        </button>
+                      </Link>
+                    </Tooltip>
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            </div>
           );
         default:
           return cellValue;
@@ -195,11 +224,6 @@ export default function InterViewDetailPage() {
                 minutes
               </span>
             </div>
-            {/* <div className="flex items-center border-b pb-2">
-              <span className="w-1/2 font-medium">Interview Date:</span>
-              <span>{formatDate(interviewScheduleData?.interviewDate)}</span>
-            </div> */}
-
             <div className="flex items-center border-b pb-2">
               <span className="w-1/2 font-medium">Location:</span>
               {interviewScheduleData?.interviewFormat == "Online" ? (
@@ -229,13 +253,15 @@ export default function InterViewDetailPage() {
             </div>
           }
         >
-          {(candidate: any) => (
+          {candidateData.map((candidate: any, index: number) => (
             <TableRow key={candidate.candidateId}>
               {(colKey) => (
-                <TableCell>{renderCellCandidate(candidate, colKey)}</TableCell>
+                <TableCell>
+                  {renderCellCandidate(candidate, colKey, index)}
+                </TableCell>
               )}
             </TableRow>
-          )}
+          ))}
         </TableBody>
       </Table>
     </div>

@@ -13,6 +13,7 @@ import { Chip, ChipProps } from "@nextui-org/chip";
 import React, { useState } from "react";
 import {
   DeleteIcon,
+  EllipsisIcon,
   ViewIcon,
 } from "@/app/(dashboard)/internPeriod/_components/Icons";
 import { Tooltip } from "@nextui-org/tooltip";
@@ -31,6 +32,12 @@ import Link from "next/link";
 import { useInternPeriodContext } from "../_providers/InternPeriodProvider";
 import { Pagination } from "@nextui-org/pagination";
 import { formatDate } from "@/app/util";
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+} from "@nextui-org/dropdown";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   InProgress: "warning",
@@ -147,31 +154,39 @@ export default function InternPeriodTable() {
           );
         case "actions":
           return (
-            <div className="flex gap-2">
-              <Tooltip content="View detail">
-                <Link href={`/internPeriod/${period.id}`}>
-                  <button className="cursor-pointer">
-                    <ViewIcon />
-                  </button>
-                </Link>
-              </Tooltip>
-
-              <Tooltip content="Delete">
-                <button
-                  onClick={() => {
-                    if (period.currentCandidateQuantity > 0) {
-                      toast.error(
-                        "Cannot delete a period with active candidates.",
-                      );
-                      return;
-                    }
-                    handleDeleteConfirmation(period.id);
-                  }}
-                  className="-mt-1 cursor-pointer"
-                >
-                  <DeleteIcon />
-                </button>
-              </Tooltip>
+            <div className="flex items-center">
+              <Dropdown>
+                <DropdownTrigger>
+                  <Button variant="light" isIconOnly>
+                    <EllipsisIcon />
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu aria-label="Dynamic Actions">
+                  <DropdownItem key="view" className="flex items-center">
+                    <Link href={`/internPeriod/${period.id}`}>
+                      <button className="flex cursor-pointer items-center">
+                        <ViewIcon className="mr-2" /> View Detail
+                      </button>
+                    </Link>
+                  </DropdownItem>
+                  <DropdownItem key="delete" className="flex items-center">
+                    <button
+                      onClick={() => {
+                        if (period.currentCandidateQuantity > 0) {
+                          toast.error(
+                            "Cannot delete a period with active candidates.",
+                          );
+                          return;
+                        }
+                        handleDeleteConfirmation(period.id);
+                      }}
+                      className="flex cursor-pointer items-center text-danger"
+                    >
+                      <DeleteIcon className="mr-2" /> Delete
+                    </button>
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
             </div>
           );
         default:

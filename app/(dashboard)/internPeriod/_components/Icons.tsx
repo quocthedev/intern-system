@@ -6,6 +6,8 @@ import FilterIconSVG from "@/public/icons/actionbar/filter-icon.svg";
 import EditIconSVG from "@/public/icons/others/edit-icon.svg";
 import ViewIconSVG from "@/public/icons/others/view-icon.svg";
 import CandidateIconSVG from "@/public/icons/sidebar/intern-management-inactive.svg";
+import EllipsisIconSVG from "@/public/icons/others/ellipsis-icon.svg";
+
 import Image from "next/image";
 
 type ActionBarIconsProps = {
@@ -79,6 +81,16 @@ export const ViewIcon = ({ size = 20, className }: ActionBarIconsProps) => (
     width={size}
     height={size}
     src={ViewIconSVG}
+    className={className}
+  />
+);
+
+export const EllipsisIcon = ({ size = 20, className }: ActionBarIconsProps) => (
+  <Image
+    alt="Filter Icon"
+    width={size}
+    height={size}
+    src={EllipsisIconSVG}
     className={className}
   />
 );
