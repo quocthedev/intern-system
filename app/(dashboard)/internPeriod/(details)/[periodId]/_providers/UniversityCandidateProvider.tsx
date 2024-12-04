@@ -24,6 +24,7 @@ export interface UniversityCandidateContextInterface {
   setFilter: (newFilter: any) => void;
   removeOneFilter: (key: "Status" | "Gender") => void;
   removeAllFilter: () => void;
+  internPeriodId: string;
   universityId: string;
 }
 
@@ -37,9 +38,11 @@ export const useUniversityCandidateContext = () =>
 
 export default function UniversityCandidateProvider({
   children,
+  internPeriodId,
   universityId,
 }: React.PropsWithChildren<{
-  universityId: string;
+  internPeriodId: any;
+  universityId: any;
 }>) {
   const {
     isLoading,
@@ -54,6 +57,7 @@ export default function UniversityCandidateProvider({
     removeAllFilter,
   } = useUniversityCandidate({
     pageSize: 10,
+    internPeriodId,
     universityId,
   });
 
@@ -70,6 +74,7 @@ export default function UniversityCandidateProvider({
         setFilter,
         removeOneFilter,
         removeAllFilter,
+        internPeriodId,
         universityId,
       }}
     >
