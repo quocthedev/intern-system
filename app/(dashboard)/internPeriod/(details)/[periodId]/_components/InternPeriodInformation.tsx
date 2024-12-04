@@ -203,7 +203,7 @@ export default function InternPeriodInformation() {
             <div className="flex items-center border-b pb-2">
               <span className="w-1/3 font-medium">Max Candidates:</span>
               <Input
-                value={String(internPeriodData?.maxCandidateQuantity)}
+                defaultValue={String(internPeriodData?.maxCandidateQuantity)}
                 type="number"
                 variant="bordered"
                 classNames={
