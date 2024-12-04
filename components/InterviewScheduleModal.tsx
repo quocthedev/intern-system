@@ -31,12 +31,14 @@ import { useToggle } from "usehooks-ts";
 import { Tab, Tabs } from "@nextui-org/tabs";
 import { DatePicker } from "@nextui-org/date-picker";
 
-import { now, getLocalTimeZone } from "@internationalized/date";
+import { now, getLocalTimeZone, today } from "@internationalized/date";
 import { Select, SelectItem } from "@nextui-org/select";
 import { GetUsersByRoleResponse } from "../libs/_types/GetUsersResponse";
 import { sendEmail } from "@/actions/send-email-next";
 import { InterviewIcon } from "@/components/icons/ActionBarIcons";
 import { toast } from "sonner";
+import { isWeekend, addDays } from "date-fns";
+
 const apiClient = new APIClient({
   // onFulfilled: (response) => response,
   // onRejected: (error) => {
@@ -48,6 +50,14 @@ export type InterviewScheduleModalProps = {
   candidates?: { id: string; fullName: string }[];
   isAddingCandidate?: boolean;
   callback?: () => void;
+};
+
+const isDateUnavailable = (date: Date) => {
+  // Adjust for Vietnam timezone (UTC+7)
+  const vietnamDate = addDays(date, 1);
+
+  // Check if the adjusted date is a weekend
+  return isWeekend(vietnamDate);
 };
 
 export default function InterviewScheduleModal(
@@ -183,23 +193,23 @@ export default function InterviewScheduleModal(
   const durations = [
     {
       key: "0",
+      name: "15 min",
+      value: "00:15",
+    },
+    {
+      key: "1",
       name: "30 min",
       value: "00:30",
     },
     {
-      key: "1",
-      name: "60 min",
-      value: "01:00",
-    },
-    {
       key: "2",
-      name: "90 min",
-      value: "01:30",
+      name: "45 min",
+      value: "00:45",
     },
     {
       key: "3",
-      name: "120 min",
-      value: "02:00",
+      name: "60 min",
+      value: "01:00",
     },
   ];
 
@@ -347,6 +357,7 @@ export default function InterviewScheduleModal(
                         name="dateTime"
                         labelPlacement="outside"
                         isRequired
+                        isDateUnavailable={isDateUnavailable as any}
                       />
 
                       <Select

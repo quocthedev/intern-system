@@ -9,7 +9,7 @@ import { Select, SelectItem } from "@nextui-org/select";
 import { removeEmptyFields } from "@/libs/utils";
 import { Chip } from "@nextui-org/chip";
 import { useInternPeriodContext } from "../_providers/InternPeriodProvider";
-
+import { getLocalTimeZone, today } from "@internationalized/date";
 const InternPeriodStatusMapping = {
   0: InternPeriodStatus.NotYet,
   1: InternPeriodStatus.InProgress,
@@ -93,12 +93,16 @@ export default function InternPeriodFilter() {
             name="fromDate"
             showMonthAndYearPickers
             granularity="day"
+            maxValue={today(getLocalTimeZone())}
+            defaultValue={today(getLocalTimeZone())}
           />
           <DatePicker
             label="To date"
             name="toDate"
             showMonthAndYearPickers
             granularity="day"
+            minValue={today(getLocalTimeZone())}
+            defaultValue={today(getLocalTimeZone())}
           />
 
           <Select

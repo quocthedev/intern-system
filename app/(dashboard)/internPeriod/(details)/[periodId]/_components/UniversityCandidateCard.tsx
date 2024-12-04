@@ -26,14 +26,22 @@ import {
   ModalContent,
   useDisclosure,
 } from "@nextui-org/modal";
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+} from "@nextui-org/dropdown";
 import { Button } from "@nextui-org/button";
 import { toast } from "sonner";
+import { EllipsisIcon } from "@/app/(dashboard)/internPeriod/_components/Icons";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   Approved: "success",
   InProgress: "warning",
   Rejected: "danger",
   InterviewEmailSent: "warning",
+  InterviewResultEmailSent: "warning",
   CompletedOjt: "success",
 };
 
@@ -150,29 +158,42 @@ export default function UniversityCandidateCard() {
       case "action":
         return (
           <div className="flex gap-2">
-            <Tooltip content="View detail">
-              <Link
-                className="cursor-pointer"
-                href={`/intern/details/${candidate.id}`}
-              >
-                <ViewIcon />
-              </Link>
-            </Tooltip>
-
-            {role === "Administrator" ||
-            role === "HR Manager" ||
-            role === "University Offical" ? (
-              <Tooltip content="Delete">
-                <button
-                  onClick={() => openDeleteModal(candidate.id)}
-                  className="-mt-1 cursor-pointer active:opacity-50"
-                >
-                  <DeleteIcon />
-                </button>
-              </Tooltip>
-            ) : (
-              <></>
-            )}
+            <Dropdown>
+              <DropdownTrigger>
+                <Button variant="light" isIconOnly>
+                  <EllipsisIcon />
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu aria-label="Dynamic Actions">
+                <DropdownItem key="view" className="flex items-center">
+                  <Tooltip content="View detail">
+                    <Link href={`/intern/details/${candidate.id}`}>
+                      <button className="cursor-pointer">
+                        <span className="flex items-center text-black">
+                          <ViewIcon className="mr-2" /> View detail
+                        </span>
+                      </button>
+                    </Link>
+                  </Tooltip>
+                </DropdownItem>
+                <DropdownItem>
+                  {role === "Administrator" ||
+                  role === "HR Manager" ||
+                  role === "University Offical" ? (
+                    <Tooltip content="Delete">
+                      <button
+                        onClick={() => openDeleteModal(candidate.id)}
+                        className="-mt-1 flex cursor-pointer items-center text-lg active:opacity-50"
+                      >
+                        <DeleteIcon className="mr-2" /> Delete
+                      </button>
+                    </Tooltip>
+                  ) : (
+                    <></>
+                  )}
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
           </div>
         );
       default:

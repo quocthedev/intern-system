@@ -42,6 +42,7 @@ export default function RelatedUniversities() {
                   key={university.id}
                 >
                   <UniversityCandidateProvider
+                    internPeriodId={internPeriodData?.id}
                     universityId={university.id}
                     key={university.id}
                   >
