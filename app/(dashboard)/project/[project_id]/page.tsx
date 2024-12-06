@@ -7,6 +7,7 @@ import GeneralInformation from "./_components/GeneralInformation";
 import RelatedUsers from "./_components/RelatedUsers";
 import TaskList from "./_components/TaskList";
 import { useState } from "react";
+import { useParams } from "next/navigation";
 
 const apiClient = new APIClient({
   onFulfilled: (response) => response,
@@ -20,12 +21,9 @@ export type RelatedUser = {
   fullName: string;
   role: string;
 };
-export default function ProjectDetails({
-  params,
-}: {
-  params: { project_id: string };
-}) {
-  const { project_id } = params;
+
+export default function ProjectDetailsPagge() {
+  const { project_id } = useParams();
 
   const [filterTask, setFilterTask] = useState<number>(0);
 
@@ -70,7 +68,7 @@ export default function ProjectDetails({
             <GeneralInformation project={project as any} />
             <RelatedUsers
               groups={relatedUser as any}
-              projectId={project_id}
+              projectId={project_id as string}
               projectName={project?.title as string}
             />
           </div>
@@ -80,7 +78,7 @@ export default function ProjectDetails({
             relatedUsers={relatedUser as any}
             filterTask={filterTask}
             setFilterTask={setFilterTask}
-            projectId={project_id}
+            projectId={project_id as string}
           />
         </div>
       )}

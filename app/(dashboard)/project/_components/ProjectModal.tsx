@@ -4,28 +4,15 @@ import { Modal, ModalContent, ModalHeader, ModalBody } from "@nextui-org/modal";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import { DatePicker } from "@nextui-org/date-picker";
-import { Select, SelectItem } from "@nextui-org/select";
-import { useQuery } from "@tanstack/react-query";
-import APIClient from "@/libs/api-client";
-import { GetPositionResponse, Position } from "../_types/Position";
-import { API_ENDPOINTS } from "@/libs/config";
-import { PaginationResponseSuccess } from "@/libs/types";
-import { GetTechnologyResponse, Technology } from "../_types/Technology";
 import { createNewProject } from "@/actions/create-new-project";
 import { Project } from "../_types/Project";
 import { getLocalTimeZone, now, parseDate } from "@internationalized/date";
 import * as R from "ramda";
-import { updateProject } from "@/actions/update-project";
 import { cn } from "@nextui-org/theme";
-const apiClient = new APIClient({
-  onFulfilled: (response) => response,
-  onRejected: (error) => {
-    // console.error(error);
-    // return Promise.reject(error);
-
-    console.log(error.response.data);
-  },
-});
+import { usePosition } from "@/data-store/position.store";
+import SelectSearch, { SelectSearchItem } from "@/components/SelectSearch";
+import { useTechnology } from "@/data-store/technology.store";
+import { updateProject } from "@/actions/update-project";
 
 export type ProjectModalProps = {
   selectedProjectInfo?: Project;
@@ -42,29 +29,59 @@ export default function ProjectModal(props: ProjectModalProps) {
 
   const {
     isLoading: isPositionsLoading,
-    error: positionsError,
-    data: positions,
-  } = useQuery({
-    queryKey: ["positions"],
-    queryFn: async () => {
-      const response = await apiClient.get<GetPositionResponse>(
-        API_ENDPOINTS.position,
-      );
+    setSearch: setPositionSearch,
+    dynamicPositionList,
+    scrollerRef: positionScrollerRef,
+    setIsOpen: setIsOpenPositionSearch,
+    isOpen: isOpenPositionSearch,
+  } = usePosition({ pageSize: 8 });
 
-      if (response?.statusCode === "200") {
-        const { data } = response as PaginationResponseSuccess<Position>;
+  const positions = dynamicPositionList || [];
 
-        return data.pagingData;
-      }
+  const {
+    isLoading: isTechnologiesLoading,
+    setSearch: setTechnologySearch,
+    dynamicTechnologyList,
+    scrollerRef: technologyScrollerRef,
+    setIsOpen: setIsOpenTechnologySearch,
+    isOpen: isOpenTechnologySearch,
+  } = useTechnology({ pageSize: 8 });
 
-      return [];
-    },
-  });
+  const technologies = dynamicTechnologyList || [];
 
-  // use react-query mutation to handle form submission
+  const [selectedPositions, setSelectedPositions] = useState<
+    Array<SelectSearchItem>
+  >(
+    (props.selectedProjectInfo?.listPosition || []).map((position) => ({
+      key: position.id,
+      value: position.name,
+      label: position.name,
+      chipLabel: position.abbreviation,
+    })),
+  );
+
+  const [selectedTechnologies, setSelectedTechnologies] = useState<
+    Array<SelectSearchItem>
+  >(
+    (props.selectedProjectInfo?.listTechnology || []).map((technology) => ({
+      key: technology.id,
+      value: technology.name,
+      label: technology.name,
+      chipLabel: technology.abbreviation,
+    })),
+  );
 
   const submit = async (formData: FormData) => {
     setIsProcessing(true);
+
+    selectedPositions.forEach((position) => {
+      formData.append("positions", position.key);
+    });
+
+    selectedTechnologies.forEach((technology) => {
+      formData.append("technologies", technology.key);
+    });
+
     try {
       if (props.mode === "create") {
         await createNewProject(formData);
@@ -118,7 +135,6 @@ export default function ProjectModal(props: ProjectModalProps) {
           oldData.listTechnology.map((technology) => technology.id),
           formData.getAll("technologies"),
         );
-        // Remove fields with values as empty array
 
         const filteredParams = {
           ...(R.filter((value) => value.length > 0, params) as Record<
@@ -143,27 +159,6 @@ export default function ProjectModal(props: ProjectModalProps) {
       setIsProcessing(false);
     }
   };
-
-  const {
-    isLoading: isTechnologiesLoading,
-    error: technologiesError,
-    data: technologies,
-  } = useQuery({
-    queryKey: ["technologies"],
-    queryFn: async () => {
-      const response = await apiClient.get<GetTechnologyResponse>(
-        API_ENDPOINTS.technology,
-      );
-
-      if (response?.statusCode === "200") {
-        const { data } = response as PaginationResponseSuccess<Technology>;
-
-        return data.pagingData;
-      }
-
-      return [];
-    },
-  });
 
   return (
     <Modal
@@ -225,45 +220,48 @@ export default function ProjectModal(props: ProjectModalProps) {
                   defaultValue={props.selectedProjectInfo?.zaloUri}
                   required
                 />
-                <Select
+
+                <SelectSearch
                   label="Positions"
                   placeholder="Select positions"
                   selectionMode="multiple"
                   isLoading={isPositionsLoading}
-                  items={positions || []}
-                  labelPlacement="outside"
-                  name="positions"
-                  defaultSelectedKeys={props.selectedProjectInfo?.listPosition.map(
-                    (position) => position.id,
-                  )}
+                  items={(positions || []).map((position) => ({
+                    key: position.id,
+                    value: position.name,
+                    label: position.name,
+                    chipLabel: position.abbreviation,
+                  }))}
                   required
-                >
-                  {(position) => (
-                    <SelectItem key={position.id} value={position.name}>
-                      {position.name}
-                    </SelectItem>
-                  )}
-                </Select>
-
-                <Select
+                  inputSearchPlaceholder="Search positions by name"
+                  scrollRef={positionScrollerRef}
+                  onSearchChange={setPositionSearch}
+                  isOpen={isOpenPositionSearch}
+                  setIsOpen={setIsOpenPositionSearch}
+                  selectedItems={selectedPositions}
+                  setSelectedItems={setSelectedPositions}
+                />
+                {/* Add SelectSearch for technologies */}
+                <SelectSearch
                   label="Technologies"
                   placeholder="Select technologies"
                   selectionMode="multiple"
                   isLoading={isTechnologiesLoading}
-                  items={technologies || []}
-                  labelPlacement="outside"
-                  name="technologies"
+                  items={(technologies || []).map((technology) => ({
+                    key: technology.id,
+                    value: technology.name,
+                    label: technology.name,
+                    chipLabel: technology.abbreviation,
+                  }))}
                   required
-                  defaultSelectedKeys={props.selectedProjectInfo?.listTechnology.map(
-                    (technology) => technology.id,
-                  )}
-                >
-                  {(technology) => (
-                    <SelectItem key={technology.id} value={technology.name}>
-                      {technology.name}
-                    </SelectItem>
-                  )}
-                </Select>
+                  inputSearchPlaceholder="Search technologies by name"
+                  scrollRef={technologyScrollerRef}
+                  onSearchChange={setTechnologySearch}
+                  isOpen={isOpenTechnologySearch}
+                  setIsOpen={setIsOpenTechnologySearch}
+                  selectedItems={selectedTechnologies}
+                  setSelectedItems={setSelectedTechnologies}
+                />
 
                 <div className="flex w-full gap-3">
                   <DatePicker
