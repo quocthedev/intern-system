@@ -20,11 +20,12 @@ export type RelatedUser = {
   fullName: string;
   role: string;
 };
-
-type Params = Promise<{ project_id: string }>;
-
-export default async function ProjectDetails({ params }: { params: Params }) {
-  const { project_id } = await params;
+export default function ProjectDetails({
+  params,
+}: {
+  params: { project_id: string };
+}) {
+  const { project_id } = params;
 
   const [filterTask, setFilterTask] = useState<number>(0);
 
