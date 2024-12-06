@@ -5,6 +5,7 @@ import { useUniversityCandidateContext } from "../_providers/UniversityCandidate
 import ImportExcelModal2 from "../ImportExcelModal2";
 import { useInternPeriodContext } from "../_providers/InternPeriodDetailProvider";
 import UniversityCandidateFilter from "./UniversityCandidateFilter";
+import InterviewScheduleModal from "@/components/InterviewScheduleModal";
 
 export default function ActionBar() {
   const { setSearch, universityId } = useUniversityCandidateContext();
@@ -22,6 +23,12 @@ export default function ActionBar() {
         <ImportExcelModal2
           internPeriodId={periodId}
           universityId={universityId}
+        />
+
+        <InterviewScheduleModal
+          isAddingCandidate
+          universityId={universityId}
+          internPeriodId={periodId}
         />
       </div>
       <UniversityCandidateFilter />
