@@ -40,8 +40,8 @@ export type Project = {
   releaseDate: string;
   status: string;
   groupUserRelated: GroupUserRelated[];
-  listPosition: { name: string; id: string }[];
-  listTechnology: { name: string; id: string }[];
+  listPosition: { name: string; id: string; abbreviation: string }[];
+  listTechnology: { name: string; id: string; abbreviation: string }[];
   taskList: Task[];
   id: string;
   dateCreate: string;

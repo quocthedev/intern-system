@@ -7,6 +7,7 @@ import GeneralInformation from "./_components/GeneralInformation";
 import RelatedUsers from "./_components/RelatedUsers";
 import TaskList from "./_components/TaskList";
 import { useState } from "react";
+import { useParams } from "next/navigation";
 
 const apiClient = new APIClient({
   onFulfilled: (response) => response,
@@ -21,10 +22,8 @@ export type RelatedUser = {
   role: string;
 };
 
-type Params = Promise<{ project_id: string }>;
-
-export default async function ProjectDetails({ params }: { params: Params }) {
-  const { project_id } = await params;
+export default function ProjectDetailsPagge() {
+  const { project_id } = useParams();
 
   const [filterTask, setFilterTask] = useState<number>(0);
 
@@ -69,7 +68,7 @@ export default async function ProjectDetails({ params }: { params: Params }) {
             <GeneralInformation project={project as any} />
             <RelatedUsers
               groups={relatedUser as any}
-              projectId={project_id}
+              projectId={project_id as string}
               projectName={project?.title as string}
             />
           </div>
@@ -79,7 +78,7 @@ export default async function ProjectDetails({ params }: { params: Params }) {
             relatedUsers={relatedUser as any}
             filterTask={filterTask}
             setFilterTask={setFilterTask}
-            projectId={project_id}
+            projectId={project_id as string}
           />
         </div>
       )}
