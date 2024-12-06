@@ -166,28 +166,27 @@ export default function UniversityCandidateCard() {
               </DropdownTrigger>
               <DropdownMenu aria-label="Dynamic Actions">
                 <DropdownItem key="view" className="flex items-center">
-                  <Tooltip content="View detail">
-                    <Link href={`/intern/details/${candidate.id}`}>
-                      <button className="cursor-pointer">
-                        <span className="flex items-center text-black">
-                          <ViewIcon className="mr-2" /> View detail
-                        </span>
-                      </button>
-                    </Link>
-                  </Tooltip>
+                  <Link
+                    href={`/intern/details/${candidate.id}`}
+                    className="w-full text-medium text-black"
+                  >
+                    <button className="cursor-pointer">
+                      <span className="flex items-center">
+                        <ViewIcon className="mr-2" /> View detail
+                      </span>
+                    </button>
+                  </Link>
                 </DropdownItem>
                 <DropdownItem>
                   {role === "Administrator" ||
                   role === "HR Manager" ||
                   role === "University Offical" ? (
-                    <Tooltip content="Delete">
-                      <button
-                        onClick={() => openDeleteModal(candidate.id)}
-                        className="-mt-1 flex cursor-pointer items-center text-lg active:opacity-50"
-                      >
-                        <DeleteIcon className="mr-2" /> Delete
-                      </button>
-                    </Tooltip>
+                    <button
+                      onClick={() => openDeleteModal(candidate.id)}
+                      className="-mt-1 flex w-full cursor-pointer items-center text-medium"
+                    >
+                      <DeleteIcon className="mr-2" /> Delete
+                    </button>
                   ) : (
                     <></>
                   )}

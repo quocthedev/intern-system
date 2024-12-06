@@ -146,6 +146,7 @@ export default function InterViewDetailPage() {
                     <Tooltip content="View candidate detail">
                       <Link
                         href={`/intern/details/${candidate.candidateId}/interview-information`}
+                        className="w-full"
                       >
                         <button className="flex cursor-pointer items-center">
                           <ViewIcon className="mr-2" /> View detail
