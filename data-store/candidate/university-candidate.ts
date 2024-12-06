@@ -9,6 +9,15 @@ import { API_ENDPOINTS } from "@/libs/config";
 import { create } from "zustand";
 import { toast } from "sonner";
 
+export enum CandidateStatus {
+  Pending = 0,
+  Approved = 1,
+  Rejected = 2,
+  InterviewEmailSent = 3,
+  CompletedOJT = 4,
+  Out = 5,
+}
+
 export interface UniversityCandidate {
   studentCode: string;
   fullName: string;
@@ -98,8 +107,9 @@ const useFilterStore = create<{
 
 export function useUniversityCandidate(params: {
   pageSize: number;
-  internPeriodId: string;
-  universityId: string;
+  internPeriodId: string | undefined;
+  universityId: string | undefined;
+  status?: CandidateStatus;
 }) {
   const [pageIndex, setPageIndex] = useState(1);
   const [search, setSearch] = useState("");
@@ -116,6 +126,10 @@ export function useUniversityCandidate(params: {
       filter,
     ],
     queryFn: async () => {
+      if (!params.internPeriodId || !params.universityId) {
+        return null;
+      }
+
       const response = await apiClient.get<
         PaginationResponse<UniversityCandidate>
       >(
@@ -127,6 +141,7 @@ export function useUniversityCandidate(params: {
                 PageIndex: pageIndex.toString(),
                 PageSize: params.pageSize.toString(),
                 Search: search,
+                Status: params.status?.toString() ?? "",
               },
               filter ?? {},
             ),

@@ -38,6 +38,12 @@ import { sendEmail } from "@/actions/send-email-next";
 import { InterviewIcon } from "@/components/icons/ActionBarIcons";
 import { toast } from "sonner";
 import { isWeekend, addDays } from "date-fns";
+import {
+  CandidateStatus,
+  UniversityCandidate,
+  useUniversityCandidate,
+} from "@/data-store/candidate/university-candidate";
+import { Chip, ChipProps } from "@nextui-org/chip";
 
 const apiClient = new APIClient({
   // onFulfilled: (response) => response,
@@ -46,9 +52,20 @@ const apiClient = new APIClient({
   // },
 });
 
+const statusColorMap: Record<string, ChipProps["color"]> = {
+  Approved: "success",
+  InProgress: "warning",
+  Rejected: "danger",
+  InterviewEmailSent: "warning",
+  InterviewResultEmailSent: "warning",
+  CompletedOjt: "success",
+};
+
 export type InterviewScheduleModalProps = {
   candidates?: { id: string; fullName: string }[];
   isAddingCandidate?: boolean;
+  universityId?: string;
+  internPeriodId?: string;
   callback?: () => void;
 };
 
@@ -118,7 +135,26 @@ export default function InterviewScheduleModal(
     },
   });
 
-  const { pagingData: candidates, totalPages } = getCandidateData || {};
+  const {
+    data: universityCandidateData,
+    isLoading: isLoadinguniversityCandidateData,
+  } = useUniversityCandidate({
+    pageSize: 10,
+    internPeriodId: props.internPeriodId,
+    universityId: props.universityId,
+    status: CandidateStatus.Approved,
+  });
+
+  let candidates: Candidate[] | UniversityCandidate[] | undefined;
+  let totalPages: number | undefined;
+
+  if (props.universityId) {
+    candidates = universityCandidateData?.candidates;
+    totalPages = universityCandidateData?.totalPages;
+  } else {
+    candidates = getCandidateData?.pagingData;
+    totalPages = getCandidateData?.totalPages;
+  }
 
   const columns = [
     {
@@ -138,8 +174,8 @@ export default function InterviewScheduleModal(
       title: "Phone Number",
     },
     {
-      key: "email",
-      title: "Email",
+      key: "universityEmail",
+      title: "University Email",
     },
     {
       key: "cv",
@@ -159,7 +195,10 @@ export default function InterviewScheduleModal(
     },
   ];
 
-  const renderCell = (item: Candidate, columnKey: string) => {
+  const renderCell = (
+    item: Candidate | UniversityCandidate,
+    columnKey: string,
+  ) => {
     switch (columnKey) {
       case "fullName":
         return item.fullName;
@@ -170,7 +209,7 @@ export default function InterviewScheduleModal(
       case "phoneNumber":
         return item.phoneNumber;
 
-      case "email":
+      case "universityEmail":
         return item.universityEmail;
 
       case "cv":
@@ -183,7 +222,11 @@ export default function InterviewScheduleModal(
         return item.universityViewModel.name;
 
       case "status":
-        return item.status;
+        return (
+          <Chip color={statusColorMap[item.status]} variant="flat">
+            {item.status}
+          </Chip>
+        );
 
       default:
         return "";
