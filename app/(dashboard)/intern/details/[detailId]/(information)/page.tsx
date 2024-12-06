@@ -58,7 +58,6 @@ export default function CandidateInformationPage() {
   });
 
   const candidateData = data?.data || {};
-  console.log(candidateData?.status);
 
   const updateMutation = useMutation({
     mutationFn: async () => {
@@ -69,7 +68,9 @@ export default function CandidateInformationPage() {
       });
     },
     onSuccess: () => {
+      toast.success("Candidate information updated successfully!");
       refetch();
+      onCloseEdit();
     },
     onError: (error) => {
       toast.error(`Error: ${error.message}`);
@@ -412,7 +413,10 @@ export default function CandidateInformationPage() {
                   </div>
                 </ModalBody>
                 <ModalFooter>
-                  <Button onClick={() => updateMutation.mutate()}>
+                  <Button
+                    onClick={() => updateMutation.mutate()}
+                    color="primary"
+                  >
                     Save Changes
                   </Button>
                   <Button onClick={onCloseEdit}>Cancel</Button>

@@ -194,7 +194,7 @@ export default function InterviewInformationPage() {
   const titleMapping = {
     [QuestionTemplateStatus.NOT_CREATED]: "Create questions",
     [QuestionTemplateStatus.CREATED]:
-      "Answers not submitted! Please submit your answers.",
+      "📝Answers not submitted! Please submit your answers.",
     [QuestionTemplateStatus.SUBMITTED]:
       "Answers submitted! Please evaluate the answers.",
     [QuestionTemplateStatus.EVALUATED]: "📝 Evaluation completed!",
@@ -249,45 +249,6 @@ export default function InterviewInformationPage() {
     return (
       <div className="flex flex-col gap-3">
         <h1 className="text-2xl font-bold">{titleMapping[status]}</h1>
-        {
-          // Show the evaluation result
-          status === QuestionTemplateStatus.EVALUATED && (
-            <Card shadow="sm">
-              <CardHeader>
-                <div className="flex w-full items-center justify-between">
-                  <p className="text-lg font-medium">
-                    {candidateQuestionTemplateDetails?.name}
-                  </p>
-                </div>
-              </CardHeader>
-              <CardBody className="gap-3">
-                <p>
-                  Total score:{" "}
-                  {candidateQuestionTemplateDetails?.totalAnswerScore}/
-                  {candidateQuestionTemplateDetails?.totalQuestionScore}
-                </p>
-                <p className="flex gap-1">
-                  Result:
-                  <p
-                    className={
-                      candidateQuestionTemplateDetails?.result == "Passed"
-                        ? "font-medium text-green-600"
-                        : "font-medium text-red-600"
-                    }
-                  >
-                    {candidateQuestionTemplateDetails?.result}
-                  </p>
-                </p>
-                <div className="flex gap-2">
-                  Evaluator name:{" "}
-                  <p className="font-medium">
-                    {candidateQuestionTemplateDetails?.reviewerName}
-                  </p>
-                </div>
-              </CardBody>
-            </Card>
-          )
-        }
         <form
           className="mt-2 flex flex-col gap-3"
           action={
@@ -296,13 +257,64 @@ export default function InterviewInformationPage() {
               : submitEvaluation
           }
         >
+          <Card shadow="sm">
+            <CardHeader>
+              <div className="flex w-full items-center justify-between">
+                <p className="text-lg font-medium">
+                  {candidateQuestionTemplateDetails?.name}
+                </p>
+              </div>
+            </CardHeader>
+            <CardBody className="gap-3">
+              <p>
+                Total score:{" "}
+                {candidateQuestionTemplateDetails?.totalAnswerScore}/
+                {candidateQuestionTemplateDetails?.totalQuestionScore}
+              </p>
+              <p className="flex gap-1">
+                Result:
+                <p
+                  className={
+                    candidateQuestionTemplateDetails?.result == "Passed"
+                      ? "font-medium text-green-600"
+                      : candidateQuestionTemplateDetails?.result == "NotPassed"
+                        ? "font-medium text-red-600"
+                        : "font-medium text-amber-600"
+                  }
+                >
+                  {candidateQuestionTemplateDetails?.result === "Passed"
+                    ? candidateQuestionTemplateDetails?.result
+                    : candidateQuestionTemplateDetails?.result === "WaitAnswer"
+                      ? "Waiting for answer"
+                      : "Not passed"}
+                </p>
+              </p>
+              <div className="flex gap-2">
+                Candidate name:{" "}
+                <p className="font-light">
+                  {candidateQuestionTemplateDetails?.candidateName}
+                </p>
+              </div>
+              <div className="flex gap-2">
+                Evaluator name:{" "}
+                <p className="font-medium">
+                  {candidateQuestionTemplateDetails?.reviewerName ? (
+                    candidateQuestionTemplateDetails?.reviewerName
+                  ) : (
+                    <div className="font-light">Waiting for evaluator</div>
+                  )}
+                </p>
+              </div>
+            </CardBody>
+          </Card>
+
           {candidateQuestionTemplateDetails?.questionTemplateDetails.map(
             (questionTemplateDetail, id) => (
               <div
                 className="mb-6 flex h-fit gap-4"
                 key={questionTemplateDetail.id}
               >
-                <Card shadow="sm" className="w-9/12">
+                <Card shadow="sm" className="w-10/12">
                   <CardHeader>
                     <div className="flex w-full items-center justify-between">
                       <p className="text-2xl font-semibold">
@@ -314,49 +326,53 @@ export default function InterviewInformationPage() {
                         </Chip>
 
                         {status !== QuestionTemplateStatus.CREATED && (
-                          <Input
-                            label="Your score:"
-                            labelPlacement="outside-left"
-                            type="number"
-                            defaultValue={"0"}
-                            name={questionTemplateDetail.id}
-                            max={questionTemplateDetail.maxQuestionScore}
-                            min={0}
-                            validate={(value) => {
-                              if (Number(value) < 0) {
-                                return "Score must be greater than 0";
-                              }
+                          <div>
+                            <Input
+                              label="Your score:"
+                              labelPlacement="outside-left"
+                              type="number"
+                              defaultValue={"0"}
+                              name={questionTemplateDetail.id}
+                              max={questionTemplateDetail.maxQuestionScore}
+                              min={0}
+                              validate={(value) => {
+                                if (Number(value) < 0) {
+                                  return "Score must be greater than 0";
+                                }
 
-                              if (
-                                Number(value) >
-                                Number(questionTemplateDetail.maxQuestionScore)
-                              ) {
-                                return "Score must be less than max score";
-                              }
-                            }}
-                            onChange={(e) => {
-                              // remove the evaluation if it already exists
-                              evaluation = evaluation.filter(
-                                (evaluation) =>
-                                  evaluation.questionTemplateDetailId !==
-                                  questionTemplateDetail.id,
-                              );
+                                if (
+                                  Number(value) >
+                                  Number(
+                                    questionTemplateDetail.maxQuestionScore,
+                                  )
+                                ) {
+                                  return "Score must be less than max score";
+                                }
+                              }}
+                              onChange={(e) => {
+                                // remove the evaluation if it already exists
+                                evaluation = evaluation.filter(
+                                  (evaluation) =>
+                                    evaluation.questionTemplateDetailId !==
+                                    questionTemplateDetail.id,
+                                );
 
-                              evaluation.push({
-                                questionTemplateDetailId:
-                                  questionTemplateDetail.id,
-                                answerScore: Number(e.target.value),
-                              });
-                            }}
-                            variant={
-                              status === QuestionTemplateStatus.SUBMITTED
-                                ? "bordered"
-                                : "flat"
-                            }
-                            disabled={
-                              status !== QuestionTemplateStatus.SUBMITTED
-                            }
-                          />
+                                evaluation.push({
+                                  questionTemplateDetailId:
+                                    questionTemplateDetail.id,
+                                  answerScore: Number(e.target.value),
+                                });
+                              }}
+                              variant={
+                                status === QuestionTemplateStatus.SUBMITTED
+                                  ? "bordered"
+                                  : "flat"
+                              }
+                              disabled={
+                                status !== QuestionTemplateStatus.SUBMITTED
+                              }
+                            />
+                          </div>
                         )}
                       </div>
                     </div>
@@ -399,7 +415,7 @@ export default function InterviewInformationPage() {
                     />
                   </CardBody>
                 </Card>
-                <div className="h-fit w-fit border">
+                <div className="flex h-full w-[250px] items-center border">
                   {questionTemplateDetail?.interviewQuestion?.imageUri ? (
                     <Image
                       width={250}
@@ -410,7 +426,7 @@ export default function InterviewInformationPage() {
                     />
                   ) : (
                     <Image
-                      className="border"
+                      className="object-contain"
                       width={250}
                       height={250}
                       alt="Default Question Image"

@@ -1,3 +1,4 @@
+import { formatDate } from "@/app/util";
 import { Card, CardBody, CardFooter, CardHeader } from "@nextui-org/card";
 import { Link } from "@nextui-org/link";
 import { cn } from "@nextui-org/theme";
@@ -39,9 +40,9 @@ export default function GeneralInformation({
         </p>
 
         <div className="flex gap-4">
-          <p>Start Date: {project.startDate.split("T")[0]}</p>
+          <p>Start Date: {formatDate(project.startDate.split("T")[0])}</p>
 
-          <p>Release Date: {project.releaseDate.split("T")[0]}</p>
+          <p>Release Date: {formatDate(project.releaseDate.split("T")[0])}</p>
         </div>
 
         <p className="flex gap-3">

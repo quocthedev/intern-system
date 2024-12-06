@@ -161,7 +161,7 @@ export default function QuestionBankPage() {
     },
 
     onSuccess: () => {
-      toast.success("New university added successfully!");
+      toast.success("New question added successfully!");
       refetch();
       onCloseCreate();
     },
@@ -205,8 +205,8 @@ export default function QuestionBankPage() {
   };
 
   const handleCreate = () => {
-    if (!content || !difficulty || !technologyId || !selectedFile) {
-      toast.error("All fields are required and select an image!");
+    if (!content || !difficulty || !technologyId) {
+      toast.error("All fields are required");
       return;
     }
 
@@ -215,15 +215,11 @@ export default function QuestionBankPage() {
     formData.append("content", content);
     formData.append("difficulty", difficulty.toString());
     formData.append("technologyId", technologyId);
-    formData.append("ImageUri", selectedFile);
-    mutate(formData);
 
-    // mutate({
-    //   content,
-    //   difficulty,
-    //   imageUri,
-    //   technologyId,
-    // });
+    if (selectedFile) {
+      formData.append("ImageUri", selectedFile);
+    }
+    mutate(formData);
   };
 
   const columns = [
@@ -471,6 +467,8 @@ export default function QuestionBankPage() {
                   placeholder="Enter question's difficult "
                   labelPlacement="outside"
                   type="number"
+                  min={1}
+                  max={5}
                   value={difficulty.toString()}
                   onChange={(e) => setDifficulty(Number(e.target.value))}
                   isRequired
