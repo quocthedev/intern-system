@@ -331,7 +331,7 @@ export default function InterviewInformationPage() {
                               label="Your score:"
                               labelPlacement="outside-left"
                               type="number"
-                              defaultValue={"0"}
+                              defaultValue={questionTemplateDetail.answerScore.toString()}
                               name={questionTemplateDetail.id}
                               max={questionTemplateDetail.maxQuestionScore}
                               min={0}
