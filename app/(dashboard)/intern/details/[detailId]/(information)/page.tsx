@@ -77,13 +77,6 @@ export default function CandidateInformationPage() {
     },
   });
 
-  // <SelectItem key="0">Pending</SelectItem>
-  // <SelectItem key="1">Approved</SelectItem>
-  // <SelectItem key="2">Rejected</SelectItem>
-  // <SelectItem key="3">InterviewEmailSent</SelectItem>
-  // <SelectItem key="4">CompletedOJT</SelectItem>
-  // <SelectItem key="5">Out</SelectItem>
-
   const getStatus = (status: string) => {
     switch (status) {
       case "Pending":
@@ -94,10 +87,14 @@ export default function CandidateInformationPage() {
         return "2";
       case "InterviewEmailSent":
         return "3";
-      case "CompletedOJT":
+      case "InterviewResultEmailSent":
         return "4";
-      case "Out":
+      case "InProgress":
         return "5";
+      case "CompletedOJT":
+        return "6";
+      case "Out":
+        return "7";
       default:
         return "Unknown";
     }
@@ -210,8 +207,14 @@ export default function CandidateInformationPage() {
             Status:{" "}
             {candidateData?.status === "Approved" ? (
               <span className="text-green-500">{candidateData?.status}</span>
+            ) : candidateData?.status === "CompletedOjt" ? (
+              <span className="text-green-500">Completed Ojt</span>
             ) : candidateData?.status === "Rejected" ? (
               <span className="text-danger">{candidateData?.status}</span>
+            ) : candidateData?.status === "InterviewEmailSent" ? (
+              <span className="text-warning">Interview email sent</span>
+            ) : candidateData?.status === "InterviewResultEmailSent" ? (
+              <span className="text-blue-600">Interview email result sent</span>
             ) : (
               <span className="text-warning">{candidateData?.status}</span>
             )}
@@ -364,34 +367,6 @@ export default function CandidateInformationPage() {
                         })
                       }
                     />
-                    {/* <Input
-                      label="CV URI"
-                      value={updateData.cvUri}
-                      onChange={(e) =>
-                        setUpdateData({ ...updateData, cvUri: e.target.value })
-                      }
-                    />
-                    <Input
-                      label="Internship Period ID"
-                      value={updateData.internPeriodId}
-                      onChange={(e) =>
-                        setUpdateData({
-                          ...updateData,
-                          internPeriodId: e.target.value,
-                        })
-                      }
-                    />
-                    <Input
-                      label="University ID"
-                      value={updateData.universityId}
-                      onChange={(e) =>
-                        setUpdateData({
-                          ...updateData,
-                          universityId: e.target.value,
-                        })
-                      }
-                    /> */}
-
                     <Select
                       label="Status"
                       value={updateData.status}
@@ -407,8 +382,10 @@ export default function CandidateInformationPage() {
                       <SelectItem key="1">Approved</SelectItem>
                       <SelectItem key="2">Rejected</SelectItem>
                       <SelectItem key="3">InterviewEmailSent</SelectItem>
-                      <SelectItem key="4">CompletedOJT</SelectItem>
-                      <SelectItem key="5">Out</SelectItem>
+                      <SelectItem key="4">InterviewResultEmailSent</SelectItem>
+                      <SelectItem key="5">InProgress</SelectItem>
+                      <SelectItem key="6">CompletedOJT</SelectItem>
+                      <SelectItem key="7">Out</SelectItem>
                     </Select>
                   </div>
                 </ModalBody>
