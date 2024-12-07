@@ -21,22 +21,21 @@ export const TechCard = () => {
   const defaultId = "f8f50d79-778f-4f24-bcf4-b5e9eb83ee56";
 
   const [positionId, setPositionId] = useState(defaultId);
-
   const { isLoading, error, data, refetch } = useQuery({
-    queryKey: ["data", positionId],
+    queryKey: ["allPositions", positionId], // Query key for caching and refetching
     queryFn: async () => {
-      const position = await fetch(API_ENDPOINTS.position).then((res) =>
-        res.json(),
-      );
+      try {
+        const response = await fetch(`${API_ENDPOINTS.position}?pageSize=20`);
+        const result = await response.json();
 
-      return {
-        positions: position?.data?.pagingData || [],
-      };
+        return result?.data?.pagingData || []; // Return positions or an empty array
+      } catch (err) {
+        throw new Error("Failed to fetch positions");
+      }
     },
   });
 
-  const positionData = data?.positions || [];
-
+  const positionData = data || [];
   const {
     isLoading: isTechnologyLoading,
     data: technologyData,

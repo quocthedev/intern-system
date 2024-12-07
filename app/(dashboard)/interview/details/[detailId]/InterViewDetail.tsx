@@ -1,5 +1,5 @@
 "use client";
-import { ViewIcon } from "@/app/(dashboard)/intern/_components/Icons";
+import { CreateQuestionIcon } from "@/app/(dashboard)/intern/_components/Icons";
 import { formatDate, formatedTimeToMinutes } from "@/app/util/format";
 import { API_ENDPOINTS } from "@/libs/config";
 import { Chip, ChipProps } from "@nextui-org/chip";
@@ -149,7 +149,8 @@ export default function InterViewDetailPage() {
                         className="w-full"
                       >
                         <button className="flex cursor-pointer items-center">
-                          <ViewIcon className="mr-2" /> View detail
+                          <CreateQuestionIcon className="mr-2" /> Create
+                          interview question
                         </button>
                       </Link>
                     </Tooltip>
