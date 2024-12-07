@@ -4,7 +4,7 @@ import {
   Criteria,
   SubmitScore,
 } from "@/app/(dashboard)/intern/_types/GetCriterias";
-import { formatDate } from "@/app/util";
+import { formatDate, getCookie } from "@/app/util";
 import APIClient from "@/libs/api-client";
 import { API_ENDPOINTS } from "@/libs/config";
 import { Button } from "@nextui-org/button";
@@ -42,6 +42,7 @@ export default function FinalReportPage() {
 
   const params = useParams();
   const candidateId = params.detailId as string;
+  const role = getCookie("userRole");
 
   const apiClient = new APIClient({
     onFulfilled: (response) => response,
@@ -483,25 +484,29 @@ export default function FinalReportPage() {
           </div>
           <div className="mb-4 flex items-center justify-between">
             <h1 className="text-lg font-semibold">II. Compliance Evaluation</h1>
-            <div className="flex justify-end gap-2">
-              <Button
-                variant="solid"
-                color="primary"
-                className={`${isEditable === false ? "hidden" : ""}`}
-                onClick={handleUpdateCriteria}
-              >
-                Update
-              </Button>
+            {role == "Candidate" ? (
+              <></>
+            ) : (
+              <div className="flex justify-end gap-2">
+                <Button
+                  variant="solid"
+                  color="primary"
+                  className={`${isEditable === false ? "hidden" : ""}`}
+                  onClick={handleUpdateCriteria}
+                >
+                  Update
+                </Button>
 
-              <Button
-                variant="solid"
-                color="primary"
-                onClick={() => setIsEditable(!isEditable)}
-                // className={`${isScored ? "hidden" : ""}`}
-              >
-                {isEditable ? "Cancel" : "Evaluate"}
-              </Button>
-            </div>
+                <Button
+                  variant="solid"
+                  color="primary"
+                  onClick={() => setIsEditable(!isEditable)}
+                  // className={`${isScored ? "hidden" : ""}`}
+                >
+                  {isEditable ? "Cancel" : "Evaluate"}
+                </Button>
+              </div>
+            )}
           </div>
           <div>
             <div>
