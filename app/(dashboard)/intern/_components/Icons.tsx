@@ -7,7 +7,7 @@ import EditIconSVG from "@/public/icons/others/edit-icon.svg";
 import ViewIconSVG from "@/public/icons/others/view-icon.svg";
 import CalendarIconSVG from "@/public/icons/others/calendar-icon.svg";
 import ScheduleIconSVG from "@/public/icons/others/schedule-icon.svg";
-
+import CreateQuestionIconSVG from "@/public/icons/others/create-question-icon.svg";
 import Image from "next/image";
 
 type ActionBarIconsProps = {
@@ -101,6 +101,19 @@ export const ScheduleIcon = ({ size = 20, className }: ActionBarIconsProps) => (
     width={size}
     height={size}
     src={ScheduleIconSVG}
+    className={className}
+  />
+);
+
+export const CreateQuestionIcon = ({
+  size = 20,
+  className,
+}: ActionBarIconsProps) => (
+  <Image
+    alt="Filter Icon"
+    width={size}
+    height={size}
+    src={CreateQuestionIconSVG}
     className={className}
   />
 );
