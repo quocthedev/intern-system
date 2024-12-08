@@ -193,11 +193,6 @@ if (role === "Candidate") {
       NavigationItems.splice(index, 1);
     }
   }
-  NavigationItems.push({
-    label: "Candidates",
-    href: "/intern",
-    icon: InternManagementIcon,
-  });
 }
 
 export default function Navigation(props: NavigationProps) {
