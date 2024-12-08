@@ -91,7 +91,7 @@ export default function CandidateInformationPage() {
         return "4";
       case "InProgress":
         return "5";
-      case "CompletedOJT":
+      case "CompletedOjt":
         return "6";
       case "Out":
         return "7";
@@ -384,7 +384,7 @@ export default function CandidateInformationPage() {
                       <SelectItem key="3">InterviewEmailSent</SelectItem>
                       <SelectItem key="4">InterviewResultEmailSent</SelectItem>
                       <SelectItem key="5">InProgress</SelectItem>
-                      <SelectItem key="6">CompletedOJT</SelectItem>
+                      <SelectItem key="6">CompletedOjt</SelectItem>
                       <SelectItem key="7">Out</SelectItem>
                     </Select>
                   </div>
