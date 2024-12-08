@@ -130,7 +130,8 @@ export function useUniversityCandidate(params: {
       if (!params.internPeriodId || !params.universityId) {
         return null;
       }
-      
+
+      //Change code for filtering interview-schedule candidate with approved status
       const queryParams: Record<string, string> = {
         PageIndex: pageIndex.toString(),
         PageSize: params.pageSize.toString(),
@@ -143,9 +144,8 @@ export function useUniversityCandidate(params: {
         PaginationResponse<UniversityCandidate>
       >(
         `${API_ENDPOINTS.candidate}/${params.internPeriodId}/university/${params.universityId}/candidates`,
-        { params: new URLSearchParams(queryParams) }
+        { params: new URLSearchParams(queryParams) },
       );
-
 
       if (response?.statusCode === "200") {
         const { data } =

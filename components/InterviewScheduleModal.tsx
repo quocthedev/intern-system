@@ -44,6 +44,7 @@ import {
   useUniversityCandidate,
 } from "@/data-store/candidate/university-candidate";
 import { Chip, ChipProps } from "@nextui-org/chip";
+import { formatDate } from "@/app/util";
 
 const apiClient = new APIClient({
   // onFulfilled: (response) => response,
@@ -205,7 +206,7 @@ export default function InterviewScheduleModal(
       // case "group":
       //   return item.internPeriodViewModel.name;
       case "doB":
-        return item.doB.split("T")[0];
+        return formatDate(item.doB.split("T")[0]);
       case "phoneNumber":
         return item.phoneNumber;
 
