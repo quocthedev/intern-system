@@ -3,16 +3,16 @@ import { logout } from "@/actions/auth";
 import { useRouter } from "next/navigation";
 import React from "react";
 import {
-  Dropdown,
-  DropdownTrigger,
   DropdownMenu,
   DropdownSection,
   DropdownItem,
 } from "@nextui-org/dropdown";
+import { getCookie } from "@/app/util";
 
 export default function UserDropdown() {
   const router = useRouter();
-
+  const role = getCookie("userRole");
+  const id = getCookie("userId");
   const logoutUser = async () => {
     // window.localStorage.clear();
     await logout();
@@ -20,10 +20,16 @@ export default function UserDropdown() {
     window.location.reload();
   };
 
+  const handleMove = () => {
+    if (role === "Candidate") {
+      router.push(`/userCandidate/${id}`);
+    } else router.push("/");
+  };
+
   return (
     <DropdownMenu>
       <DropdownSection>
-        <DropdownItem>Profile</DropdownItem>
+        <DropdownItem onClick={handleMove}>Profile</DropdownItem>
         <DropdownItem>Settings</DropdownItem>
         <DropdownItem className="text-danger-500" onClick={logoutUser}>
           Logout
