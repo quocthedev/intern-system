@@ -14,6 +14,7 @@ import {
 } from "@nextui-org/modal";
 import { Select, SelectItem } from "@nextui-org/select";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import Image from "next/image";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -168,7 +169,7 @@ export default function CandidateInformationPage() {
       <div className="flex gap-4">
         <div className="mb-4 flex w-1/3 flex-col items-center">
           {candidateData?.avatar ? (
-            <img
+            <Image
               width={200}
               height={200}
               alt={`${candidateData.name}`}
