@@ -24,8 +24,10 @@ export type RelatedUser = {
 
 export default function ProjectDetailsPagge() {
   const { project_id } = useParams();
-
   const [filterTask, setFilterTask] = useState<number>(0);
+  const [listPosition, setListPosition] = useState<
+    { name: string; id: string }[]
+  >([]);
 
   const {
     data: project,
@@ -65,7 +67,10 @@ export default function ProjectDetailsPagge() {
       ) : (
         <div className="flex flex-col gap-6">
           <div className="flex w-full gap-6">
-            <GeneralInformation project={project as any} />
+            <GeneralInformation
+              project={project as any}
+              onListPositionChange={setListPosition}
+            />
             <RelatedUsers
               groups={relatedUser as any}
               projectId={project_id as string}
@@ -79,6 +84,7 @@ export default function ProjectDetailsPagge() {
             filterTask={filterTask}
             setFilterTask={setFilterTask}
             projectId={project_id as string}
+            listPosition={listPosition}
           />
         </div>
       )}

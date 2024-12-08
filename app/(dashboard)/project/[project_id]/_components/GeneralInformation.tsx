@@ -11,14 +11,22 @@ export type GeneralInformationProps = {
     zaloUri: string;
     startDate: string;
     releaseDate: string;
-    listPosition: { name: string }[];
+    listPosition: { name: string; id: string }[];
     listTechnology: { abbreviation: string }[];
     className?: string;
   };
+  onListPositionChange?: (positions: { name: string; id: string }[]) => void;
 };
 export default function GeneralInformation({
   project,
+  onListPositionChange,
 }: GeneralInformationProps) {
+  React.useEffect(() => {
+    if (onListPositionChange) {
+      onListPositionChange(project.listPosition);
+    }
+  }, [project.listPosition, onListPositionChange]);
+
   return (
     <div className="mt-3 flex w-[700px] flex-col">
       <h1 className="text-xl font-semibold">General Information</h1>

@@ -109,29 +109,13 @@ export default function TaskModal(props: TaskModalProps) {
         toast.success("Task updated successfully!");
         queryClient.invalidateQueries();
       } else {
-        const startDate = new Date(
-          formData.get("startDate")?.toString().split("T")[0] as string,
-        ).getTime();
-        const dueDate = new Date(
-          formData.get("dueDate")?.toString().split("T")[0] as string,
-        ).getTime();
-
-        if (startDate < Date.now()) {
-          toast.warning("Start date must be in the future");
-          return;
-        }
-
-        // if (startDate >= dueDate) {
-        //   toast.warning("Due date must be after start date");
-        //   return;
-        // }
-
         await createNewTask(formData);
         toast.success("Task created successfully!");
       }
       queryClient.invalidateQueries();
       onClose();
     } catch (error) {
+      console.error(error);
       toast.error(
         "An error occurred while creating the task. Please try again.",
       );
@@ -157,7 +141,9 @@ export default function TaskModal(props: TaskModalProps) {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                <h1 className="">Add New Task</h1>
+                <h1>
+                  {props.mode === "edit" ? "Update Task" : "Add New Task"}
+                </h1>
               </ModalHeader>
 
               <ModalBody className="">
@@ -335,7 +321,7 @@ export default function TaskModal(props: TaskModalProps) {
                     }
                   </div>
 
-                  <Textarea
+                  {/* <Textarea
                     type="text"
                     label="Notes"
                     labelPlacement="outside"
@@ -345,7 +331,7 @@ export default function TaskModal(props: TaskModalProps) {
                     // isRequired
                     name="note"
                     // defaultValue={props.selectedTaskInfo?.description}
-                  />
+                  /> */}
 
                   <div className="grid grid-cols-2 gap-4">
                     <Button color="primary" fullWidth type="submit">

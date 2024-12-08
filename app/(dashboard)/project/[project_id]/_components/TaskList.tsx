@@ -20,6 +20,7 @@ export type TaskListProps = {
   filterTask: number;
   setFilterTask: (filterTask: number) => void;
   className?: string;
+  listPosition: { name: string; id: string }[];
 };
 
 export default function TaskList(props: TaskListProps) {
@@ -27,8 +28,8 @@ export default function TaskList(props: TaskListProps) {
 
   const columns = [
     { key: "title", label: "Title" },
-    // { key: "summary", label: "Summary" },
-    // { key: "description", label: "Description" },
+    { key: "summary", label: "Summary" },
+    { key: "description", label: "Description" },
     { key: "startDate", label: "Start Date" },
     { key: "dueDate", label: "Due Date" },
 
@@ -38,7 +39,7 @@ export default function TaskList(props: TaskListProps) {
     { key: "memberName", label: "Member Name" },
     { key: "completionProgress", label: "Completion" },
     { key: "progressAssessment", label: "Assessment" },
-    { key: "note", label: "Note" },
+    // { key: "note", label: "Note" },
     { key: "actions", label: "Actions" },
   ];
 
@@ -99,6 +100,7 @@ export default function TaskList(props: TaskListProps) {
               relatedUsers={props.relatedUsers}
               projectId={props.projectId}
               selectedTaskInfo={item}
+              listPosition={props.listPosition}
             />
             <TaskDeleteModal taskId={item.id} />
           </div>
@@ -117,6 +119,7 @@ export default function TaskList(props: TaskListProps) {
           mode="create"
           relatedUsers={props.relatedUsers}
           projectId={props.projectId}
+          listPosition={props.listPosition}
         />
       </div>
       <Tabs
