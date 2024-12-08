@@ -24,17 +24,15 @@ export type TaskListProps = {
 export default function TaskList(props: TaskListProps) {
   const columns = [
     { key: "title", label: "Title" },
-
+    { key: "description", label: "Description" },
     { key: "startDate", label: "Start Date" },
     { key: "dueDate", label: "Due Date" },
-
     { key: "priority", label: "Priority" },
     { key: "difficulty", label: "Difficulty" },
     { key: "status", label: "Status" },
     { key: "memberName", label: "Member Name" },
     { key: "completionProgress", label: "Completion" },
     { key: "progressAssessment", label: "Assessment" },
-    { key: "note", label: "Note" },
     { key: "actions", label: "Actions" },
   ];
 
