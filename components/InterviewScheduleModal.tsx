@@ -161,10 +161,10 @@ export default function InterviewScheduleModal(
       key: "fullName",
       title: "Name",
     },
-    {
-      key: "group",
-      title: "Group",
-    },
+    // {
+    //   key: "group",
+    //   title: "Group",
+    // },
     {
       key: "doB",
       title: "Date of Birth",
@@ -185,10 +185,10 @@ export default function InterviewScheduleModal(
       key: "gpa",
       title: "GPA",
     },
-    {
-      key: "university",
-      title: "University",
-    },
+    // {
+    //   key: "university",
+    //   title: "University",
+    // },
     {
       key: "status",
       title: "Status",
@@ -202,8 +202,8 @@ export default function InterviewScheduleModal(
     switch (columnKey) {
       case "fullName":
         return item.fullName;
-      case "group":
-        return item.internPeriodViewModel.name;
+      // case "group":
+      //   return item.internPeriodViewModel.name;
       case "doB":
         return item.doB.split("T")[0];
       case "phoneNumber":
@@ -218,8 +218,8 @@ export default function InterviewScheduleModal(
       case "gpa":
         return item.gpa;
 
-      case "university":
-        return item.universityViewModel.name;
+      // case "university":
+      //   return item.universityViewModel.name;
 
       case "status":
         return (
