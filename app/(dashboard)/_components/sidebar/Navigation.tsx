@@ -48,9 +48,10 @@ export const NavigationItems = [
   },
   {
     label: "Projects",
-    href: "/project",
+    href: role === "Candidate" ? "/projectUserCandidate" : "/project",
     icon: ProjectManagementIcon,
   },
+
   {
     label: "Interns",
     href: "/intern",
