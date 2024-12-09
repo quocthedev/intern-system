@@ -14,9 +14,12 @@ import {
 } from "@nextui-org/modal";
 import { Select, SelectItem } from "@nextui-org/select";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import Image from "next/image";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { parseDate } from "@internationalized/date";
+
 export default function CandidateInformationPage() {
   const params = useParams();
   const candidateId = params.detailId as string;
@@ -25,13 +28,12 @@ export default function CandidateInformationPage() {
     isOpen: isEditOpen,
     onOpen: onOpenEdit,
     onClose: onCloseEdit,
-    onOpenChange: onOpenEditChange,
   } = useDisclosure();
 
   const [updateData, setUpdateData] = useState({
     studentCode: "",
     fullName: "",
-    doB: "",
+    doB: parseDate("2002-04-22"),
     universityEmail: "",
     personalEmail: "",
     phoneNumber: "",
@@ -62,10 +64,15 @@ export default function CandidateInformationPage() {
 
   const updateMutation = useMutation({
     mutationFn: async () => {
+      const clonedObject = {
+        ...updateData,
+        doB: updateData.doB.toString() as any,
+      };
+
       await fetch(API_ENDPOINTS.candidate + "/" + candidateId, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updateData),
+        body: JSON.stringify(clonedObject),
       });
     },
     onSuccess: () => {
@@ -105,7 +112,7 @@ export default function CandidateInformationPage() {
     setUpdateData({
       studentCode: candidateData?.studentCode || "",
       fullName: candidateData?.fullName || "",
-      doB: candidateData?.doB || "",
+      doB: parseDate(candidateData?.doB?.split("T")[0]) || null,
       universityEmail: candidateData?.universityEmail || "",
       personalEmail: candidateData?.personalEmail || "",
       phoneNumber: candidateData?.phoneNumber || "",
@@ -168,7 +175,7 @@ export default function CandidateInformationPage() {
       <div className="flex gap-4">
         <div className="mb-4 flex w-1/3 flex-col items-center">
           {candidateData?.avatar ? (
-            <img
+            <Image
               width={200}
               height={200}
               alt={`${candidateData.name}`}
@@ -259,9 +266,15 @@ export default function CandidateInformationPage() {
                         })
                       }
                     />
-                    <Input
+                    <DatePicker
                       label="Date of Birth"
-                      value={formatDate(updateData.doB)}
+                      defaultValue={updateData.doB}
+                      onChange={(e) =>
+                        setUpdateData({
+                          ...updateData,
+                          doB: e,
+                        })
+                      }
                     />
                     <Input
                       label="University Email"
