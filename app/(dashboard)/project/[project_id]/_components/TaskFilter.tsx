@@ -30,6 +30,52 @@ export default function TaskFilter() {
     })) || []),
   ];
 
+  const priorityOptions = [
+    {
+      key: "0",
+      value: "Highest",
+    },
+    {
+      key: "1",
+      value: "High",
+    },
+    {
+      key: "2",
+      value: "Medium",
+    },
+    {
+      key: "3",
+      value: "Low",
+    },
+    {
+      key: "4",
+      value: "Lowest",
+    },
+  ];
+
+  const difficultyOptions = [
+    {
+      key: "1",
+      value: "Easy",
+    },
+    {
+      key: "2",
+      value: "MediumEasy",
+    },
+    {
+      key: "3",
+      value: "Medium",
+    },
+    {
+      key: "4",
+      value: "MediumHard",
+    },
+    {
+      key: "5",
+      value: "Hard",
+    },
+  ];
+
   // const [isOpen, setIsOpen] = React.useState(false);
 
   return (
@@ -38,7 +84,7 @@ export default function TaskFilter() {
         placeholder="Filter by position"
         defaultItems={positionOptions}
         variant="bordered"
-        className="w-[300px]"
+        className="w-[250px]"
         onSelectionChange={(selectedKey) => {
           setProjectTaskFilter(
             Object.assign({}, projectTaskFilter, {
@@ -58,7 +104,7 @@ export default function TaskFilter() {
         placeholder="Filter by members"
         defaultItems={userOptions}
         variant="bordered"
-        className="w-[300px]"
+        className="w-[250px]"
         onSelectionChange={(selectedKey) => {
           console.log(selectedKey);
 
@@ -72,6 +118,46 @@ export default function TaskFilter() {
         {(item) => (
           <SelectItem key={item.value} value={item.value}>
             {item.label}
+          </SelectItem>
+        )}
+      </Autocomplete>
+
+      <Autocomplete
+        placeholder="Filter by priority"
+        defaultItems={priorityOptions}
+        variant="bordered"
+        className="w-[250px]"
+        onSelectionChange={(selectedKey) => {
+          setProjectTaskFilter(
+            Object.assign({}, projectTaskFilter, {
+              Priority: selectedKey ?? "",
+            }),
+          );
+        }}
+      >
+        {(item) => (
+          <SelectItem key={item.key} value={item.key}>
+            {item.value}
+          </SelectItem>
+        )}
+      </Autocomplete>
+
+      <Autocomplete
+        placeholder="Filter by difficulty"
+        defaultItems={difficultyOptions}
+        variant="bordered"
+        className="w-[250px]"
+        onSelectionChange={(selectedKey) => {
+          setProjectTaskFilter(
+            Object.assign({}, projectTaskFilter, {
+              Difficulty: selectedKey ?? "",
+            }),
+          );
+        }}
+      >
+        {(item) => (
+          <SelectItem key={item.key} value={item.key}>
+            {item.value}
           </SelectItem>
         )}
       </Autocomplete>

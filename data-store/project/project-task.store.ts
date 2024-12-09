@@ -38,6 +38,8 @@ export type ProjectTaskFilter = Partial<{
   Status: string;
   PositionId: string;
   UserId: string;
+  Priority: string;
+  Difficulty: string;
 }> | null;
 
 export type ProjectTaskData =
