@@ -8,7 +8,7 @@ import ProjectDetailProvider from "../_providers/ProjectDetailProvider";
 const apiClient = new APIClient({
   onFulfilled: (response) => response,
   onRejected: (error) => {
-    console.log(error.response.data);
+    console.log(error.response);
   },
 });
 

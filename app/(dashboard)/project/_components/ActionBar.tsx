@@ -9,7 +9,7 @@ export type ActionBarProps = {
   toggleShowFilter: () => void;
 };
 export default function ActionBar(props: ActionBarProps) {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
   return (
     <div className="flex w-full gap-3">
@@ -34,6 +34,7 @@ export default function ActionBar(props: ActionBarProps) {
           mode="create"
           isOpen={isOpen}
           onOpenChange={onOpenChange}
+          onClose={onClose}
         />
         <Button
           color="default"
