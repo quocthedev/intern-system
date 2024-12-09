@@ -4,8 +4,12 @@ import React, { useState } from "react";
 import { useProjectDetailContext } from "../../_providers/ProjectDetailProvider";
 
 export default function TaskFilter() {
-  const { projectSummary, relatedUser, setProjectTaskFilter } =
-    useProjectDetailContext();
+  const {
+    projectSummary,
+    relatedUser,
+    setProjectTaskFilter,
+    projectTaskFilter,
+  } = useProjectDetailContext();
 
   const positionOptions = [
     {
@@ -38,9 +42,11 @@ export default function TaskFilter() {
         className="w-[200px]"
         defaultSelectedKeys={[""]}
         onSelectionChange={(selectedKeys) => {
-          setProjectTaskFilter({
-            PositionId: selectedKeys.currentKey as string,
-          });
+          setProjectTaskFilter(
+            Object.assign({}, projectTaskFilter, {
+              PositionId: selectedKeys.currentKey as string,
+            }),
+          );
         }}
       >
         {(item) => <SelectItem key={item.value}>{item.label}</SelectItem>}
@@ -53,9 +59,11 @@ export default function TaskFilter() {
         className="w-[200px]"
         defaultSelectedKeys={[""]}
         onSelectionChange={(selectedKeys) => {
-          setProjectTaskFilter({
-            UserId: selectedKeys.currentKey as string,
-          });
+          setProjectTaskFilter(
+            Object.assign({}, projectTaskFilter, {
+              UserId: selectedKeys.currentKey as string,
+            }),
+          );
         }}
       >
         {(item) => <SelectItem key={item.value}>{item.label}</SelectItem>}
