@@ -11,10 +11,14 @@ export const getUpdatedFields = <T extends Record<string, any>>(
   }, {} as Partial<T>);
 };
 
-export const removeEmptyFields = <T extends Record<string, any>>(
+export const removeEmptyFields = <T extends Record<string, any> | null>(
   obj: T,
 ): Partial<T> => {
   const emptyValues = ["", null, undefined];
+
+  if (!obj) {
+    return {} as Partial<T>;
+  }
 
   return Object.keys(obj).reduce((acc, key) => {
     if (!emptyValues.includes(obj[key])) {

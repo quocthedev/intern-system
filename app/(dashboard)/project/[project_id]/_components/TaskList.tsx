@@ -1,5 +1,4 @@
 import React, { Key } from "react";
-import { Task } from "../../_types/Project";
 import {
   Table,
   TableBody,
@@ -9,37 +8,34 @@ import {
   TableRow,
 } from "@nextui-org/table";
 import TaskModal from "./TaskModal";
-import { RelatedUser } from "../page";
 import TaskDeleteModal from "./TaskDeleteModal";
 import { Tabs, Tab } from "@nextui-org/tabs";
+import { useProjectDetailContext } from "../../_providers/ProjectDetailProvider";
+import { ProjectTask } from "@/data-store/project/project-task.store";
+import Loading from "@/components/Loading";
+import TaskFilter from "./TaskFilter";
+import { Pagination } from "@nextui-org/pagination";
 
-export type TaskListProps = {
-  tasks: Task[];
-  relatedUsers: RelatedUser[];
-  projectId: string;
-  filterTask: number;
-  setFilterTask: (filterTask: number) => void;
-  className?: string;
-  listPosition: { name: string; id: string }[];
-};
-
-export default function TaskList(props: TaskListProps) {
-  const [selectedStatus, setSelectedStatus] = React.useState("0");
+export default function TaskList() {
+  const {
+    projectTasks,
+    isLoadingProjectTask,
+    setProjectTaskPageIndex,
+    setProjectTaskFilter,
+    projectSummary,
+  } = useProjectDetailContext();
 
   const columns = [
     { key: "title", label: "Title" },
     { key: "summary", label: "Summary" },
-    { key: "description", label: "Description" },
     { key: "startDate", label: "Start Date" },
     { key: "dueDate", label: "Due Date" },
-
     { key: "priority", label: "Priority" },
     { key: "difficulty", label: "Difficulty" },
     { key: "status", label: "Status" },
     { key: "memberName", label: "Member Name" },
     { key: "completionProgress", label: "Completion" },
     { key: "progressAssessment", label: "Assessment" },
-    // { key: "note", label: "Note" },
     { key: "actions", label: "Actions" },
   ];
 
@@ -66,14 +62,12 @@ export default function TaskList(props: TaskListProps) {
     },
   ];
 
-  const renderCell = (item: Task, columnKey: Key) => {
+  const renderCell = (item: ProjectTask, columnKey: Key) => {
     switch (columnKey) {
       case "title":
         return <p className="max">{item.title}</p>;
       case "summary":
         return item.summary;
-      case "description":
-        return item.description;
       case "startDate":
         return item.startDate.split("T")[0];
       case "dueDate":
@@ -85,22 +79,18 @@ export default function TaskList(props: TaskListProps) {
       case "status":
         return item.status;
       case "memberName":
-        return item.memberName;
+        return item.assignedPerson.assignedPerson;
       case "completionProgress":
         return item.completionProgress;
       case "progressAssessment":
         return item.progressAssessment;
-      case "note":
-        return item.note;
       case "actions":
         return (
           <div className="flex">
             <TaskModal
               mode="edit"
-              relatedUsers={props.relatedUsers}
-              projectId={props.projectId}
+              projectId={projectSummary?.id as string}
               selectedTaskInfo={item}
-              listPosition={props.listPosition}
             />
             <TaskDeleteModal taskId={item.id} />
           </div>
@@ -115,25 +105,26 @@ export default function TaskList(props: TaskListProps) {
       <div className="flex items-center justify-between">
         <p className="text-xl font-semibold">Task Lists</p>
 
-        <TaskModal
-          mode="create"
-          relatedUsers={props.relatedUsers}
-          projectId={props.projectId}
-          listPosition={props.listPosition}
-        />
+        <TaskModal mode="create" projectId={projectSummary?.id as string} />
       </div>
+
       <Tabs
         key={"md"}
         size={"md"}
         fullWidth
         aria-label="Tabs sizes"
-        onSelectionChange={(key) => props.setFilterTask(Number(key))}
-        selectedKey={props.filterTask.toString()}
+        onSelectionChange={(key) =>
+          setProjectTaskFilter({
+            Status: key as string,
+          })
+        }
       >
         {statusOptions.map((statusOption) => (
           <Tab key={statusOption.key} title={statusOption.value} />
         ))}
       </Tabs>
+      <TaskFilter />
+
       <Table selectionMode="single">
         <TableHeader columns={columns}>
           {(column) => (
@@ -141,7 +132,12 @@ export default function TaskList(props: TaskListProps) {
           )}
         </TableHeader>
 
-        <TableBody items={props.tasks} emptyContent={"No rows to display."}>
+        <TableBody
+          items={projectTasks?.tasks ?? []}
+          emptyContent={"No rows to display."}
+          isLoading={isLoadingProjectTask}
+          loadingContent={<Loading />}
+        >
           {(item) => (
             <TableRow key={item.id} className="hover:cursor-pointer">
               {(columnKey) => (
@@ -151,6 +147,20 @@ export default function TaskList(props: TaskListProps) {
           )}
         </TableBody>
       </Table>
+
+      <Pagination
+        className="m-4 flex justify-center"
+        isCompact
+        loop
+        showControls
+        total={projectTasks?.totalPages ? Number(projectTasks?.totalPages) : 0}
+        initialPage={
+          projectTasks?.pageIndex ? Number(projectTasks?.pageIndex) : 1
+        }
+        onChange={(page) => {
+          setProjectTaskPageIndex(page);
+        }}
+      />
     </div>
   );
 }
