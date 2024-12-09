@@ -27,6 +27,7 @@ import { addNewMembers } from "@/actions/add-new-members";
 import { toast } from "sonner";
 import { usePosition } from "@/data-store/position.store";
 import Loading from "@/components/Loading";
+import { Autocomplete } from "@nextui-org/autocomplete";
 
 const apiClient = new APIClient({
   onFulfilled: (response) => response,
@@ -52,15 +53,17 @@ export default function NewMemberModal(props: NewMemberModalProps) {
   });
 
   const [positionFilter, setPositionFilter] = React.useState("");
+  const [search, setSearch] = React.useState("");
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ["members", positionFilter],
+    queryKey: ["members", positionFilter, search],
     queryFn: async () => {
       const response = await apiClient.get<GetCandidateUsersResponse>(
         API_ENDPOINTS.candidateUser,
         {
           params: {
             PositionId: positionFilter === "" ? undefined : positionFilter,
+            Search: search,
           },
         },
         true,
@@ -166,16 +169,10 @@ export default function NewMemberModal(props: NewMemberModalProps) {
     }
   };
 
-  const postionOptions = [
-    {
-      value: "",
-      label: "All Positions",
-    },
-    ...(positionData?.positions ?? []).map((position) => ({
-      value: position.id,
-      label: position.name,
-    })),
-  ];
+  const positionOptions = (positionData?.positions ?? []).map((position) => ({
+    value: position.id,
+    label: position.name,
+  }));
 
   return (
     <>
@@ -197,21 +194,24 @@ export default function NewMemberModal(props: NewMemberModalProps) {
                       type="text"
                       label="Search by member name"
                       size="sm"
+                      value={search}
+                      onChange={(e) => setSearch(e.target.value)}
                     />
-                    <Select
-                      items={postionOptions}
+                    <Autocomplete
+                      defaultItems={positionOptions}
                       // label="Fitler by position"
                       variant="bordered"
-                      defaultSelectedKeys={[""]}
-                      className="w-[200px]"
-                      onSelectionChange={(selectedKeys) => {
-                        setPositionFilter(selectedKeys.currentKey as string);
+                      defaultSelectedKey={""}
+                      className="w-[300px]"
+                      onSelectionChange={(selectedKey) => {
+                        setPositionFilter(selectedKey as string);
                       }}
+                      placeholder="Filter by position"
                     >
                       {(item) => (
                         <SelectItem key={item.value}>{item.label}</SelectItem>
                       )}
-                    </Select>
+                    </Autocomplete>
 
                     <Table
                       fullWidth
@@ -232,7 +232,7 @@ export default function NewMemberModal(props: NewMemberModalProps) {
                       </TableHeader>
 
                       <TableBody
-                        isLoading={isPositionLoading}
+                        isLoading={isLoading}
                         loadingContent={<Loading />}
                         items={data || []}
                       >
