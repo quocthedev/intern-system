@@ -19,7 +19,7 @@ export default function ProjectCard(
   >,
 ) {
   const router = useRouter();
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
   return (
     <Card
@@ -51,6 +51,7 @@ export default function ProjectCard(
               onOpenChange={onOpenChange}
               selectedProjectInfo={props}
               refetch={props.refetch}
+              onClose={onClose}
             />
             <Checkbox />
           </div>

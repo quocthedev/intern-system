@@ -8,11 +8,13 @@ import { createNewProject } from "@/actions/create-new-project";
 import { Project } from "../_types/Project";
 import { getLocalTimeZone, now, parseDate } from "@internationalized/date";
 import * as R from "ramda";
-import { cn } from "@nextui-org/theme";
 import { usePosition } from "@/data-store/position.store";
 import SelectSearch, { SelectSearchItem } from "@/components/SelectSearch";
 import { useTechnology } from "@/data-store/technology.store";
-import { updateProject } from "@/actions/update-project";
+import { toast } from "sonner";
+import { useMutation } from "@tanstack/react-query";
+import { API_ENDPOINTS } from "@/libs/config";
+import axios from "axios";
 
 export type ProjectModalProps = {
   selectedProjectInfo?: Project;
@@ -21,11 +23,181 @@ export type ProjectModalProps = {
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
   refetch?: () => void;
+  onClose?: () => void;
 };
 
+export async function updateProject(params: {
+  projectId: string;
+  updateData: Partial<
+    Project & {
+      addingPositions: string[];
+      removingPositions: string[];
+      addingTechnologies: string[];
+      removingTechnologies: string[];
+    }
+  >;
+}) {
+  const {
+    addingPositions,
+    removingPositions,
+    addingTechnologies,
+    removingTechnologies,
+    ...updateProjectParams
+  } = params.updateData;
+
+  const requestBody = {
+    ...updateProjectParams,
+    ...(R.compose(
+      R.fromPairs,
+      R.map(([key, value]) => [key, new Date(value).toISOString()]) as never,
+      R.toPairs as never,
+      R.pick(["startDate", "releaseDate"]) as never,
+    )(updateProjectParams) as any),
+  };
+
+  const requests = [];
+
+  if (addingPositions) {
+    requests.push(
+      axios.post(
+        API_ENDPOINTS.project + `/${params.projectId}/add-positions`,
+        addingPositions.map((id) => ({ positionId: id })),
+      ),
+    );
+  }
+
+  if (removingPositions) {
+    requests.push(
+      removingPositions.map((id) =>
+        axios.delete(
+          API_ENDPOINTS.project + `/${params.projectId}/position/${id}`,
+        ),
+      ),
+    );
+  }
+
+  if (addingTechnologies) {
+    requests.push(
+      axios.post(
+        API_ENDPOINTS.project + `/${params.projectId}/add-technologies`,
+        addingTechnologies.map((id) => ({ technologyId: id })),
+      ),
+    );
+  }
+
+  if (removingTechnologies) {
+    removingTechnologies.map((id) =>
+      axios.delete(
+        API_ENDPOINTS.project + `/${params.projectId}/technology/${id}`,
+      ),
+    );
+  }
+
+  await fetch(API_ENDPOINTS.project + `/${params.projectId}`, {
+    method: "PUT",
+    body: JSON.stringify(requestBody),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  await Promise.all([...requests]);
+}
+
 export default function ProjectModal(props: ProjectModalProps) {
-  const [isProcessingForm, setIsProcessing] = useState(false);
-  const [formMessage, setFormMessage] = useState("Processing...");
+  const updateProjectMutation = useMutation({
+    mutationFn: async (params: {
+      projectId: string;
+      updateData: Partial<
+        Project & {
+          addingPositions: string[];
+          removingPositions: string[];
+          addingTechnologies: string[];
+          removingTechnologies: string[];
+        }
+      >;
+    }) => {
+      const {
+        addingPositions,
+        removingPositions,
+        addingTechnologies,
+        removingTechnologies,
+        ...updateProjectParams
+      } = params.updateData;
+
+      const requestBody = {
+        ...updateProjectParams,
+        ...(R.compose(
+          R.fromPairs,
+          R.map(([key, value]) => [
+            key,
+            new Date(value).toISOString(),
+          ]) as never,
+          R.toPairs as never,
+          R.pick(["startDate", "releaseDate"]) as never,
+        )(updateProjectParams) as any),
+      };
+
+      const requests = [];
+
+      if (addingPositions) {
+        requests.push(
+          axios.post(
+            API_ENDPOINTS.project + `/${params.projectId}/add-positions`,
+            addingPositions.map((id) => ({ positionId: id })),
+          ),
+        );
+      }
+
+      if (removingPositions) {
+        requests.push(
+          removingPositions.map((id) =>
+            axios.delete(
+              API_ENDPOINTS.project + `/${params.projectId}/position/${id}`,
+            ),
+          ),
+        );
+      }
+
+      if (addingTechnologies) {
+        requests.push(
+          axios.post(
+            API_ENDPOINTS.project + `/${params.projectId}/add-technologies`,
+            addingTechnologies.map((id) => ({ technologyId: id })),
+          ),
+        );
+      }
+
+      if (removingTechnologies) {
+        removingTechnologies.map((id) =>
+          axios.delete(
+            API_ENDPOINTS.project + `/${params.projectId}/technology/${id}`,
+          ),
+        );
+      }
+
+      // throw new Error("Error");
+
+      const response = await fetch(
+        API_ENDPOINTS.project + `/${params.projectId}`,
+        {
+          method: "PUT",
+          body: JSON.stringify(requestBody),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      ).then((response) => response.json());
+
+      if (response.statusCode !== 200) {
+        return {
+          error: response.message,
+        };
+      }
+
+      await Promise.all([...requests]);
+    },
+  });
 
   const {
     isLoading: isPositionsLoading,
@@ -72,8 +244,6 @@ export default function ProjectModal(props: ProjectModalProps) {
   );
 
   const submit = async (formData: FormData) => {
-    setIsProcessing(true);
-
     selectedPositions.forEach((position) => {
       formData.append("positions", position.key);
     });
@@ -82,81 +252,80 @@ export default function ProjectModal(props: ProjectModalProps) {
       formData.append("technologies", technology.key);
     });
 
-    try {
-      if (props.mode === "create") {
-        await createNewProject(formData);
-        setFormMessage("Successfully submitted!");
+    if (props.mode === "create") {
+      const res = (await createNewProject(formData)) as any;
 
-        setIsProcessing(false);
-        props.refetch?.();
+      if (res?.error) {
+        toast.error(res.error);
       } else {
-        const updatedFields = {} as Partial<Project>;
+        toast.success("Project created successfully");
+        props.onClose?.();
+      }
 
-        const oldData = {
-          ...props.selectedProjectInfo,
-          startDate: props.selectedProjectInfo?.startDate.split(
-            "T",
-          )[0] as string,
-          releaseDate: props.selectedProjectInfo?.releaseDate.split(
-            "T",
-          )[0] as string,
-        } as Project;
+      props.refetch?.();
+    } else {
+      const updatedFields = {} as Partial<Project>;
 
-        for (const [key, value] of formData.entries()) {
-          if (key === "positions" || key === "technologies") {
-            continue;
-          }
+      const oldData = {
+        ...props.selectedProjectInfo,
+        startDate: props.selectedProjectInfo?.startDate.split("T")[0] as string,
+        releaseDate: props.selectedProjectInfo?.releaseDate.split(
+          "T",
+        )[0] as string,
+      } as Project;
 
-          const projectKey = key as keyof Project;
-
-          if (oldData[projectKey] !== value) {
-            updatedFields[projectKey] = value as any;
-          }
+      for (const [key, value] of formData.entries()) {
+        if (key === "positions" || key === "technologies") {
+          continue;
         }
 
-        const params = {} as Record<string, any>;
+        const projectKey = key as keyof Project;
 
-        params["addingPositions"] = R.difference(
-          formData.getAll("positions"),
-          oldData.listPosition.map((position) => position.id),
-        );
-
-        params["removingPositions"] = R.difference(
-          oldData.listPosition.map((position) => position.id),
-          formData.getAll("positions"),
-        );
-
-        params["addingTechnologies"] = R.difference(
-          formData.getAll("technologies"),
-          oldData.listTechnology.map((technology) => technology.id),
-        );
-
-        params["removingTechnologies"] = R.difference(
-          oldData.listTechnology.map((technology) => technology.id),
-          formData.getAll("technologies"),
-        );
-
-        const filteredParams = {
-          ...(R.filter((value) => value.length > 0, params) as Record<
-            string,
-            any
-          >),
-          ...updatedFields,
-        };
-
-        await updateProject({
-          projectId: props.selectedProjectInfo?.id as string,
-          updateData: filteredParams,
-        });
-        setFormMessage("Successfully submitted!");
-
-        setIsProcessing(false);
-        props.refetch?.();
+        updatedFields[projectKey] = value as any;
       }
-    } catch (error) {
-      setFormMessage("An error occurred!");
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      setIsProcessing(false);
+
+      const params = {} as Record<string, any>;
+
+      params["addingPositions"] = R.difference(
+        formData.getAll("positions"),
+        oldData.listPosition.map((position) => position.id),
+      );
+
+      params["removingPositions"] = R.difference(
+        oldData.listPosition.map((position) => position.id),
+        formData.getAll("positions"),
+      );
+
+      params["addingTechnologies"] = R.difference(
+        formData.getAll("technologies"),
+        oldData.listTechnology.map((technology) => technology.id),
+      );
+
+      params["removingTechnologies"] = R.difference(
+        oldData.listTechnology.map((technology) => technology.id),
+        formData.getAll("technologies"),
+      );
+
+      const filteredParams = {
+        ...(R.filter((value) => value.length > 0, params) as Record<
+          string,
+          any
+        >),
+        ...updatedFields,
+      };
+
+      const res = await updateProjectMutation.mutateAsync({
+        projectId: props.selectedProjectInfo?.id as string,
+        updateData: filteredParams,
+      });
+
+      if (res?.error) {
+        toast.error(res.error);
+      } else {
+        toast.success("Project updated successfully");
+
+        props.onClose?.();
+      }
     }
   };
 
@@ -176,19 +345,8 @@ export default function ProjectModal(props: ProjectModalProps) {
             </ModalHeader>
 
             <ModalBody className="w-[800px]">
-              <p
-                className={cn(
-                  "hidden text-black",
-                  isProcessingForm ? "block" : "",
-                )}
-              >
-                {formMessage}
-              </p>
               <form
-                className={cn(
-                  "flex flex-col gap-5",
-                  isProcessingForm ? "hidden" : "",
-                )}
+                className={"flex flex-col gap-5"}
                 onSubmit={(e) => {
                   e.preventDefault();
                   const formData = new FormData(e.currentTarget);
