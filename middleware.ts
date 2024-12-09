@@ -5,8 +5,14 @@ export async function middleware(request: NextRequest) {
   const requestPath = request.nextUrl.pathname;
   const isLoginPage = requestPath === "/login";
 
+  const role = request.cookies.get("userRole")?.value;
+
   if (accessToken) {
-    // Avoid redirect loop: Only redirect to `/` if user is on `/login`.
+    if (role === "Candidate" && requestPath !== "/projectUserCandidate") {
+      return NextResponse.redirect(
+        new URL("/projectUserCandidate", request.nextUrl),
+      );
+    }
     if (isLoginPage) {
       return NextResponse.redirect(new URL("/", request.nextUrl));
     }
