@@ -22,6 +22,7 @@ export default function TaskList() {
     isLoadingProjectTask,
     setProjectTaskPageIndex,
     setProjectTaskFilter,
+    projectTaskFilter,
     projectSummary,
   } = useProjectDetailContext();
 
@@ -114,9 +115,9 @@ export default function TaskList() {
         fullWidth
         aria-label="Tabs sizes"
         onSelectionChange={(key) =>
-          setProjectTaskFilter({
-            Status: key as string,
-          })
+          setProjectTaskFilter(
+            Object.assign({}, projectTaskFilter, { Status: key as string }),
+          )
         }
       >
         {statusOptions.map((statusOption) => (
