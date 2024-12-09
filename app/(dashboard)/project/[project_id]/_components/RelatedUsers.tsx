@@ -10,19 +10,28 @@ import {
 import NewMemberModal from "./NewMemberModal";
 import MemberUpdate from "./MemberUpdate";
 import MemberDeleteModal from "./MemberDeleteModal";
-
-export type RelatedUsersProps = {
-  groups: RelatedUser[];
-  projectId: string;
-  projectName: string;
-};
+import { useProjectDetailContext } from "../../_providers/ProjectDetailProvider";
+import Loading from "@/components/Loading";
 
 type RelatedUser = {
-  id: number;
+  id: string;
   name: string;
   role: string;
 };
-export default function RelatedUsers(props?: RelatedUsersProps) {
+export default function RelatedUsers() {
+  const { projectSummary, isLoadingProjectSummary } = useProjectDetailContext();
+
+  const relatedUser = projectSummary?.groupUserRelated.reduce((acc, group) => {
+    const usersWithRole = group.users.map((user) => ({
+      ...user,
+      name: user.fullName,
+      role: group.role,
+      id: user.id, // Ensure id is a number
+    }));
+
+    return [...acc, ...usersWithRole];
+  }, [] as RelatedUser[]);
+
   const renderCell = (item: any, columnKey: Key) => {
     switch (columnKey) {
       case "name":
@@ -39,14 +48,14 @@ export default function RelatedUsers(props?: RelatedUsersProps) {
         return (
           <div className="flex gap-1">
             <MemberUpdate
-              projectName={props?.projectName as string}
-              projectId={props?.projectId as string}
-              memberName={item.fullName}
+              projectName={projectSummary?.title as string}
+              projectId={projectSummary?.id as string}
+              memberName={item.name}
               memberId={item.id}
               role={item.role}
             />
             <MemberDeleteModal
-              projectId={props?.projectId as string}
+              projectId={projectSummary?.id as string}
               memberId={item.id}
             />
           </div>
@@ -83,11 +92,15 @@ export default function RelatedUsers(props?: RelatedUsersProps) {
     },
   ];
 
+  if (isLoadingProjectSummary) {
+    return <Loading />;
+  }
+
   return (
     <div className="flex w-full flex-col gap-3">
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-semibold">Members</h1>
-        <NewMemberModal projectId={props?.projectId as string} />
+        <NewMemberModal projectId={projectSummary?.id as string} />
       </div>
 
       <Table className="max-h-[300px]" isHeaderSticky>
@@ -97,7 +110,7 @@ export default function RelatedUsers(props?: RelatedUsersProps) {
           )}
         </TableHeader>
 
-        <TableBody items={props?.groups} className="overflow-hidden">
+        <TableBody items={relatedUser ?? []} className="overflow-hidden">
           {(item) => (
             <TableRow key={item.id}>
               {(columnKey) => (

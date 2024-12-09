@@ -14,19 +14,18 @@ import { Select, SelectItem } from "@nextui-org/select";
 import { RelatedUser } from "../page";
 import { createNewTask } from "@/actions/create-new-task";
 import { EditIcon } from "../../_components/Icons";
-import { Task } from "../../_types/Project";
 import { updateTask } from "@/actions/update-task";
 import { toast } from "sonner";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import APIClient from "@/libs/api-client";
 import { useParams } from "next/navigation";
+import { ProjectTask } from "@/data-store/project/project-task.store";
+import { useProjectDetailContext } from "../../_providers/ProjectDetailProvider";
 
 export type TaskModalProps = {
   mode: "create" | "edit";
-  selectedTaskInfo?: Task;
-  relatedUsers?: RelatedUser[];
+  selectedTaskInfo?: ProjectTask;
   projectId: string;
-  listPosition: { name: string; id: string }[];
 };
 
 const apiClient = new APIClient({
@@ -46,8 +45,7 @@ export default function TaskModal(props: TaskModalProps) {
   const [selectedPositionId, setSelectedPositionId] = useState("");
   const { project_id } = useParams();
 
-  console.log("Project id: " + project_id);
-  console.log(props.listPosition);
+  const { projectSummary } = useProjectDetailContext();
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["userPositions", selectedPositionId],
@@ -66,7 +64,6 @@ export default function TaskModal(props: TaskModalProps) {
     enabled: !!selectedPositionId,
   });
 
-  console.log("Fetched data:", data);
   const handleClose = () => {
     onClose();
     setSelectedPositionId("");
@@ -164,8 +161,6 @@ export default function TaskModal(props: TaskModalProps) {
     }
   };
 
-  console.log(props.selectedTaskInfo?.memberId);
-
   return (
     <>
       {props.mode === "edit" ? (
@@ -207,18 +202,6 @@ export default function TaskModal(props: TaskModalProps) {
                     isRequired
                     name="summary"
                     defaultValue={props.selectedTaskInfo?.summary}
-                  />
-
-                  <Textarea
-                    type="text"
-                    label="Description"
-                    labelPlacement="outside"
-                    placeholder="Enter Task Description"
-                    minRows={3}
-                    maxRows={5}
-                    isRequired
-                    name="description"
-                    defaultValue={props.selectedTaskInfo?.description}
                   />
 
                   <div className="flex w-full gap-3">
@@ -331,7 +314,7 @@ export default function TaskModal(props: TaskModalProps) {
                       value={selectedPositionId}
                       onChange={(e) => setSelectedPositionId(e.target.value)}
                     >
-                      {props.listPosition.map((position) => (
+                      {(projectSummary?.listPosition ?? []).map((position) => (
                         <SelectItem key={position.id} value={position.id}>
                           {position.name}
                         </SelectItem>
@@ -343,7 +326,7 @@ export default function TaskModal(props: TaskModalProps) {
                       labelPlacement="outside"
                       placeholder="Select Assignee"
                       defaultSelectedKeys={[
-                        `${props.selectedTaskInfo?.memberId ?? ""}`,
+                        `${props.selectedTaskInfo?.assignedPerson.id ?? ""}`,
                       ]}
                       name="userId"
                       required
