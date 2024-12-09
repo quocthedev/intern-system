@@ -2,6 +2,11 @@
 import { Select, SelectItem } from "@nextui-org/select";
 import React, { useState } from "react";
 import { useProjectDetailContext } from "../../_providers/ProjectDetailProvider";
+import {
+  Autocomplete,
+  AutocompleteSection,
+  AutocompleteItem,
+} from "@nextui-org/autocomplete";
 
 export default function TaskFilter() {
   const {
@@ -12,10 +17,6 @@ export default function TaskFilter() {
   } = useProjectDetailContext();
 
   const positionOptions = [
-    {
-      value: "",
-      label: "All positions",
-    },
     ...(projectSummary?.listPosition.map((position) => ({
       value: position.id,
       label: position.name,
@@ -23,51 +24,57 @@ export default function TaskFilter() {
   ];
 
   const userOptions = [
-    {
-      value: "",
-      label: "All members",
-    },
     ...(relatedUser?.map((user) => ({
       value: user.id,
       label: user.name,
     })) || []),
   ];
 
+  // const [isOpen, setIsOpen] = React.useState(false);
+
   return (
     <div className="flex gap-3">
-      <Select
+      <Autocomplete
         placeholder="Filter by position"
-        items={positionOptions}
+        defaultItems={positionOptions}
         variant="bordered"
-        className="w-[200px]"
-        defaultSelectedKeys={[""]}
-        onSelectionChange={(selectedKeys) => {
+        className="w-[300px]"
+        onSelectionChange={(selectedKey) => {
           setProjectTaskFilter(
             Object.assign({}, projectTaskFilter, {
-              PositionId: selectedKeys.currentKey as string,
+              PositionId: selectedKey ?? "",
             }),
           );
         }}
       >
-        {(item) => <SelectItem key={item.value}>{item.label}</SelectItem>}
-      </Select>
+        {(item) => (
+          <AutocompleteItem key={item.value} value={item.value}>
+            {item.label}
+          </AutocompleteItem>
+        )}
+      </Autocomplete>
 
-      <Select
+      <Autocomplete
         placeholder="Filter by members"
-        items={userOptions}
+        defaultItems={userOptions}
         variant="bordered"
-        className="w-[200px]"
-        defaultSelectedKeys={[""]}
-        onSelectionChange={(selectedKeys) => {
+        className="w-[300px]"
+        onSelectionChange={(selectedKey) => {
+          console.log(selectedKey);
+
           setProjectTaskFilter(
             Object.assign({}, projectTaskFilter, {
-              UserId: selectedKeys.currentKey as string,
+              UserId: selectedKey ?? "",
             }),
           );
         }}
       >
-        {(item) => <SelectItem key={item.value}>{item.label}</SelectItem>}
-      </Select>
+        {(item) => (
+          <SelectItem key={item.value} value={item.value}>
+            {item.label}
+          </SelectItem>
+        )}
+      </Autocomplete>
     </div>
   );
 }
