@@ -18,16 +18,6 @@ interface SelectedPostionIdProps {
   selectedPositionId: string;
 }
 
-interface PositionInterface {
-  name: string;
-  abbreviation: string;
-  tenologies: string[];
-  id: string;
-  dateCreate: string;
-  dateUpdate: string;
-  isDeleted: boolean;
-}
-
 export default function AddTechModal({
   selectedPositionId,
 }: SelectedPostionIdProps) {
