@@ -122,8 +122,6 @@ export default function TaskModal(props: TaskModalProps) {
     }
   };
 
-  console.log(props.selectedTaskInfo?.memberId);
-
   return (
     <>
       {props.mode === "edit" ? (
@@ -155,7 +153,8 @@ export default function TaskModal(props: TaskModalProps) {
                     placeholder="Enter Task Title"
                     isRequired
                     name="title"
-                    defaultValue={props.selectedTaskInfo?.title}
+                    value={props.selectedTaskInfo?.title}
+                    isDisabled
                   />
                   <Input
                     type="text"
@@ -164,7 +163,8 @@ export default function TaskModal(props: TaskModalProps) {
                     placeholder="Enter Task Summary"
                     isRequired
                     name="summary"
-                    defaultValue={props.selectedTaskInfo?.summary}
+                    value={props.selectedTaskInfo?.summary}
+                    isDisabled
                   />
 
                   <Textarea
@@ -176,7 +176,8 @@ export default function TaskModal(props: TaskModalProps) {
                     maxRows={5}
                     isRequired
                     name="description"
-                    defaultValue={props.selectedTaskInfo?.description}
+                    value={props.selectedTaskInfo?.description}
+                    isDisabled
                   />
 
                   <div className="flex w-full gap-3">
@@ -186,7 +187,7 @@ export default function TaskModal(props: TaskModalProps) {
                       name="startDate"
                       isRequired
                       granularity="day"
-                      defaultValue={
+                      value={
                         props.mode === "create"
                           ? now(getLocalTimeZone())
                           : parseDate(
@@ -195,6 +196,7 @@ export default function TaskModal(props: TaskModalProps) {
                               )[0] as string,
                             )
                       }
+                      isDisabled
                     />
 
                     <DatePicker
@@ -204,7 +206,7 @@ export default function TaskModal(props: TaskModalProps) {
                       isRequired
                       showMonthAndYearPickers
                       granularity="day"
-                      defaultValue={
+                      value={
                         props.mode === "create"
                           ? now(getLocalTimeZone())
                           : parseDate(
@@ -213,6 +215,7 @@ export default function TaskModal(props: TaskModalProps) {
                               )[0] as string,
                             )
                       }
+                      isDisabled
                     />
                   </div>
 
@@ -276,7 +279,7 @@ export default function TaskModal(props: TaskModalProps) {
                           name="progressAssessment"
                           min={0}
                           max={100}
-                          defaultValue={props.selectedTaskInfo?.progressAssessment?.toString()}
+                          value={props.selectedTaskInfo?.progressAssessment?.toString()}
                         />
                       </>
                     )}
@@ -286,7 +289,7 @@ export default function TaskModal(props: TaskModalProps) {
                       label="Assignee"
                       labelPlacement="outside"
                       placeholder={"Select Assignee"}
-                      defaultSelectedKeys={[
+                      selectedKeys={[
                         `${props.selectedTaskInfo?.memberId ?? ""}`,
                       ]}
                       name="userId"

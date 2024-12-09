@@ -11,6 +11,7 @@ import {
 import TaskModal from "./TaskModal";
 import { RelatedUser } from "../page";
 import { Tabs, Tab } from "@nextui-org/tabs";
+import { getCookie } from "@/app/util";
 
 export type TaskListProps = {
   tasks: Task[];
@@ -22,9 +23,11 @@ export type TaskListProps = {
 };
 
 export default function TaskList(props: TaskListProps) {
+  const userName = getCookie("userName");
+
   const columns = [
     { key: "title", label: "Title" },
-    { key: "description", label: "Description" },
+    { key: "summary", label: "Summary" },
     { key: "startDate", label: "Start Date" },
     { key: "dueDate", label: "Due Date" },
     { key: "priority", label: "Priority" },
@@ -65,8 +68,6 @@ export default function TaskList(props: TaskListProps) {
         return <p className="max">{item.title}</p>;
       case "summary":
         return item.summary;
-      case "description":
-        return item.description;
       case "startDate":
         return item.startDate.split("T")[0];
       case "dueDate":
@@ -88,12 +89,16 @@ export default function TaskList(props: TaskListProps) {
       case "actions":
         return (
           <div className="flex">
-            <TaskModal
-              mode="edit"
-              relatedUsers={props.relatedUsers}
-              projectId={props.projectId}
-              selectedTaskInfo={item}
-            />
+            {userName === item.memberName ? (
+              <TaskModal
+                mode="edit"
+                relatedUsers={props.relatedUsers}
+                projectId={props.projectId}
+                selectedTaskInfo={item}
+              />
+            ) : (
+              <></>
+            )}
           </div>
         );
       default:

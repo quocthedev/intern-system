@@ -1,17 +1,12 @@
 "use server";
-
 import { Project } from "@/app/(dashboard)/project/_types/Project";
 import APIClient from "@/libs/api-client";
 import { API_ENDPOINTS } from "@/libs/config";
-import { update } from "ramda";
 import * as R from "ramda";
 const apiClient = new APIClient({
   onFulfilled: (response) => response,
   onRejected: (error) => {
-    // console.error(error);
-    // return Promise.reject(error);
-
-    console.log(error.response);
+    throw new Error(error);
   },
 });
 
@@ -82,10 +77,10 @@ export async function updateProject(params: {
     );
   }
 
-  const response = await Promise.all([
-    apiClient.put(API_ENDPOINTS.project + `/${params.projectId}`, requestBody),
-    ...requests,
-  ]);
+  await apiClient.put(
+    API_ENDPOINTS.project + `/${params.projectId}`,
+    requestBody,
+  );
 
-  return response;
+  await Promise.all([...requests]);
 }

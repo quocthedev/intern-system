@@ -8,14 +8,17 @@ const apiClient = new APIClient({
   onRejected: (error) => {
     // console.error(error);
     // return Promise.reject(error);
-
     console.log(error.response.data);
+
+    return {
+      data: {
+        error: error.response.data.message,
+      },
+    };
   },
 });
 
-export async function createNewProject(
-  data: FormData,
-): Promise<boolean | null> {
+export async function createNewProject(data: FormData) {
   const params = {
     title: data.get("title") as string,
     productUri: data.get("productUri") as string,
@@ -32,7 +35,5 @@ export async function createNewProject(
     ).toISOString(),
   };
 
-  await apiClient.post(API_ENDPOINTS.project, params, {}, true);
-
-  return true;
+  return await apiClient.post(API_ENDPOINTS.project, params, {}, true);
 }
