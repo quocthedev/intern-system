@@ -25,6 +25,8 @@ import APIClient from "@/libs/api-client";
 import { API_ENDPOINTS } from "@/libs/config";
 import { addNewMembers } from "@/actions/add-new-members";
 import { toast } from "sonner";
+import { usePosition } from "@/data-store/position.store";
+import Loading from "@/components/Loading";
 
 const apiClient = new APIClient({
   onFulfilled: (response) => response,
@@ -45,12 +47,22 @@ export default function NewMemberModal(props: NewMemberModalProps) {
   const roleMapping: Record<string, string> = {};
   const queryClient = useQueryClient();
 
+  const { data: positionData, isLoading: isPositionLoading } = usePosition({
+    pageSize: 100,
+  });
+
+  const [positionFilter, setPositionFilter] = React.useState("");
+
   const { data, isLoading, error } = useQuery({
-    queryKey: ["members"],
+    queryKey: ["members", positionFilter],
     queryFn: async () => {
       const response = await apiClient.get<GetCandidateUsersResponse>(
         API_ENDPOINTS.candidateUser,
-        {},
+        {
+          params: {
+            PositionId: positionFilter === "" ? undefined : positionFilter,
+          },
+        },
         true,
       );
 
@@ -154,13 +166,24 @@ export default function NewMemberModal(props: NewMemberModalProps) {
     }
   };
 
+  const postionOptions = [
+    {
+      value: "",
+      label: "All Positions",
+    },
+    ...(positionData?.positions ?? []).map((position) => ({
+      value: position.id,
+      label: position.name,
+    })),
+  ];
+
   return (
     <>
       <Button onPress={onOpen} color="primary" variant="shadow">
         Add New Member
       </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-        <ModalContent className="max-w-fit">
+        <ModalContent className="max-w-[800px]">
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
@@ -175,6 +198,20 @@ export default function NewMemberModal(props: NewMemberModalProps) {
                       label="Search by member name"
                       size="sm"
                     />
+                    <Select
+                      items={postionOptions}
+                      // label="Fitler by position"
+                      variant="bordered"
+                      defaultSelectedKeys={[""]}
+                      className="w-[200px]"
+                      onSelectionChange={(selectedKeys) => {
+                        setPositionFilter(selectedKeys.currentKey as string);
+                      }}
+                    >
+                      {(item) => (
+                        <SelectItem key={item.value}>{item.label}</SelectItem>
+                      )}
+                    </Select>
 
                     <Table
                       fullWidth
@@ -194,16 +231,20 @@ export default function NewMemberModal(props: NewMemberModalProps) {
                         )}
                       </TableHeader>
 
-                      <TableBody className="">
-                        {(data || []).map((candidate) => (
-                          <TableRow key={candidate.id}>
+                      <TableBody
+                        isLoading={isPositionLoading}
+                        loadingContent={<Loading />}
+                        items={data || []}
+                      >
+                        {(item) => (
+                          <TableRow key={item.id}>
                             {(columnKey) => (
                               <TableCell>
-                                {renderCell(candidate, columnKey.toString())}
+                                {renderCell(item, columnKey.toString())}
                               </TableCell>
                             )}
                           </TableRow>
-                        ))}
+                        )}
                       </TableBody>
                     </Table>
                   </div>
