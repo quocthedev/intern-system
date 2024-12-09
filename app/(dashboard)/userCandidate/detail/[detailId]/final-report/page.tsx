@@ -484,29 +484,6 @@ export default function FinalReportPage() {
           </div>
           <div className="mb-4 flex items-center justify-between">
             <h1 className="text-lg font-semibold">II. Compliance Evaluation</h1>
-            {role == "Candidate" ? (
-              <></>
-            ) : (
-              <div className="flex justify-end gap-2">
-                <Button
-                  variant="solid"
-                  color="primary"
-                  className={`${isEditable === false ? "hidden" : ""}`}
-                  onClick={handleUpdateCriteria}
-                >
-                  Update
-                </Button>
-
-                <Button
-                  variant="solid"
-                  color="primary"
-                  onClick={() => setIsEditable(!isEditable)}
-                  // className={`${isScored ? "hidden" : ""}`}
-                >
-                  {isEditable ? "Cancel" : "Evaluate"}
-                </Button>
-              </div>
-            )}
           </div>
           <div>
             <div>

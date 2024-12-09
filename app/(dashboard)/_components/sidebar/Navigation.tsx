@@ -48,9 +48,10 @@ export const NavigationItems = [
   },
   {
     label: "Projects",
-    href: "/project",
+    href: role === "Candidate" ? "/projectUserCandidate" : "/project",
     icon: ProjectManagementIcon,
   },
+
   {
     label: "Interns",
     href: "/intern",
@@ -193,11 +194,6 @@ if (role === "Candidate") {
       NavigationItems.splice(index, 1);
     }
   }
-  NavigationItems.push({
-    label: "Candidates",
-    href: "/intern",
-    icon: InternManagementIcon,
-  });
 }
 
 export default function Navigation(props: NavigationProps) {

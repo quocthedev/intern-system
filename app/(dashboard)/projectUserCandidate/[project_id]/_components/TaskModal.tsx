@@ -8,7 +8,7 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/modal";
-import React, { useState } from "react";
+import React from "react";
 import { getLocalTimeZone, now, parseDate } from "@internationalized/date";
 import { Select, SelectItem } from "@nextui-org/select";
 import { RelatedUser } from "../page";
@@ -17,60 +17,18 @@ import { EditIcon } from "../../_components/Icons";
 import { Task } from "../../_types/Project";
 import { updateTask } from "@/actions/update-task";
 import { toast } from "sonner";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import APIClient from "@/libs/api-client";
-import { useParams } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 
 export type TaskModalProps = {
   mode: "create" | "edit";
   selectedTaskInfo?: Task;
   relatedUsers?: RelatedUser[];
   projectId: string;
-  listPosition: { name: string; id: string }[];
-};
-
-const apiClient = new APIClient({
-  onFulfilled: (response) => response,
-  onRejected: (error) => {
-    console.log(error.response.data);
-  },
-});
-
-export type User = {
-  id: string;
 };
 
 export default function TaskModal(props: TaskModalProps) {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const queryClient = useQueryClient();
-  const [selectedPositionId, setSelectedPositionId] = useState("");
-  const { project_id } = useParams();
-
-  console.log("Project id: " + project_id);
-  console.log(props.listPosition);
-
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["userPositions", selectedPositionId],
-
-    queryFn: async () => {
-      if (!selectedPositionId) return [];
-
-      const response = (await apiClient.get(
-        `/project/${project_id}/position/${selectedPositionId}/user-relates`,
-      )) as { statusCode: string; data: any };
-
-      if (response.statusCode == "200") {
-        return response.data;
-      }
-    },
-    enabled: !!selectedPositionId,
-  });
-
-  console.log("Fetched data:", data);
-  const handleClose = () => {
-    onClose();
-    setSelectedPositionId("");
-  };
 
   const priorityOptions = [
     {
@@ -325,38 +283,20 @@ export default function TaskModal(props: TaskModalProps) {
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <Select
-                      label="Select position"
-                      labelPlacement="outside"
-                      placeholder="Select position"
-                      value={selectedPositionId}
-                      onChange={(e) => setSelectedPositionId(e.target.value)}
-                    >
-                      {props.listPosition.map((position) => (
-                        <SelectItem key={position.id} value={position.id}>
-                          {position.name}
-                        </SelectItem>
-                      ))}
-                    </Select>
-
-                    <Select
                       label="Assignee"
                       labelPlacement="outside"
-                      placeholder="Select Assignee"
+                      placeholder={"Select Assignee"}
                       defaultSelectedKeys={[
                         `${props.selectedTaskInfo?.memberId ?? ""}`,
                       ]}
                       name="userId"
                       required
-                      isDisabled={
-                        !data || !Array.isArray(data) || data.length === 0
-                      }
                     >
-                      {data?.map((user: any) => (
-                        <SelectItem key={user.id} value={user.id}>
-                          {user.fullName}
-                        </SelectItem>
+                      {(props.relatedUsers ?? []).map((user) => (
+                        <SelectItem key={user.id}>{user.fullName}</SelectItem>
                       ))}
                     </Select>
+
                     {
                       // Only show status select for edit mode
                       props.mode === "edit" && (
@@ -397,7 +337,7 @@ export default function TaskModal(props: TaskModalProps) {
                     <Button color="primary" fullWidth type="submit">
                       Submit
                     </Button>
-                    <Button fullWidth onPress={handleClose}>
+                    <Button fullWidth onPress={onClose}>
                       Cancel
                     </Button>
                   </div>

@@ -123,6 +123,7 @@ export function useUniversityCandidate(params: {
       pageIndex,
       params.pageSize,
       search,
+      params.status,
       filter,
     ],
     queryFn: async () => {
@@ -130,23 +131,20 @@ export function useUniversityCandidate(params: {
         return null;
       }
 
+      //Change code for filtering interview-schedule candidate with approved status
+      const queryParams: Record<string, string> = {
+        PageIndex: pageIndex.toString(),
+        PageSize: params.pageSize.toString(),
+        ...(search && { Search: search }),
+        ...(params.status && { Status: params.status.toString() }),
+        ...(filter ?? {}),
+      };
+
       const response = await apiClient.get<
         PaginationResponse<UniversityCandidate>
       >(
         `${API_ENDPOINTS.candidate}/${params.internPeriodId}/university/${params.universityId}/candidates`,
-        {
-          params: new URLSearchParams(
-            Object.assign(
-              {
-                PageIndex: pageIndex.toString(),
-                PageSize: params.pageSize.toString(),
-                Search: search,
-                Status: params.status?.toString() ?? "",
-              },
-              filter ?? {},
-            ),
-          ),
-        },
+        { params: new URLSearchParams(queryParams) },
       );
 
       if (response?.statusCode === "200") {

@@ -10,7 +10,6 @@ import {
 } from "@nextui-org/table";
 import TaskModal from "./TaskModal";
 import { RelatedUser } from "../page";
-import TaskDeleteModal from "./TaskDeleteModal";
 import { Tabs, Tab } from "@nextui-org/tabs";
 
 export type TaskListProps = {
@@ -20,26 +19,20 @@ export type TaskListProps = {
   filterTask: number;
   setFilterTask: (filterTask: number) => void;
   className?: string;
-  listPosition: { name: string; id: string }[];
 };
 
 export default function TaskList(props: TaskListProps) {
-  const [selectedStatus, setSelectedStatus] = React.useState("0");
-
   const columns = [
     { key: "title", label: "Title" },
-    { key: "summary", label: "Summary" },
     { key: "description", label: "Description" },
     { key: "startDate", label: "Start Date" },
     { key: "dueDate", label: "Due Date" },
-
     { key: "priority", label: "Priority" },
     { key: "difficulty", label: "Difficulty" },
     { key: "status", label: "Status" },
     { key: "memberName", label: "Member Name" },
     { key: "completionProgress", label: "Completion" },
     { key: "progressAssessment", label: "Assessment" },
-    // { key: "note", label: "Note" },
     { key: "actions", label: "Actions" },
   ];
 
@@ -100,9 +93,7 @@ export default function TaskList(props: TaskListProps) {
               relatedUsers={props.relatedUsers}
               projectId={props.projectId}
               selectedTaskInfo={item}
-              listPosition={props.listPosition}
             />
-            <TaskDeleteModal taskId={item.id} />
           </div>
         );
       default:
@@ -114,13 +105,6 @@ export default function TaskList(props: TaskListProps) {
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between">
         <p className="text-xl font-semibold">Task Lists</p>
-
-        <TaskModal
-          mode="create"
-          relatedUsers={props.relatedUsers}
-          projectId={props.projectId}
-          listPosition={props.listPosition}
-        />
       </div>
       <Tabs
         key={"md"}

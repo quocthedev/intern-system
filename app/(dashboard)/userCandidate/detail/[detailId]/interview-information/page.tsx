@@ -11,13 +11,14 @@ import { Input, Textarea } from "@nextui-org/input";
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import { Chip } from "@nextui-org/chip";
 import { toast } from "sonner";
+
+import { useParams } from "next/navigation";
+import Image from "next/image";
 import {
   GetPositionPaginationResponse,
   Position,
-} from "../../../_types/GetPositionPaginationResponse";
-import { GetCandidateQuestionTemplateResponse } from "../../../_types/GetCandidateQuestionTemplate";
-import { useParams } from "next/navigation";
-import Image from "next/image";
+} from "@/app/(dashboard)/userCandidate/_types/GetPositionPaginationResponse";
+import { GetCandidateQuestionTemplateResponse } from "@/app/(dashboard)/userCandidate/_types/GetCandidateQuestionTemplate";
 
 const apiClient = new APIClient({
   onFulfilled: (response) => response,
