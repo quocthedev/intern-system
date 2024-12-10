@@ -11,6 +11,11 @@ import { Checkbox } from "@nextui-org/checkbox";
 import { Button } from "@nextui-org/button";
 import { redirect, useRouter } from "next/navigation";
 import { login } from "@/actions/auth";
+import { useMutation } from "@tanstack/react-query";
+import { API_ENDPOINTS } from "@/libs/config";
+import { toast } from "sonner";
+
+import "@nextui-org/framer-transitions";
 
 type GOOGLE_AUTH_KEYS =
   | "client_id"
@@ -52,100 +57,186 @@ export const LoginForm = () => {
     window.location.href = url.toString();
   };
 
+  // create a mutation to reset the password
+  const resetPassword = useMutation({
+    mutationFn: async (email: string) => {
+      const res = await fetch(API_ENDPOINTS.requestResetPassword, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      }).then((response) => response.json());
+
+      if (res.statusCode === "200") {
+        toast.success("Reset password link has been sent to your email");
+      } else {
+        toast.error("Failed to send reset password link");
+      }
+    },
+  });
+
+  enum Mode {
+    Login = "login",
+    ResetPassword = "reset-password",
+  }
+
+  const [mode, setMode] = useState(Mode.Login);
+
+  const submitLogin = async (formData: FormData) => {
+    const result = await login(formData);
+
+    if ("error" in result) {
+      setErrorMessage(result.error);
+      setIsLoading(false);
+    } else {
+      // Set user info to the local storage
+      Object.entries(result).forEach(([key, value]) => {
+        setIsLoading(false);
+        window.localStorage.setItem(key, value);
+      });
+
+      redirect("/");
+    }
+  };
+
+  const submitResetPassword = async (formData: FormData) => {
+    const res = await resetPassword.mutateAsync(
+      formData.get("email") as string,
+    );
+
+    console.log(res);
+  };
+
   return (
-    <>
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="w-[30%] rounded-xl bg-white p-10 shadow-xl">
-          <div className="mb-10 text-center text-2xl font-semibold">
-            Welcome to InternS!
+    <div>
+      <form
+        className="flex min-h-screen w-full items-center justify-center"
+        onSubmit={() => setIsLoading(true)}
+        action={
+          {
+            [Mode.Login]: submitLogin,
+            [Mode.ResetPassword]: submitResetPassword,
+          }[mode]
+        }
+      >
+        <div className="relative flex w-[30%] flex-col gap-3 rounded-xl bg-white p-10 shadow-xl">
+          <div className="mb-3 text-center text-2xl font-semibold">
+            {
+              {
+                [Mode.Login]: "Welcome to InternS",
+                [Mode.ResetPassword]: "Reset password",
+              }[mode]
+            }
           </div>
+          {
+            {
+              [Mode.Login]: (
+                <>
+                  <Input
+                    type="email"
+                    label="Email"
+                    variant="bordered"
+                    labelPlacement="outside"
+                    placeholder="example@mail.com"
+                    name="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
 
-          <form
-            onSubmit={() => setIsLoading(true)}
-            action={async (formData) => {
-              const result = await login(formData);
+                  <Input
+                    label="Password"
+                    labelPlacement="outside"
+                    variant="bordered"
+                    placeholder="Enter password"
+                    endContent={
+                      <button type="button" onClick={toggleVisible}>
+                        {visible ? <EyeSlashFilledIcon /> : <EyeFilledIcon />}
+                      </button>
+                    }
+                    name="password"
+                    type={visible ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                  {errorMessage && (
+                    <div className="text-red-500">{errorMessage}</div>
+                  )}
 
-              if ("error" in result) {
-                setErrorMessage(result.error);
-                setIsLoading(false);
-              } else {
-                // Set user info to the local storage
-                Object.entries(result).forEach(([key, value]) => {
-                  setIsLoading(false);
-                  window.localStorage.setItem(key, value);
-                });
+                  <Button
+                    isLoading={isLoading}
+                    isDisabled={isLoading}
+                    type="submit"
+                    color="primary"
+                  >
+                    {isLoading ? "Signing in..." : "Sign in"}
+                  </Button>
 
-                redirect("/");
-              }
-            }}
-          >
-            <Input
-              type="email"
-              label="Email"
-              variant="bordered"
-              labelPlacement="outside"
-              className="mb-10"
-              placeholder="example@mail.com"
-              name="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-            <Input
-              label="Password"
-              labelPlacement="outside"
-              variant="bordered"
-              placeholder="Enter password"
-              endContent={
-                <button type="button" onClick={toggleVisible}>
-                  {visible ? <EyeSlashFilledIcon /> : <EyeFilledIcon />}
-                </button>
-              }
-              name="password"
-              type={visible ? "text" : "password"}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-            {errorMessage && (
-              <div className="mb-4 text-red-500">{errorMessage}</div>
-            )}
+                  <div className="mt-2 w-full">
+                    <hr className="h-0.5 w-full bg-gray-300" />
+                    <p className="z-10 mx-auto -mt-3 w-fit bg-white px-3 text-center text-gray-300">
+                      OR
+                    </p>
+                  </div>
 
-            {/* <div className="mt-4">
-              <Checkbox defaultSelected size="md"></Checkbox>
-              <span className="-ml-1 mr-20 mt-0.5 text-xs">Remember me</span>
-              <span className="mt-0.5 text-xs text-blue-500">
-                Forgot password?
-              </span>
-            </div> */}
+                  <Button
+                    variant="bordered"
+                    startContent={<GoogleIcon />}
+                    onPress={() => loginWithGoogle()}
+                  >
+                    Sign in with Google
+                  </Button>
+                  <Button
+                    className="font-medium text-blue-500 underline underline-offset-4"
+                    variant="light"
+                    onPress={() => setMode(Mode.ResetPassword)}
+                  >
+                    Forgot password?
+                  </Button>
+                </>
+              ),
+              [Mode.ResetPassword]: (
+                <>
+                  <Button
+                    className="hover:none absolute text-blue-500"
+                    isIconOnly
+                    onClick={() => setMode(Mode.Login)}
+                    color="primary"
+                    variant="light"
+                  >
+                    く
+                  </Button>
 
-            <Button
-              isLoading={isLoading}
-              isDisabled={isLoading}
-              type="submit"
-              className="mt-4 w-[100%]"
-              color="primary"
-            >
-              {isLoading ? "Signing in..." : "Sign in"}
-            </Button>
-          </form>
+                  <Input
+                    type="email"
+                    label="Email"
+                    variant="bordered"
+                    labelPlacement="outside"
+                    placeholder="example@mail.com"
+                    name="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
 
-          <div className="flex justify-center">
-            <hr className="mt-6 h-0.5 w-44 bg-gray-300" />
-            <p className="ml-1 mr-1 mt-3 text-gray-300">OR</p>
-            <hr className="mt-6 h-0.5 w-44 bg-gray-300" />
-          </div>
-
-          <Button
-            className="mt-4 w-[100%]"
-            variant="bordered"
-            startContent={<GoogleIcon />}
-            onPress={() => loginWithGoogle()}
-          >
-            Sign in with Google
-          </Button>
+                  <Button
+                    isLoading={resetPassword.isPending}
+                    isDisabled={resetPassword.isPending}
+                    type="submit"
+                    color="primary"
+                  >
+                    {resetPassword.isPending
+                      ? "Processing..."
+                      : "Reset password"}
+                  </Button>
+                </>
+              ),
+            }[mode]
+          }
         </div>
-      </div>
-    </>
+      </form>
+    </div>
   );
 };

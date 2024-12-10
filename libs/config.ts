@@ -1,8 +1,11 @@
 export const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || "https://intern-system-amazing-tech.azurewebsites.net/api";
+  process.env.NEXT_PUBLIC_API_BASE_URL ||
+  "https://intern-system-amazing-tech.azurewebsites.net/api";
 
 export const API_ENDPOINTS = {
   login: `${API_BASE_URL}/auth/signin`,
+  requestResetPassword: `${API_BASE_URL}/user/request-password-reset`,
+  resetPassword: `${API_BASE_URL}/user/reset-password`,
   googleLogin: `${API_BASE_URL}/auth/signin-google`,
   project: `${API_BASE_URL}/project`,
   candidate: `${API_BASE_URL}/candidate`,
@@ -20,5 +23,4 @@ export const API_ENDPOINTS = {
   questionTemplate: `${API_BASE_URL}/question-template`,
   internshipReport: `${API_BASE_URL}/internship-report`,
   statistic: `${API_BASE_URL}/statistics`,
-
 };
