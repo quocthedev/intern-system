@@ -48,6 +48,12 @@ export default function CandidateCVPage() {
     }
   };
 
+  const isGoogleDriveLink = () => {
+    const url = new URL(candidateData.cvUri);
+
+    return url.hostname === "drive.google.com";
+  };
+
   const handleUpload = async () => {
     if (!selectedFile) return;
 
@@ -112,7 +118,14 @@ export default function CandidateCVPage() {
               hidden
             />
           </div>
-          <PDFEmbed pdfUrl={candidateData.cvUri} />
+
+          <PDFEmbed
+            pdfUrl={
+              isGoogleDriveLink()
+                ? candidateData.cvUri.replace("view?usp=drive_link", "preview")
+                : candidateData.cvUri
+            }
+          />
         </div>
       )}
     </div>
