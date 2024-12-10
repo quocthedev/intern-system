@@ -2,7 +2,7 @@
 import { Input } from "@nextui-org/input";
 
 import { useUniversityCandidateContext } from "../_providers/UniversityCandidateProvider";
-import ImportExcelModal2 from "../ImportExcelModal2";
+import ImportExcelModal3 from "../ImportExcelModal3";
 import { useInternPeriodContext } from "../_providers/InternPeriodDetailProvider";
 import UniversityCandidateFilter from "./UniversityCandidateFilter";
 import InterviewScheduleModal from "@/components/InterviewScheduleModal";
@@ -20,7 +20,7 @@ export default function ActionBar() {
           placeholder="Search by name, group, technology,..."
           onChange={(e) => setSearch(e.target.value)}
         />
-        <ImportExcelModal2
+        <ImportExcelModal3
           internPeriodId={periodId}
           universityId={universityId}
         />
