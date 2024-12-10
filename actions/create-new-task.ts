@@ -7,6 +7,12 @@ const apiClient = new APIClient({
   onFulfilled: (response) => response,
   onRejected: (error) => {
     console.log(error.response.data);
+
+    return {
+      data: {
+        error: error.response.data.message,
+      },
+    };
   },
 });
 
@@ -33,7 +39,6 @@ export async function createNewTask(formData: FormData) {
     projectId,
   };
 
-  console.log(params);
   const response = await apiClient.post(API_ENDPOINTS.task, params);
 
   return response;
