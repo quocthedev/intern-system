@@ -11,14 +11,14 @@ import React from "react";
 import { deleteTask } from "@/actions/delete-task";
 import { TrashIcon } from "@/components/icons/OtherIcons";
 import { toast } from "sonner";
-import { useQueryClient } from "@tanstack/react-query";
+import { useProjectDetailContext } from "../../_providers/ProjectDetailProvider";
 export type TaskModalProps = {
   taskId: string;
 };
 
 export default function TaskDeleteModal(props: TaskModalProps) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const queryClient = useQueryClient();
+  const { refetchProjectTask } = useProjectDetailContext();
 
   return (
     <>
@@ -39,10 +39,10 @@ export default function TaskDeleteModal(props: TaskModalProps) {
 
               <ModalFooter>
                 <Button
-                  onClick={() => {
-                    deleteTask(props.taskId);
-                    queryClient.invalidateQueries();
+                  onClick={async () => {
+                    await deleteTask(props.taskId);
                     toast.success("Task deleted successfully");
+                    refetchProjectTask();
                     onClose();
                   }}
                   fullWidth

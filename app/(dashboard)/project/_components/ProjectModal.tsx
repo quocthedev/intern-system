@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
 import { API_ENDPOINTS } from "@/libs/config";
 import axios from "axios";
+import { useProjectListContext } from "../_providers/ProjectListProvider";
 
 export type ProjectModalProps = {
   selectedProjectInfo?: Project;
@@ -22,7 +23,7 @@ export type ProjectModalProps = {
   mode: "create" | "edit";
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
-  refetch?: () => void;
+
   onClose?: () => void;
 };
 
@@ -105,6 +106,7 @@ export async function updateProject(params: {
 }
 
 export default function ProjectModal(props: ProjectModalProps) {
+  const { refetchProjectList } = useProjectListContext();
   const updateProjectMutation = useMutation({
     mutationFn: async (params: {
       projectId: string;
@@ -260,9 +262,11 @@ export default function ProjectModal(props: ProjectModalProps) {
       } else {
         toast.success("Project created successfully");
         props.onClose?.();
+        setSelectedPositions([]);
+        setSelectedTechnologies([]);
       }
 
-      props.refetch?.();
+      refetchProjectList();
     } else {
       const updatedFields = {} as Partial<Project>;
 
@@ -323,8 +327,11 @@ export default function ProjectModal(props: ProjectModalProps) {
         toast.error(res.error);
       } else {
         toast.success("Project updated successfully");
+        setSelectedPositions([]);
+        setSelectedTechnologies([]);
 
         props.onClose?.();
+        refetchProjectList();
       }
     }
   };
