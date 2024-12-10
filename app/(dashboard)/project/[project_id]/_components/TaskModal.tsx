@@ -11,12 +11,11 @@ import {
 import React, { useState } from "react";
 import { getLocalTimeZone, now, parseDate } from "@internationalized/date";
 import { Select, SelectItem } from "@nextui-org/select";
-import { RelatedUser } from "../page";
 import { createNewTask } from "@/actions/create-new-task";
 import { EditIcon } from "../../_components/Icons";
 import { updateTask } from "@/actions/update-task";
 import { toast } from "sonner";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import APIClient from "@/libs/api-client";
 import { useParams } from "next/navigation";
 import { ProjectTask } from "@/data-store/project/project-task.store";
@@ -41,11 +40,10 @@ export type User = {
 
 export default function TaskModal(props: TaskModalProps) {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
-  const queryClient = useQueryClient();
   const [selectedPositionId, setSelectedPositionId] = useState("");
   const { project_id } = useParams();
 
-  const { projectSummary } = useProjectDetailContext();
+  const { projectSummary, refetchProjectTask } = useProjectDetailContext();
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["userPositions", selectedPositionId],
@@ -141,24 +139,40 @@ export default function TaskModal(props: TaskModalProps) {
   const submitTask = async (formData: FormData) => {
     formData.append("projectId", props.projectId);
 
-    try {
-      if (props.mode === "edit") {
-        formData.append("taskId", props.selectedTaskInfo?.id as string);
-        await updateTask(formData);
-        toast.success("Task updated successfully!");
-        queryClient.invalidateQueries();
-      } else {
-        await createNewTask(formData);
-        toast.success("Task created successfully!");
+    if (props.mode === "edit") {
+      formData.append("taskId", props.selectedTaskInfo?.id as string);
+
+      const userId = formData.get("userId") as string;
+
+      if (!userId) {
+        formData.append(
+          "userId",
+          props.selectedTaskInfo?.assignedPerson.id as string,
+        );
       }
-      queryClient.invalidateQueries();
-      onClose();
-    } catch (error) {
-      console.error(error);
-      toast.error(
-        "An error occurred while creating the task. Please try again.",
-      );
+
+      const res = (await updateTask(formData)) as any;
+
+      if (res?.error) {
+        toast.error(res.error);
+
+        return;
+      }
+
+      toast.success("Task updated successfully!");
+    } else {
+      const res = (await createNewTask(formData)) as any;
+
+      if (res?.error) {
+        toast.error(res.error);
+        return;
+      }
+
+      toast.success("Task created successfully!");
     }
+
+    onClose();
+    refetchProjectTask();
   };
 
   return (

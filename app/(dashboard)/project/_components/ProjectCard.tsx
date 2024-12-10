@@ -11,13 +11,7 @@ import ProjectModal from "./ProjectModal";
 import { useDisclosure } from "@nextui-org/modal";
 import { useRouter } from "next/navigation";
 
-export default function ProjectCard(
-  props: PropsWithChildren<
-    Project & {
-      refetch?: () => void;
-    }
-  >,
-) {
+export default function ProjectCard(props: PropsWithChildren<Project>) {
   const router = useRouter();
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
@@ -50,7 +44,6 @@ export default function ProjectCard(
               isOpen={isOpen}
               onOpenChange={onOpenChange}
               selectedProjectInfo={props}
-              refetch={props.refetch}
               onClose={onClose}
             />
             <Checkbox />

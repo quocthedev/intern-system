@@ -5,9 +5,15 @@ import { API_ENDPOINTS } from "@/libs/config";
 import * as R from "ramda";
 
 const apiClient = new APIClient({
-  onFulfilled: (response) => response,
+  onFulfilled: (response) => ({
+    data: response.data,
+  }),
   onRejected: (error) => {
-    console.log(error.response);
+    return {
+      data: {
+        error: error.response.data.message,
+      },
+    };
   },
 });
 
@@ -54,5 +60,5 @@ export async function updateTask(formData: FormData) {
     true,
   );
 
-  return true;
+  return response;
 }

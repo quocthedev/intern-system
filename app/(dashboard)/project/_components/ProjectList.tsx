@@ -8,6 +8,8 @@ import APIClient from "@/libs/api-client";
 import { API_ENDPOINTS } from "@/libs/config";
 import { GetProjectsResponse, Project } from "../_types/Project";
 import { PaginationResponseSuccess } from "@/libs/types";
+import { useProjectListContext } from "../_providers/ProjectListProvider";
+import Loading from "@/components/Loading";
 
 export type ProjectListProps = {
   className?: string;
@@ -25,31 +27,38 @@ const apiClient = new APIClient({
 });
 
 export default function ProjectList(props: ProjectListProps) {
-  const [pageIndex, setPageIndex] = React.useState(1);
+  // const [pageIndex, setPageIndex] = React.useState(1);
 
-  const { isLoading, error, data, refetch } = useQuery({
-    queryKey: ["projects", pageIndex],
-    queryFn: async () => {
-      const response = await apiClient.get<GetProjectsResponse>(
-        API_ENDPOINTS.project,
-        {
-          params: new URLSearchParams({
-            PageIndex: pageIndex.toString(),
-            PageSize: "6",
-          }),
-        },
-      );
+  // const { isLoading, error, data, refetch } = useQuery({
+  //   queryKey: ["projects", pageIndex],
+  //   queryFn: async () => {
+  //     const response = await apiClient.get<GetProjectsResponse>(
+  //       API_ENDPOINTS.project,
+  //       {
+  //         params: new URLSearchParams({
+  //           PageIndex: pageIndex.toString(),
+  //           PageSize: "6",
+  //         }),
+  //       },
+  //     );
 
-      if (response?.statusCode === "200") {
-        const { data } = response as PaginationResponseSuccess<Project>;
+  //     if (response?.statusCode === "200") {
+  //       const { data } = response as PaginationResponseSuccess<Project>;
 
-        return {
-          projects: data.pagingData,
-          totalPages: data.totalPages,
-        };
-      }
-    },
-  });
+  //       return {
+  //         projects: data.pagingData,
+  //         totalPages: data.totalPages,
+  //       };
+  //     }
+  //   },
+  // });
+
+  const { isLoadingProjectList, projectList, setProjectListPageIndex } =
+    useProjectListContext();
+
+  if (isLoadingProjectList) {
+    return <Loading />;
+  }
 
   return (
     <div className="flex w-full flex-col items-center gap-4">
@@ -60,22 +69,18 @@ export default function ProjectList(props: ProjectListProps) {
           props.isShowFilter ? "grid-cols-2" : "grid-cols-3",
         )}
       >
-        {isLoading && data ? (
-          <div>Loading...</div>
-        ) : (
-          data?.projects.map((project) => (
-            <ProjectCard key={project.id} {...project} refetch={refetch} />
-          ))
-        )}
+        {projectList?.projects.map((project) => (
+          <ProjectCard key={project.id} {...project} />
+        ))}
       </div>
       <Pagination
         isCompact
         loop
         showControls
-        total={Number(data?.totalPages) || 1}
+        total={Number(projectList?.totalPages) || 1}
         initialPage={1}
         onChange={(page) => {
-          setPageIndex(page);
+          setProjectListPageIndex(page);
         }}
       />
     </div>
