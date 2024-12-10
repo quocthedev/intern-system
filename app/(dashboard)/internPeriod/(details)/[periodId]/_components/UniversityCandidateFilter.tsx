@@ -17,6 +17,7 @@ const CandidateStatusMapping = {
   5: "Out",
 };
 
+//test
 const CandidateGenderMapping = {
   0: "Male",
   1: "Female",
