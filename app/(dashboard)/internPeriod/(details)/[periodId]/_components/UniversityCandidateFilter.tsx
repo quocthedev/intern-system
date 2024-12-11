@@ -48,26 +48,6 @@ export default function UniversityCandidateFilter() {
 
   return (
     <div className="flex items-center gap-3">
-      <>
-        {!(filter as CandidateFilter) ||
-          Object.entries(filter as Record<string, unknown>).map(
-            ([key, value]) => (
-              <Chip
-                color="primary"
-                variant="bordered"
-                onClose={() => removeOneFilter(key as keyof CandidateFilter)}
-                key={key}
-              >
-                {key}:{" "}
-                {key === "Status"
-                  ? CandidateStatusMapping[Number(value) as 0 | 1 | 2]
-                  : key === "Gender"
-                    ? CandidateGenderMapping[Number(value) as 0 | 1]
-                    : (value as string)}
-              </Chip>
-            ),
-          )}
-      </>
       <Popover placement="bottom-end">
         <PopoverTrigger>
           <Button
@@ -126,6 +106,26 @@ export default function UniversityCandidateFilter() {
           </Button>
         </PopoverContent>
       </Popover>
+      <>
+        {!(filter as CandidateFilter) ||
+          Object.entries(filter as Record<string, unknown>).map(
+            ([key, value]) => (
+              <Chip
+                color="primary"
+                variant="bordered"
+                onClose={() => removeOneFilter(key as keyof CandidateFilter)}
+                key={key}
+              >
+                {key}:{" "}
+                {key === "Status"
+                  ? CandidateStatusMapping[Number(value) as 0 | 1 | 2]
+                  : key === "Gender"
+                    ? CandidateGenderMapping[Number(value) as 0 | 1]
+                    : (value as string)}
+              </Chip>
+            ),
+          )}
+      </>
     </div>
   );
 }

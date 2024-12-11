@@ -9,7 +9,7 @@ export default function ActionBar() {
   const { setSearch } = useInternPeriodContext();
 
   return (
-    <div className="flex w-full flex-col items-end gap-4">
+    <div className="flex w-full flex-col items-start gap-4">
       <div className="flex w-full items-center gap-2">
         <Input
           type="name"

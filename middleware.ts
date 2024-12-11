@@ -8,7 +8,11 @@ export async function middleware(request: NextRequest) {
   const role = request.cookies.get("userRole")?.value;
 
   if (accessToken) {
-    if (role === "Candidate" && requestPath !== "/projectUserCandidate") {
+    if (
+      role === "Candidate" &&
+      requestPath !== "/projectUserCandidate" &&
+      requestPath === "/"
+    ) {
       return NextResponse.redirect(
         new URL("/projectUserCandidate", request.nextUrl),
       );
