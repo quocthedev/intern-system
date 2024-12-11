@@ -154,39 +154,31 @@ export default function InternPeriodTable() {
           );
         case "actions":
           return (
-            <div className="flex items-center">
-              <Dropdown>
-                <DropdownTrigger>
-                  <Button variant="light" isIconOnly>
-                    <EllipsisIcon />
-                  </Button>
-                </DropdownTrigger>
-                <DropdownMenu aria-label="Dynamic Actions">
-                  <DropdownItem key="view" className="flex items-center">
-                    <Link href={`/internPeriod/${period.id}`}>
-                      <button className="flex cursor-pointer items-center">
-                        <ViewIcon className="mr-2" /> View Detail
-                      </button>
-                    </Link>
-                  </DropdownItem>
-                  <DropdownItem key="delete" className="flex items-center">
-                    <button
-                      onClick={() => {
-                        if (period.currentCandidateQuantity > 0) {
-                          toast.error(
-                            "Cannot delete a period with active candidates.",
-                          );
-                          return;
-                        }
-                        handleDeleteConfirmation(period.id);
-                      }}
-                      className="flex cursor-pointer items-center text-danger"
-                    >
-                      <DeleteIcon className="mr-2" /> Delete
-                    </button>
-                  </DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
+            <div className="flex items-center gap-2">
+              <Tooltip content="View detail">
+                <Link href={`/internPeriod/${period.id}`}>
+                  <button className="flex cursor-pointer items-center">
+                    <ViewIcon className="mr-2" />
+                  </button>
+                </Link>
+              </Tooltip>
+
+              <Tooltip content="Delete">
+                <button
+                  onClick={() => {
+                    if (period.currentCandidateQuantity > 0) {
+                      toast.error(
+                        "Cannot delete a period with active candidates.",
+                      );
+                      return;
+                    }
+                    handleDeleteConfirmation(period.id);
+                  }}
+                  className="flex w-full cursor-pointer items-center text-danger"
+                >
+                  <DeleteIcon className="mr-2" />
+                </button>
+              </Tooltip>
             </div>
           );
         default:
