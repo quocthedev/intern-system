@@ -15,6 +15,17 @@ import { ProjectTask } from "@/data-store/project/project-task.store";
 import Loading from "@/components/Loading";
 import TaskFilter from "./TaskFilter";
 import { Pagination } from "@nextui-org/pagination";
+import { Chip, ChipProps } from "@nextui-org/chip";
+import { truncateText } from "@/app/util";
+import { Popover, PopoverContent, PopoverTrigger } from "@nextui-org/popover";
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+} from "@nextui-org/dropdown";
+import { Button } from "@nextui-org/button";
+import { EllipsisIcon } from "@/app/(dashboard)/internPeriod/_components/Icons";
 
 export default function TaskList() {
   const {
@@ -26,6 +37,14 @@ export default function TaskList() {
     projectSummary,
   } = useProjectDetailContext();
 
+  const statusColorMap: Record<string, ChipProps["color"]> = {
+    NotStarted: "default",
+    InProgress: "warning",
+    InReview: "warning",
+    Done: "success",
+    OverDue: "danger",
+  };
+
   const columns = [
     { key: "title", label: "Title" },
     { key: "summary", label: "Summary" },
@@ -35,8 +54,9 @@ export default function TaskList() {
     { key: "difficulty", label: "Difficulty" },
     { key: "status", label: "Status" },
     { key: "memberName", label: "Member Name" },
-    { key: "completionProgress", label: "Completion" },
-    { key: "progressAssessment", label: "Assessment" },
+    { key: "position", label: "Position" },
+    { key: "completionProgress", label: "Progress" },
+    { key: "progressAssessment", label: "Evaluate Score" },
     { key: "actions", label: "Actions" },
   ];
 
@@ -66,9 +86,31 @@ export default function TaskList() {
   const renderCell = (item: ProjectTask, columnKey: Key) => {
     switch (columnKey) {
       case "title":
-        return <p className="max">{item.title}</p>;
+        const shortTitle = truncateText(item.summary, 8);
+
+        return (
+          <Popover placement="top" showArrow offset={10}>
+            <PopoverTrigger>{shortTitle}</PopoverTrigger>
+            <PopoverContent>
+              <div className="px-1 py-2">
+                <div className="text-base">{item.title}</div>
+              </div>
+            </PopoverContent>
+          </Popover>
+        );
       case "summary":
-        return item.summary;
+        const shortSummary = truncateText(item.summary, 8);
+
+        return (
+          <Popover placement="top" showArrow offset={10}>
+            <PopoverTrigger>{shortSummary}</PopoverTrigger>
+            <PopoverContent>
+              <div className="px-1 py-2">
+                <div className="text-base">{item.summary}</div>
+              </div>
+            </PopoverContent>
+          </Popover>
+        );
       case "startDate":
         return item.startDate.split("T")[0];
       case "dueDate":
@@ -78,9 +120,20 @@ export default function TaskList() {
       case "difficulty":
         return item.difficulty;
       case "status":
-        return item.status;
+        return (
+          <Chip
+            className="text-xs capitalize"
+            color={statusColorMap[item.status]}
+            size="sm"
+            variant="flat"
+          >
+            {item.status}
+          </Chip>
+        );
       case "memberName":
         return item.assignedPerson.assignedPerson;
+      case "position":
+        return item.assignedPerson.position;
       case "completionProgress":
         return item.completionProgress;
       case "progressAssessment":
@@ -94,6 +147,30 @@ export default function TaskList() {
               selectedTaskInfo={item}
             />
             <TaskDeleteModal taskId={item.id} />
+          </div>
+        );
+      case "actions":
+        return (
+          <div className="flex items-center">
+            <Dropdown>
+              <DropdownTrigger>
+                <Button variant="light" isIconOnly>
+                  <EllipsisIcon />
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu aria-label="Dynamic Actions">
+                <DropdownItem key="edit" className="flex items-center">
+                  <TaskModal
+                    mode="edit"
+                    projectId={projectSummary?.id as string}
+                    selectedTaskInfo={item}
+                  />
+                </DropdownItem>
+                <DropdownItem key="delete" className="flex items-center">
+                  <TaskDeleteModal taskId={item.id} />
+                </DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
           </div>
         );
       default:
@@ -112,6 +189,7 @@ export default function TaskList() {
       <Tabs
         key={"md"}
         size={"md"}
+        color="primary"
         fullWidth
         aria-label="Tabs sizes"
         onSelectionChange={(key) =>
@@ -128,8 +206,29 @@ export default function TaskList() {
       </Tabs>
       <TaskFilter />
 
-      <Table selectionMode="single">
-        <TableHeader columns={columns}>
+      <Table>
+        <TableHeader
+          columns={columns.filter((column) => {
+            if (
+              (projectTaskFilter?.Status === "0" ||
+                projectTaskFilter?.Status === "1" ||
+                projectTaskFilter?.Status === "2") &&
+              (column.key == "completionProgress" ||
+                column.key == "progressAssessment")
+            ) {
+              return false;
+            }
+            if (
+              (projectTaskFilter?.Status === "3" ||
+                projectTaskFilter?.Status === "4") &&
+              column.key == "actions"
+            ) {
+              return false;
+            } else {
+              return true;
+            }
+          })}
+        >
           {(column) => (
             <TableColumn key={column.key}>{column.label}</TableColumn>
           )}
@@ -143,9 +242,31 @@ export default function TaskList() {
         >
           {(item) => (
             <TableRow key={item.id} className="hover:cursor-pointer">
-              {(columnKey) => (
-                <TableCell>{renderCell(item, columnKey)}</TableCell>
-              )}
+              {columns
+                .filter((column) => {
+                  if (
+                    (projectTaskFilter?.Status === "0" ||
+                      projectTaskFilter?.Status === "1" ||
+                      projectTaskFilter?.Status === "2") &&
+                    (column.key === "completionProgress" ||
+                      column.key === "progressAssessment")
+                  ) {
+                    return false;
+                  } else if (
+                    (projectTaskFilter?.Status === "3" ||
+                      projectTaskFilter?.Status === "4") &&
+                    column.key === "actions"
+                  ) {
+                    return false;
+                  }
+
+                  return true;
+                })
+                .map((column) => (
+                  <TableCell key={column.key}>
+                    {renderCell(item, column.key)}
+                  </TableCell>
+                ))}
             </TableRow>
           )}
         </TableBody>

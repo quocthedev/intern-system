@@ -13,3 +13,9 @@ export const formatedTimeToMinutes = (time: string): number => {
 
   return hours * 60 + minutes;
 };
+
+export const truncateText = (summary: string, maxLength: number): string => {
+  return summary.length > maxLength
+    ? summary.slice(0, maxLength) + "..."
+    : summary;
+};

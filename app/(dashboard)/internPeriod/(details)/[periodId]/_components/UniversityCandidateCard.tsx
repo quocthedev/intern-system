@@ -157,42 +157,28 @@ export default function UniversityCandidateCard() {
         );
       case "action":
         return (
-          <div className="flex gap-2">
-            <Dropdown>
-              <DropdownTrigger>
-                <Button variant="light" isIconOnly>
-                  <EllipsisIcon />
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu aria-label="Dynamic Actions">
-                <DropdownItem key="view" className="flex items-center">
-                  <Link
-                    href={`/intern/details/${candidate.id}`}
-                    className="w-full text-medium text-black"
-                  >
-                    <button className="cursor-pointer">
-                      <span className="flex items-center">
-                        <ViewIcon className="mr-2" /> View detail
-                      </span>
-                    </button>
-                  </Link>
-                </DropdownItem>
-                <DropdownItem>
-                  {role === "Administrator" ||
-                  role === "HR Manager" ||
-                  role === "University Offical" ? (
-                    <button
-                      onClick={() => openDeleteModal(candidate.id)}
-                      className="-mt-1 flex w-full cursor-pointer items-center text-medium"
-                    >
-                      <DeleteIcon className="mr-2" /> Delete
-                    </button>
-                  ) : (
-                    <></>
-                  )}
-                </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
+          <div className="flex">
+            <Tooltip content="View detail">
+              <Link
+                href={`/intern/details/${candidate.id}`}
+                className="w-full text-medium text-black"
+              >
+                <button className="cursor-pointer">
+                  <span className="flex items-center">
+                    <ViewIcon className="mr-2" />
+                  </span>
+                </button>
+              </Link>
+            </Tooltip>
+
+            <Tooltip content="Delete">
+              <button
+                onClick={() => openDeleteModal(candidate.id)}
+                className="-ml-1 -mt-1 flex w-full cursor-pointer items-center text-medium"
+              >
+                <DeleteIcon />
+              </button>
+            </Tooltip>
           </div>
         );
       default:
@@ -254,7 +240,7 @@ export default function UniversityCandidateCard() {
       >
         <ModalContent>
           <ModalBody className="mt-5">
-            Are you sure you want to delete?
+            Are you sure you want to delete this candidate?
             <div className="mt-5 grid grid-cols-2 gap-5">
               <Button
                 onClick={() => handleDelete(selectedCandidate)}
