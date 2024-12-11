@@ -17,23 +17,24 @@ type ActionBarProps = {
 
 export default function ActionBar({ selectedInterns }: ActionBarProps) {
   return (
-    <div className="mb-5 mt-3 flex w-full items-center gap-2">
-      <Input
-        type="name"
-        placeholder="Search by name, group, technology,..."
-        size="md"
-      />
+    <div>
+      <div className="mb-5 mt-3 flex w-full items-center gap-2">
+        <Input
+          type="name"
+          placeholder="Search by name, group, technology,..."
+          size="md"
+        />
 
-      <div className="flex flex-1 gap-2">
-        <ImportExcelModal />
+        <div className="flex flex-1 gap-2">
+          <ImportExcelModal />
 
-        <InterviewScheduleModal candidates={Array.from(selectedInterns)} />
-
-        <Button color="default" size="md" variant="shadow">
-          <FilterIcon />
-          Filter
-        </Button>
+          <InterviewScheduleModal candidates={Array.from(selectedInterns)} />
+        </div>
       </div>
+      <Button color="default" size="md" variant="shadow" className="mb-2">
+        <FilterIcon />
+        Filter
+      </Button>
     </div>
   );
 }
