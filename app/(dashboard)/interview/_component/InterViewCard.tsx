@@ -4,7 +4,6 @@ import { API_ENDPOINTS } from "@/libs/config";
 import { useMutation } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
-import { Pagination } from "@nextui-org/pagination";
 import Link from "next/link";
 import { formatDate, formatedTimeToMinutes } from "@/app/util";
 import { Divider } from "@nextui-org/divider";
@@ -22,6 +21,7 @@ import { toast } from "sonner";
 
 import { useInterviewContext } from "../_providers/InterviewProvider";
 import { Spinner } from "@nextui-org/spinner";
+import { Pagination } from "@nextui-org/pagination";
 
 interface InterViewScheduleInterface {
   id: string;
@@ -38,14 +38,15 @@ interface InterViewScheduleInterface {
 }
 
 export default function InterViewCard() {
-  const [pageIndex, setPageIndex] = useState(1);
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
   const [selectedSchedule, setSelectedSchedule] = useState() as any;
 
-  const pageSize = 6;
-
-  const { listInterviewData, refetchListInterview, isListInterviewLoading } =
-    useInterviewContext() || {};
+  const {
+    listInterviewData,
+    refetchListInterview,
+    isListInterviewLoading,
+    setInterviewPageIndex,
+  } = useInterviewContext() || {};
 
   const interViewData = listInterviewData?.interviews || [];
 
@@ -159,7 +160,22 @@ export default function InterViewCard() {
               ))}
           </div>
         )}
-
+        {listInterviewData?.totalPages ? (
+          <div className="mt-4 flex justify-center">
+            <Pagination
+              isCompact
+              loop
+              showControls
+              total={listInterviewData.totalPages}
+              initialPage={listInterviewData.pageIndex}
+              onChange={(page) => {
+                setInterviewPageIndex(page);
+              }}
+            />
+          </div>
+        ) : (
+          <></>
+        )}
         <Modal
           isOpen={isOpen}
           onOpenChange={onOpenChange}
@@ -181,22 +197,6 @@ export default function InterViewCard() {
           </ModalContent>
         </Modal>
       </div>
-
-      <Pagination
-        className="m-4 flex justify-center"
-        isCompact
-        loop
-        showControls
-        total={
-          listInterviewData?.totalPages
-            ? Number(listInterviewData.totalPages)
-            : 0
-        }
-        initialPage={pageIndex}
-        onChange={(page) => {
-          setPageIndex(page);
-        }}
-      />
     </div>
   );
 }

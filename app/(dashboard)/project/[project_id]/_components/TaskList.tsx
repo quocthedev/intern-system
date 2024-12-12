@@ -40,7 +40,7 @@ export default function TaskList() {
   const statusColorMap: Record<string, ChipProps["color"]> = {
     NotStarted: "default",
     InProgress: "warning",
-    InReview: "warning",
+    InReview: "secondary",
     Done: "success",
     OverDue: "danger",
   };
@@ -86,18 +86,8 @@ export default function TaskList() {
   const renderCell = (item: ProjectTask, columnKey: Key) => {
     switch (columnKey) {
       case "title":
-        const shortTitle = truncateText(item.summary, 8);
+        return item.title;
 
-        return (
-          <Popover placement="top" showArrow offset={10}>
-            <PopoverTrigger>{shortTitle}</PopoverTrigger>
-            <PopoverContent>
-              <div className="px-1 py-2">
-                <div className="text-base">{item.title}</div>
-              </div>
-            </PopoverContent>
-          </Popover>
-        );
       case "summary":
         const shortSummary = truncateText(item.summary, 8);
 

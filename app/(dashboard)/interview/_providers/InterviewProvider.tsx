@@ -3,7 +3,7 @@ import { InterviewFilter, useInterview } from "@/data-store/interview";
 import { createContext, useContext } from "react";
 
 export interface InterviewContextInterface {
-  setInterviewPageId: (pageId: number) => void;
+  setInterviewPageIndex: (pageIndex: number) => void;
   isListInterviewLoading: boolean;
   listInterviewData:
     | {
@@ -46,7 +46,7 @@ export default function InterviewProvider({
     isLoading: isListInterviewLoading,
     data: listInterviewData,
     refetch: refetchListInterview,
-    setPageIndex: setInterviewPageId,
+    setPageIndex: setInterviewPageIndex,
 
     setSearch,
     filter,
@@ -54,7 +54,7 @@ export default function InterviewProvider({
     removeOneFilter,
     removeAllFilter,
   } = useInterview({
-    pageSize: 10,
+    pageSize: 6,
   });
 
   return (
@@ -63,7 +63,7 @@ export default function InterviewProvider({
         isListInterviewLoading,
         listInterviewData,
         refetchListInterview,
-        setInterviewPageId,
+        setInterviewPageIndex,
         setSearch,
         filter: filter as InterviewFilter,
         setFilter,
