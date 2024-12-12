@@ -138,123 +138,124 @@ export default function ActionBar() {
   // };
 
   return (
-    <div className="flex w-full gap-2">
-      <Input
-        size="md"
-        placeholder="Search by name, mentor, technology,..."
-        className="flex-1"
-      />
-      <NewPrositionModal />
+    <div>
+      <div className="flex w-full gap-2">
+        <Input
+          size="md"
+          placeholder="Search by name, mentor, technology,..."
+          className="flex-1"
+        />
+        <NewPrositionModal />
 
+        <Modal
+          isOpen={isAddTechOpen}
+          onOpenChange={onOpenAddTechChange}
+          className="max-w-lg"
+        >
+          <ModalContent>
+            <ModalBody className="mt-5">
+              <span className="text-center text-xl font-semibold">
+                Add technologies
+              </span>
+              <div>
+                <Select
+                  value={positionId}
+                  placeholder="Select a position"
+                  onSelectionChange={(id) =>
+                    handleSelectPosition(Array.from(id).toString())
+                  }
+                  className="mb-6"
+                >
+                  {positionData.map((position: PositionInterface) => (
+                    <SelectItem key={position.id} value={position.id}>
+                      {position.name}
+                    </SelectItem>
+                  ))}
+                </Select>
+                <Select
+                  value={technologyId}
+                  placeholder="Select technology"
+                  selectionMode="multiple"
+                  onSelectionChange={(id) =>
+                    handleSelectTechnology(id as Set<string>)
+                  }
+                >
+                  {technologyData.map((technology: any) => (
+                    <SelectItem key={technology.id} value={technology.id}>
+                      {technology.name}
+                    </SelectItem>
+                  ))}
+                </Select>
+              </div>
+
+              <div className="mt-5 grid grid-cols-2 gap-5">
+                <Button onClick={handleAddTech} color="primary">
+                  Add technology
+                </Button>
+                <Button onClick={onCloseAddTech}>Cancel</Button>
+              </div>
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+
+        <Modal
+          isOpen={isRemoveTechOpen}
+          onOpenChange={onOpenRemoveTechChange}
+          className="max-w-lg"
+        >
+          <ModalContent>
+            <ModalBody className="mt-5">
+              <span className="text-center text-xl font-semibold">
+                Remove technologies
+              </span>
+              <div className="gap-4">
+                <Select
+                  value={positionId}
+                  placeholder="Select a position"
+                  onSelectionChange={(id) =>
+                    handleSelectPosition(Array.from(id).toString())
+                  }
+                  className="mb-6"
+                >
+                  {positionData.map((position: PositionInterface) => (
+                    <SelectItem key={position.id} value={position.id}>
+                      {position.name}
+                    </SelectItem>
+                  ))}
+                </Select>
+                <Select
+                  value={technologyId}
+                  placeholder="Select technology"
+                  selectionMode="multiple"
+                  onSelectionChange={(id) =>
+                    handleSelectTechnology(id as Set<string>)
+                  }
+                >
+                  {technologyData.map((technology: any) => (
+                    <SelectItem key={technology.id} value={technology.id}>
+                      {technology.name}
+                    </SelectItem>
+                  ))}
+                </Select>
+              </div>
+
+              <div className="mt-5 grid grid-cols-2 gap-5">
+                <Button color="primary">Yes</Button>
+                <Button onClick={onCloseRemoveTech}>No</Button>
+              </div>
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+      </div>
       <Button
         color="default"
         size="md"
         startContent={<FilterIcon />}
         variant="shadow"
-        className=""
+        className="mt-3"
       >
         Filter
       </Button>
-
-      <Modal
-        isOpen={isAddTechOpen}
-        onOpenChange={onOpenAddTechChange}
-        className="max-w-lg"
-      >
-        <ModalContent>
-          <ModalBody className="mt-5">
-            <span className="text-center text-xl font-semibold">
-              Add technologies
-            </span>
-            <div>
-              <Select
-                value={positionId}
-                placeholder="Select a position"
-                onSelectionChange={(id) =>
-                  handleSelectPosition(Array.from(id).toString())
-                }
-                className="mb-6"
-              >
-                {positionData.map((position: PositionInterface) => (
-                  <SelectItem key={position.id} value={position.id}>
-                    {position.name}
-                  </SelectItem>
-                ))}
-              </Select>
-              <Select
-                value={technologyId}
-                placeholder="Select technology"
-                selectionMode="multiple"
-                onSelectionChange={(id) =>
-                  handleSelectTechnology(id as Set<string>)
-                }
-              >
-                {technologyData.map((technology: any) => (
-                  <SelectItem key={technology.id} value={technology.id}>
-                    {technology.name}
-                  </SelectItem>
-                ))}
-              </Select>
-            </div>
-
-            <div className="mt-5 grid grid-cols-2 gap-5">
-              <Button onClick={handleAddTech} color="primary">
-                Add technology
-              </Button>
-              <Button onClick={onCloseAddTech}>Cancel</Button>
-            </div>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
-
-      <Modal
-        isOpen={isRemoveTechOpen}
-        onOpenChange={onOpenRemoveTechChange}
-        className="max-w-lg"
-      >
-        <ModalContent>
-          <ModalBody className="mt-5">
-            <span className="text-center text-xl font-semibold">
-              Remove technologies
-            </span>
-            <div className="gap-4">
-              <Select
-                value={positionId}
-                placeholder="Select a position"
-                onSelectionChange={(id) =>
-                  handleSelectPosition(Array.from(id).toString())
-                }
-                className="mb-6"
-              >
-                {positionData.map((position: PositionInterface) => (
-                  <SelectItem key={position.id} value={position.id}>
-                    {position.name}
-                  </SelectItem>
-                ))}
-              </Select>
-              <Select
-                value={technologyId}
-                placeholder="Select technology"
-                selectionMode="multiple"
-                onSelectionChange={(id) =>
-                  handleSelectTechnology(id as Set<string>)
-                }
-              >
-                {technologyData.map((technology: any) => (
-                  <SelectItem key={technology.id} value={technology.id}>
-                    {technology.name}
-                  </SelectItem>
-                ))}
-              </Select>
-            </div>
-
-            <div className="mt-5 grid grid-cols-2 gap-5">
-              <Button color="primary">Yes</Button>
-              <Button onClick={onCloseRemoveTech}>No</Button>
-            </div>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
     </div>
   );
 }
