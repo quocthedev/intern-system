@@ -23,4 +23,5 @@ export const API_ENDPOINTS = {
   questionTemplate: `${API_BASE_URL}/question-template`,
   internshipReport: `${API_BASE_URL}/internship-report`,
   statistic: `${API_BASE_URL}/statistics`,
+  role: `${API_BASE_URL}/role`,
 };
