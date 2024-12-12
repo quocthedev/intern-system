@@ -8,16 +8,6 @@ export async function middleware(request: NextRequest) {
   const role = request.cookies.get("userRole")?.value;
 
   if (accessToken) {
-
-    // if (role === "Candidate" && requestPath !== "/projectUserCandidate") {
-    //   return 0
-    // }
-
-    {
-      return NextResponse.redirect(
-        new URL("/projectUserCandidate", request.nextUrl),
-      );
-    }
     if (isLoginPage) {
       return NextResponse.redirect(new URL("/", request.nextUrl));
     }
