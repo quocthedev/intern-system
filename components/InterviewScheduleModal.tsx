@@ -37,7 +37,7 @@ import { GetUsersByRoleResponse } from "../libs/_types/GetUsersResponse";
 import { sendEmail } from "@/actions/send-email-next";
 import { InterviewIcon } from "@/components/icons/ActionBarIcons";
 import { toast } from "sonner";
-import { isWeekend, addDays } from "date-fns";
+import { isWeekend } from "date-fns";
 import {
   CandidateStatus,
   UniversityCandidate,
@@ -45,6 +45,7 @@ import {
 } from "@/data-store/candidate/university-candidate";
 import { Chip, ChipProps } from "@nextui-org/chip";
 import { formatDate } from "@/app/util";
+import { I18nProvider } from "@react-aria/i18n";
 
 const apiClient = new APIClient({
   // onFulfilled: (response) => response,
@@ -69,15 +70,6 @@ export type InterviewScheduleModalProps = {
   internPeriodId?: string;
   callback?: () => void;
 };
-
-const isDateUnavailable = (date: Date) => {
-  // Adjust for Vietnam timezone (UTC+7)
-  const vietnamDate = addDays(date, 1);
-
-  // Check if the adjusted date is a weekend
-  return isWeekend(vietnamDate);
-};
-
 export default function InterviewScheduleModal(
   props: InterviewScheduleModalProps,
 ) {
@@ -392,17 +384,20 @@ export default function InterviewScheduleModal(
                     </div>
 
                     <div className="flex gap-3">
-                      <DatePicker
-                        label="Interview Date"
-                        // variant="bordered"
-                        hideTimeZone
-                        showMonthAndYearPickers
-                        defaultValue={now(getLocalTimeZone())}
-                        name="dateTime"
-                        labelPlacement="outside"
-                        isRequired
-                        isDateUnavailable={isDateUnavailable as any}
-                      />
+                      <I18nProvider locale="vi-VN">
+                        {/* get viet name calendar */}
+                        <DatePicker
+                          label="Interview Date"
+                          // variant="bordered"
+                          hideTimeZone
+                          showMonthAndYearPickers
+                          defaultValue={now(getLocalTimeZone())}
+                          name="dateTime"
+                          labelPlacement="outside"
+                          isRequired
+                          isDateUnavailable={isWeekend as any}
+                        />
+                      </I18nProvider>
 
                       <Select
                         label="Interview Format"
