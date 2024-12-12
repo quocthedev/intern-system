@@ -14,8 +14,7 @@ import { login } from "@/actions/auth";
 import { useMutation } from "@tanstack/react-query";
 import { API_ENDPOINTS } from "@/libs/config";
 import { toast } from "sonner";
-
-import "@nextui-org/framer-transitions";
+import { cn } from "@nextui-org/theme";
 
 type GOOGLE_AUTH_KEYS =
   | "client_id"
@@ -41,6 +40,8 @@ export const LoginForm = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();
 
+  const defaultSuccessMessage =
+    "Reset password link has been sent to your email";
   const toggleVisible = () => {
     setVisible(!visible);
   };
@@ -69,9 +70,9 @@ export const LoginForm = () => {
       }).then((response) => response.json());
 
       if (res.statusCode === "200") {
-        toast.success("Reset password link has been sent to your email");
+        setResetPasswordMessage(defaultSuccessMessage);
       } else {
-        toast.error("Failed to send reset password link");
+        setResetPasswordMessage(res.message);
       }
     },
   });
@@ -99,6 +100,8 @@ export const LoginForm = () => {
       redirect("/");
     }
   };
+
+  const [resetPasswordMessage, setResetPasswordMessage] = useState("");
 
   const submitResetPassword = async (formData: FormData) => {
     const res = await resetPassword.mutateAsync(
@@ -202,7 +205,11 @@ export const LoginForm = () => {
                   <Button
                     className="hover:none absolute text-blue-500"
                     isIconOnly
-                    onClick={() => setMode(Mode.Login)}
+                    onClick={() => {
+                      setMode(Mode.Login);
+
+                      setResetPasswordMessage("");
+                    }}
                     color="primary"
                     variant="light"
                   >
@@ -220,6 +227,19 @@ export const LoginForm = () => {
                     onChange={(e) => setEmail(e.target.value)}
                     required
                   />
+
+                  {resetPasswordMessage && (
+                    <p
+                      className={cn(
+                        "text-sm",
+                        resetPasswordMessage === defaultSuccessMessage
+                          ? "text-green-500"
+                          : "text-red-500",
+                      )}
+                    >
+                      {resetPasswordMessage}
+                    </p>
+                  )}
 
                   <Button
                     isLoading={resetPassword.isPending}
