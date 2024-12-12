@@ -21,7 +21,7 @@ export default function InterviewFilter() {
     setFilter,
     removeOneFilter,
     removeAllFilter,
-    setInterviewPageId,
+    setInterviewPageIndex,
   } = useInterviewContext() || {};
 
   const applyFilter = (data: FormData) => {
@@ -39,7 +39,7 @@ export default function InterviewFilter() {
       setFilter(newFilter);
     }
 
-    setInterviewPageId(1);
+    setInterviewPageIndex(1);
   };
 
   let isDateUnavailable = (date: Date) => {

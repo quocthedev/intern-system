@@ -4,7 +4,7 @@ import InterviewScheduleModal from "@/components/InterviewScheduleModal";
 import { useInterviewContext } from "../_providers/InterviewProvider";
 import InterviewFilter from "@/app/(dashboard)/interview/_component/InterviewFilter";
 export default function ActionBar() {
-  const { refetchListInterview, setInterviewPageId } =
+  const { refetchListInterview, setInterviewPageIndex } =
     useInterviewContext() || {};
 
   const { setSearch } = useInterviewContext();
@@ -21,7 +21,7 @@ export default function ActionBar() {
         isAddingCandidate
         callback={() => {
           refetchListInterview && refetchListInterview();
-          setInterviewPageId && setInterviewPageId(1);
+          setInterviewPageIndex && setInterviewPageIndex(1);
         }}
       />
       <InterviewFilter />
