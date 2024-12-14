@@ -122,6 +122,8 @@ function ImportExcelModal3({
           size="md"
           startContent={<ExcelIcon />}
           onPress={handleOpen}
+          className="text-white"
+          variant="shadow"
         >
           Import excel file
         </Button>

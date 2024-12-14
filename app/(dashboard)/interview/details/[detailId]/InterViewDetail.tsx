@@ -180,6 +180,7 @@ export default function InterViewDetailPage() {
           <span className="font-semibold">Internship schedule details</span>
         </div>
       </div>
+      <div className="mb-2 mt-4 text-lg">Interview Schedule Information</div>
       {isLoading ? (
         <div className="rounded-lg bg-white p-4 shadow-md">
           <div className="grid grid-cols-2 gap-3 text-sm text-gray-600">
