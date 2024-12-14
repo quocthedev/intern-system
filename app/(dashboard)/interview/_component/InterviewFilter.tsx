@@ -52,21 +52,6 @@ export default function InterviewFilter() {
 
   return (
     <div className="flex items-center gap-3">
-      <>
-        {!(filter as InterViewFilter) ||
-          Object.entries(filter as Record<string, unknown>).map(
-            ([key, value]) => (
-              <Chip
-                color="primary"
-                variant="bordered"
-                onClose={() => removeOneFilter(key as keyof InterViewFilter)}
-                key={key}
-              >
-                {key}:{value as string}
-              </Chip>
-            ),
-          )}
-      </>
       <Popover placement="bottom-end">
         <PopoverTrigger>
           <Button
@@ -115,6 +100,21 @@ export default function InterviewFilter() {
           </Button>
         </PopoverContent>
       </Popover>
+      <>
+        {!(filter as InterViewFilter) ||
+          Object.entries(filter as Record<string, unknown>).map(
+            ([key, value]) => (
+              <Chip
+                color="primary"
+                variant="bordered"
+                onClose={() => removeOneFilter(key as keyof InterViewFilter)}
+                key={key}
+              >
+                {key}:{value as string}
+              </Chip>
+            ),
+          )}
+      </>
     </div>
   );
 }

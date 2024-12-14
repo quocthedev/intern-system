@@ -10,6 +10,7 @@ export default function ActionBar() {
   const { setSearch } = useInterviewContext();
 
   return (
+  <div className="mt-3">
     <div className="mb-5 mt-3 flex w-full items-center gap-2">
       <Input
         type="name"
@@ -24,6 +25,7 @@ export default function ActionBar() {
           setInterviewPageIndex && setInterviewPageIndex(1);
         }}
       />
+      </div>
       <InterviewFilter />
     </div>
   );
