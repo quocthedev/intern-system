@@ -26,15 +26,9 @@ import {
   ModalContent,
   useDisclosure,
 } from "@nextui-org/modal";
-import {
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
-} from "@nextui-org/dropdown";
 import { Button } from "@nextui-org/button";
 import { toast } from "sonner";
-import { EllipsisIcon } from "@/app/(dashboard)/internPeriod/_components/Icons";
+import { Image } from "@nextui-org/image";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   Approved: "success",
@@ -86,6 +80,8 @@ export default function UniversityCandidateCard() {
   };
 
   const columnCandidate = [
+    { key: "no", label: "NO" },
+    { key: "avatar", label: "AVATAR" },
     {
       key: "studentCode",
       label: "Student Code",
@@ -94,19 +90,24 @@ export default function UniversityCandidateCard() {
       key: "fullName",
       label: "Full Name",
     },
-
+    // {
+    //   key: "personalEmail",
+    //   label: "Email",
+    // },
     {
-      key: "personalEmail",
-      label: "Email",
+      key: "gender",
+      label: "Gender",
     },
     {
       key: "universityEmail",
       label: "University Email",
     },
+    { key: "phoneNumber", label: "Phone Number" },
     {
       key: "cvUri",
       label: "CV",
     },
+    { key: "desiredPosition", label: "Desired Position" },
     { key: "status", label: "Status" },
     {
       key: "action",
@@ -114,34 +115,63 @@ export default function UniversityCandidateCard() {
     },
   ];
 
-  const renderCellCandidate = (candidate: any, columnKey: React.Key) => {
+  const renderCellCandidate = (
+    candidate: any,
+    columnKey: React.Key,
+    index: number,
+  ) => {
     const cellValue = candidate[columnKey as keyof typeof candidate];
 
     switch (columnKey) {
+      case "no":
+        return <div>{index + 1}</div>;
+      case "avatar":
+        return (
+          <div>
+            {candidate.avatar ? (
+              <Image
+                width={60}
+                height={60}
+                alt={`${candidate.fullName} Image`}
+                src={candidate.avatar}
+              />
+            ) : (
+              <Image
+                width={50}
+                alt="Default Candidate Image"
+                src="/icons/technology/no-avatar.png"
+              />
+            )}
+          </div>
+        );
       case "studentCode":
-        return <div>{candidate.studentCode}</div>;
+        return <div className="text-xs">{candidate.studentCode}</div>;
       case "fullName":
-        return <div>{candidate.fullName}</div>;
+        return <div className="text-xs">{candidate.fullName}</div>;
       case "doB":
-        return <div>{candidate.doB}</div>;
+        return <div className="text-xs">{candidate.doB}</div>;
       case "phoneNumber":
-        return <div>{candidate.phoneNumber}</div>;
+        return <div className="text-xs">{candidate.phoneNumber}</div>;
       case "personalEmail":
-        return <div>{candidate.personalEmail}</div>;
+        return <div className="text-xs">{candidate.personalEmail}</div>;
       case "universityEmail":
-        return <div>{candidate.universityEmail}</div>;
+        return <div className="text-xs">{candidate.universityEmail}</div>;
       case "gender":
-        return <div>{candidate.gender}</div>;
+        return <div className="text-xs">{candidate.gender}</div>;
       case "cvUri":
         return (
           <Link
             href={`
           /intern/details/${candidate.id}/cv
+          
           `}
+            className="text-xs"
           >
             Link
           </Link>
         );
+      case "desiredPosition":
+        return <div className="text-xs">{candidate.desiredPosition}</div>;
       case "status":
         return (
           <Chip
@@ -163,10 +193,8 @@ export default function UniversityCandidateCard() {
                 href={`/intern/details/${candidate.id}`}
                 className="w-full text-medium text-black"
               >
-                <button className="cursor-pointer">
-                  <span className="flex items-center">
-                    <ViewIcon className="mr-2" />
-                  </span>
+                <button className="mb-1 cursor-pointer">
+                  <ViewIcon className="mr-3" />
                 </button>
               </Link>
             </Tooltip>
@@ -214,7 +242,11 @@ export default function UniversityCandidateCard() {
               <TableRow key={candidate.id}>
                 {(colKey) => (
                   <TableCell>
-                    {renderCellCandidate(candidate, colKey)}
+                    {renderCellCandidate(
+                      candidate,
+                      colKey,
+                      data?.candidates?.indexOf(candidate || 0) as number,
+                    )}
                   </TableCell>
                 )}
               </TableRow>
