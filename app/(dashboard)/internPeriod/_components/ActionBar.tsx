@@ -19,7 +19,6 @@ export default function ActionBar() {
         <div className="flex min-w-max gap-3">
           {/* <NewPeriodModal /> */}
           <NewPeriodModalNext />
-          <ImportExcelModal />
         </div>
       </div>
       <InternPeriodFilter />
