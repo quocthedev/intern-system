@@ -91,7 +91,6 @@ export default function InterviewFilter() {
             granularity="day"
             maxValue={today(getLocalTimeZone())}
             defaultValue={today(getLocalTimeZone())}
-            isDateUnavailable={isDateUnavailable as any}
           />
           <DatePicker
             label="To date"
