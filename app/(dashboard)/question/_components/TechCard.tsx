@@ -8,27 +8,21 @@ import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
 import { useQuery } from "@tanstack/react-query";
 import { API_ENDPOINTS } from "@/libs/config";
-import {
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
-} from "@nextui-org/dropdown";
-import { EditIcon } from "@/app/(dashboard)/question/_components/Icons";
 import { Spinner } from "@nextui-org/spinner";
+import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
 
 export const TechCard = () => {
-  const defaultId = "f8f50d79-778f-4f24-bcf4-b5e9eb83ee56";
+  const defaultId = "e7a7142d-72cf-4a9d-bcb7-389c1278db6b";
 
   const [positionId, setPositionId] = useState(defaultId);
-  const { isLoading, error, data, refetch } = useQuery({
-    queryKey: ["allPositions", positionId], // Query key for caching and refetching
+  const { data } = useQuery({
+    queryKey: ["allPositions", positionId],
     queryFn: async () => {
       try {
         const response = await fetch(`${API_ENDPOINTS.position}?pageSize=20`);
         const result = await response.json();
 
-        return result?.data?.pagingData || []; // Return positions or an empty array
+        return result?.data?.pagingData || [];
       } catch (err) {
         throw new Error("Failed to fetch positions");
       }
@@ -64,11 +58,11 @@ export const TechCard = () => {
     handleSelectPosition(defaultId);
   }, []);
 
-  const getPositionNameById = (id: any) => {
-    const position = positionData.find((pos: any) => pos.id === id);
+  // const getPositionNameById = (id: any) => {
+  //   const position = positionData.find((pos: any) => pos.id === id);
 
-    return position?.name;
-  };
+  //   return position?.name;
+  // };
 
   return (
     <>
@@ -76,27 +70,21 @@ export const TechCard = () => {
         <span className="font-semibold text-lime-700 sm:-mr-1">
           Selected Position:
         </span>
-        <Dropdown>
-          <DropdownTrigger className="mb-4 mt-3 sm:mb-4 sm:mt-3">
-            <Button variant="bordered" className="text-sm">
-              {isLoading ? (
-                <Spinner size="sm" />
-              ) : positionId ? (
-                getPositionNameById(positionId)
-              ) : (
-                "Select"
-              )}
-            </Button>
-          </DropdownTrigger>
-          <DropdownMenu
-            aria-label="Dynamic Actions"
-            items={positionData}
-            selectionMode="single"
-            onAction={(id) => handleSelectPosition(id)}
-          >
-            {(pos: any) => <DropdownItem key={pos.id}>{pos.name}</DropdownItem>}
-          </DropdownMenu>
-        </Dropdown>
+
+        <Autocomplete
+          variant="bordered"
+          className="w-3/10 mb-4 mt-3 sm:mb-4 sm:mt-3"
+          defaultItems={positionData}
+          placeholder="Select a position"
+          defaultSelectedKey={positionId}
+          onSelectionChange={(id) => handleSelectPosition(id)}
+        >
+          {(positionData: any) => (
+            <AutocompleteItem key={positionData.id}>
+              {positionData.name}
+            </AutocompleteItem>
+          )}
+        </Autocomplete>
       </div>
       {isTechnologyLoading ? (
         <div className="mt-20 flex items-center justify-center gap-3">
