@@ -21,9 +21,10 @@ const apiClient = new APIClient({
 
 export function useUniversity(params: { pageSize: number }) {
   const [pageIndex, setPageIndex] = useState(1);
+  const [search, setSearch] = useState("");
 
   const { isLoading, error, data, refetch } = useQuery({
-    queryKey: ["university", pageIndex, params.pageSize],
+    queryKey: ["university", pageIndex, params.pageSize, search],
     queryFn: async () => {
       const response = await apiClient.get<
         PaginationResponse<UniversityInterface>
@@ -31,6 +32,7 @@ export function useUniversity(params: { pageSize: number }) {
         params: new URLSearchParams({
           PageIndex: pageIndex.toString(),
           PageSize: params.pageSize.toString(),
+          Search: search,
         }),
       });
 
@@ -39,7 +41,7 @@ export function useUniversity(params: { pageSize: number }) {
           response as PaginationResponseSuccess<UniversityInterface>;
 
         return {
-          universitites: data.pagingData,
+          universities: data.pagingData,
           pageIndex: data.pageIndex,
           totalPages: data.totalPages,
         };
@@ -53,5 +55,6 @@ export function useUniversity(params: { pageSize: number }) {
     data,
     refetch,
     setPageIndex,
+    setSearch,
   };
 }
