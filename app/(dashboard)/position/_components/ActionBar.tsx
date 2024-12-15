@@ -247,15 +247,6 @@ export default function ActionBar() {
           </ModalContent>
         </Modal>
       </div>
-      <Button
-        color="default"
-        size="md"
-        startContent={<FilterIcon />}
-        variant="shadow"
-        className="mt-3"
-      >
-        Filter
-      </Button>
     </div>
   );
 }
