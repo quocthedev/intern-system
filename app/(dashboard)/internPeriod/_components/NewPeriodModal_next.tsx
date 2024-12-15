@@ -204,7 +204,7 @@ export default function NewPeriodModalNext() {
                 name="universities"
                 selectionMode="multiple"
               >
-                {(data?.universitites ?? []).map((university) => (
+                {(data?.universities ?? []).map((university) => (
                   <SelectItem key={university.id} value={university.id}>
                     {university.name}
                   </SelectItem>
