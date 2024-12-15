@@ -20,12 +20,6 @@ export default function ActionBar() {
           <NewTechModal />
         </div>
       </div>
-      <div className="flex min-w-max gap-3">
-        <Button color="default" size="md" variant="shadow">
-          <FilterIcon />
-          Filter
-        </Button>
-      </div>
     </div>
   );
 }

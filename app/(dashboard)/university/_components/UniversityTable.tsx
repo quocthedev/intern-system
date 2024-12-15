@@ -6,7 +6,7 @@ import {
   EditIcon,
 } from "@/app/(dashboard)/university/_components/Icons";
 import { Tooltip } from "@nextui-org/tooltip";
-import { useMutation, useQuery } from "@tanstack/react-query"; //get request
+import { useMutation } from "@tanstack/react-query"; //get request
 import { API_ENDPOINTS } from "@/libs/config";
 import {
   Modal,
@@ -23,6 +23,8 @@ import { Divider } from "@nextui-org/divider";
 import { Pagination } from "@nextui-org/pagination";
 import Image from "next/image";
 import { useUniversity } from "@/data-store/university";
+import { useUniversityContext } from "@/app/(dashboard)/university/_providers/UniversityProvider";
+import { Spinner } from "@nextui-org/spinner";
 
 interface UniversityInterface {
   id: string;
@@ -54,12 +56,17 @@ export default function UniversityTable() {
     address: "",
   });
 
-  const [pageIndex, setPageIndex] = useState(1);
-
-  const pageSize = 6;
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  const { isLoading, error, data, refetch } = useUniversity({ pageSize });
+  // const { isLoading, error, data, refetch } = useUniversity({ pageSize });
+  const {
+    isListUniversityLoading,
+    listUniversityData,
+    refetchListUniversity,
+    setUniversityPageIndex,
+  } = useUniversityContext();
+
+  const data = listUniversityData?.universities;
 
   const mutation = useMutation({
     mutationFn: (id: string) =>
@@ -72,7 +79,7 @@ export default function UniversityTable() {
     },
 
     onSuccess: () => {
-      refetch();
+      refetchListUniversity();
     },
   });
 
@@ -86,7 +93,7 @@ export default function UniversityTable() {
     },
     onSuccess: () => {
       toast.success("Updated successfully!");
-      refetch();
+      refetchListUniversity();
       onCloseEdit();
     },
   });
@@ -141,100 +148,107 @@ export default function UniversityTable() {
         throw new Error("File upload failed");
       }
 
-      await refetch();
+      await refetchListUniversity();
     } catch (error) {
       toast.error("Error uploading image");
       console.error(error);
     }
   };
 
-  if (error) {
-    return <div>Error + {error.message}</div>;
-  }
-
   return (
     <div>
-      <div className="grid h-full grid-cols-3 gap-5">
-        {data?.universitites &&
-          data.universitites.map((university: UniversityInterface) => (
-            <Card key={university.id as string} className="w-full">
-              <CardHeader>
-                <div className="flex w-full justify-between">
-                  <div className="text-md font-bold">{university.name}</div>
+      {isListUniversityLoading ? (
+        <Spinner className="flex items-center gap-4">Loading...</Spinner>
+      ) : (
+        <div className="grid h-full grid-cols-3 gap-5">
+          {data &&
+            data.map((university: UniversityInterface) => (
+              <Card key={university.id as string} className="w-full">
+                <CardHeader>
+                  <div className="flex w-full justify-between">
+                    <div className="text-md font-bold">{university.name}</div>
 
-                  <div className="flex space-x-1">
-                    <Tooltip content="Edit" color="success">
-                      <button
-                        className="cursor-pointer text-lg text-default-400 active:opacity-50"
-                        onClick={() =>
-                          openEditModal(
-                            university.id,
-                            university.name,
-                            university.abbreviation,
-                            university.address,
-                          )
-                        }
-                      >
-                        <EditIcon />
-                      </button>
-                    </Tooltip>
-                    <Tooltip content="Delete" color="danger">
-                      <button
-                        className="bg-transparent"
-                        onClick={() => openModalDelete(university.id as string)}
-                      >
-                        <DeleteIcon />
-                      </button>
-                    </Tooltip>
+                    <div className="flex space-x-1">
+                      <Tooltip content="Edit" color="success">
+                        <button
+                          className="cursor-pointer text-lg text-default-400 active:opacity-50"
+                          onClick={() =>
+                            openEditModal(
+                              university.id,
+                              university.name,
+                              university.abbreviation,
+                              university.address,
+                            )
+                          }
+                        >
+                          <EditIcon />
+                        </button>
+                      </Tooltip>
+                      <Tooltip content="Delete" color="danger">
+                        <button
+                          className="bg-transparent"
+                          onClick={() =>
+                            openModalDelete(university.id as string)
+                          }
+                        >
+                          <DeleteIcon />
+                        </button>
+                      </Tooltip>
+                    </div>
                   </div>
-                </div>
-              </CardHeader>
-              <Divider />
-              <CardBody>
-                <div className="mb-4">
-                  {university.image ? (
-                    <Image
-                      width={200}
-                      height={200}
-                      alt={`${university.name} Image`}
-                      src={university.image}
-                      className="h-40 w-full rounded-md object-contain"
-                    />
-                  ) : (
-                    <Image
-                      width={200}
-                      height={200}
-                      layout="responsive"
-                      alt="Default University Image"
-                      src="/icons/technology/noimg.png"
-                      className="rounded-md object-contain"
-                    />
-                  )}
-                </div>
+                </CardHeader>
+                <Divider />
+                <CardBody>
+                  <div className="mb-4">
+                    {university.image ? (
+                      <Image
+                        width={200}
+                        height={200}
+                        alt={`${university.name} Image`}
+                        src={university.image}
+                        className="h-40 w-full rounded-md object-contain"
+                      />
+                    ) : (
+                      <Image
+                        width={200}
+                        height={200}
+                        layout="responsive"
+                        alt="Default University Image"
+                        src="/icons/technology/noimg.png"
+                        className="rounded-md object-contain"
+                      />
+                    )}
+                  </div>
 
-                <div>
-                  <span className="font-bold">Abberviation: </span>
-                  {university.abbreviation}
-                </div>
-                <div className="mt-2">
-                  <span className="font-bold">Address: </span>
-                  {university.address}
-                </div>
-              </CardBody>
-            </Card>
-          ))}
-      </div>
-      <Pagination
-        className="m-4 flex justify-center"
-        isCompact
-        loop
-        showControls
-        total={data?.totalPages ? Number(data.totalPages) : 0}
-        initialPage={pageIndex}
-        onChange={(page) => {
-          setPageIndex(page);
-        }}
-      />
+                  <div>
+                    <span className="font-bold">Abberviation: </span>
+                    {university.abbreviation}
+                  </div>
+                  <div className="mt-2">
+                    <span className="font-bold">Address: </span>
+                    {university.address}
+                  </div>
+                </CardBody>
+              </Card>
+            ))}
+        </div>
+      )}
+
+      {listUniversityData?.totalPages ? (
+        <Pagination
+          className="m-4 flex justify-center"
+          isCompact
+          loop
+          showControls
+          total={listUniversityData?.totalPages as number}
+          initialPage={listUniversityData.pageIndex}
+          onChange={(page) => {
+            setUniversityPageIndex(page);
+          }}
+        />
+      ) : (
+        <></>
+      )}
 
       <Modal
         isOpen={isDeleteOpen}
