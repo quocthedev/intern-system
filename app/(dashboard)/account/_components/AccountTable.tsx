@@ -38,7 +38,8 @@ export type Account = {
   address: string;
   status: string;
   isActive: boolean;
-  roleId: string;
+  role: any;
+  jobTitle: any;
   id: string;
   dateCreate: string;
   dateUpdate: string;
@@ -94,12 +95,13 @@ export default function AccountTable() {
     { key: "no", label: "NO" },
     { key: "fullName", label: "FULL NAME" },
     { key: "email", label: "EMAIL" },
-    { key: "userName", label: "USERNAME" },
+    // { key: "userName", label: "USERNAME" },
     { key: "gender", label: "GENDER" },
     { key: "phone", label: "PHONE" },
-    { key: "address", label: "ADDRESS" },
+    // { key: "address", label: "ADDRESS" },
     { key: "status", label: "STATUS" },
-    // { key: "role", label: "ROLE" },
+    { key: "role", label: "ROLE" },
+    { key: "jobTitle", label: "POSITION" },
     { key: "actions", label: "ACTIONS" },
   ];
 
@@ -114,14 +116,20 @@ export default function AccountTable() {
           return <div className="text-xs">{account.fullName}</div>;
         case "email":
           return <div className="text-xs">{account.email}</div>;
-        case "userName":
-          return <div className="text-xs">{account.userName}</div>;
         case "gender":
           return <div className="text-xs">{account.gender}</div>;
         case "phone":
           return <div className="text-xs">{account.phone}</div>;
-        case "address":
-          return <div className="text-xs">{account.address}</div>;
+        case "role":
+          return <div className="text-xs">{account.role?.name}</div>;
+        case "jobTitle":
+          return (
+            <div className="text-xs">
+              {account.jobTitle.positions.map((position: any) => (
+                <div key={position.id}>{position.name}</div>
+              ))}
+            </div>
+          );
         case "status":
           return (
             <div className="text-xs">
@@ -132,7 +140,7 @@ export default function AccountTable() {
           );
         case "actions":
           return (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center">
               <Tooltip content="View detail">
                 <Button isIconOnly variant="light">
                   <ViewIcon />
