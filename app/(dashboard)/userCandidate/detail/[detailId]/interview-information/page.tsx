@@ -120,7 +120,7 @@ export default function InterviewInformationPage() {
 
   const technologies =
     positions?.find((position) => position.id === selectedPosition)
-      ?.tenologies || [];
+      ?.technologies || [];
 
   const submitAnswer = async (formData: FormData) => {
     const answers = Array.from(formData.entries()).map(([key, value]) => ({

@@ -17,7 +17,8 @@ export type Account = {
   address: string;
   status: string;
   isActive: boolean;
-  roleId: string;
+  role: any;
+  jobTitle: any;
   id: string;
   dateCreate: string;
   dateUpdate: string;

@@ -9,7 +9,7 @@ import { useInfiniteScroll } from "@nextui-org/use-infinite-scroll";
 interface Position {
   name: string;
   abbreviation: string;
-  tenologies: string[];
+  technologies: string[];
   id: string;
   dateCreate: string;
   dateUpdate: string;

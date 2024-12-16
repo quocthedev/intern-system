@@ -28,7 +28,7 @@ interface PositionInterface {
   id: string;
   name: string;
   abbreviation: string;
-  tenologies: any;
+  technologies: any;
   image: string;
 }
 
@@ -149,11 +149,11 @@ export default function PositionCard(props: PositonCardProps) {
     updateMutation.mutate();
     // get added technologies
     const addedTechnologies = selectedTechnologies.filter(
-      (tech) => !props.data.tenologies.find((t: any) => t.id === tech.key),
+      (tech) => !props.data.technologies.find((t: any) => t.id === tech.key),
     );
 
     // get removed technologies
-    const removedTechnologies = props.data.tenologies.filter(
+    const removedTechnologies = props.data.technologies.filter(
       (tech: any) => !selectedTechnologies.find((t) => t.key === tech.id),
     );
 
@@ -198,7 +198,7 @@ export default function PositionCard(props: PositonCardProps) {
   } = useTechnology({ pageSize: 8 });
 
   const defaultSelectedTechnologies = (dynamicTechnologyList || []).filter(
-    (tech) => props.data?.tenologies?.find((t: any) => t.id === tech.id),
+    (tech) => props.data?.technologies?.find((t: any) => t.id === tech.id),
   );
 
   const [selectedTechnologies, setSelectedTechnologies] = useState<
@@ -228,7 +228,7 @@ export default function PositionCard(props: PositonCardProps) {
                       props.data.id,
                       props.data.name,
                       props.data.abbreviation,
-                      props.data.tenologies,
+                      props.data.technologies,
                     )
                   }
                 >
@@ -274,7 +274,7 @@ export default function PositionCard(props: PositonCardProps) {
           <div className="mt-2">
             <span className="font-semibold">Technologies:</span>{" "}
             <span className="whitespace-normal">
-              {props.data?.tenologies
+              {props.data?.technologies
                 ?.map((tech: Tech) => tech.name)
                 .join(", ")}
             </span>

@@ -119,7 +119,9 @@ export default function InterviewInformationPage() {
 
   const technologies =
     positions?.find((position) => position.id === selectedPosition)
-      ?.tenologies || [];
+      ?.technologies || [];
+
+  console.log(technologies);
 
   const submitAnswer = async (formData: FormData) => {
     const answers = Array.from(formData.entries()).map(([key, value]) => ({
@@ -223,21 +225,21 @@ export default function InterviewInformationPage() {
         >
           {(item) => <SelectItem key={item.id}>{item.name}</SelectItem>}
         </Select>
-        {selectedPosition && (
-          <div className="flex flex-col gap-3">
-            <Select
-              label="Select technologies"
-              placeholder="Java, Javascript, Nodejs, ..."
-              items={technologies}
-              selectionMode="multiple"
-              // disabled={!selectedPosition}
-              onSelectionChange={setSelectedTechnologies as any}
-              selectedKeys={selectedTechnologies}
-            >
-              {(item) => <SelectItem key={item.id}>{item.name}</SelectItem>}
-            </Select>
-          </div>
-        )}
+        {/* {selectedPosition && ( */}
+        <div className="flex flex-col gap-3">
+          <Select
+            label="Select technologies"
+            placeholder="Java, Javascript, Nodejs, ..."
+            items={technologies}
+            selectionMode="multiple"
+            // disabled={!selectedPosition}
+            onSelectionChange={setSelectedTechnologies as any}
+            selectedKeys={selectedTechnologies}
+          >
+            {(item) => <SelectItem key={item.id}>{item.name}</SelectItem>}
+          </Select>
+        </div>
+        {/* )} */}
         {Array.from(selectedTechnologies)[0] ? (
           <Button onClick={createQuestions}>Create questions</Button>
         ) : (
