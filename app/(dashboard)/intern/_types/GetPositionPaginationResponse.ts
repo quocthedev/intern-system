@@ -14,7 +14,7 @@ export type Position = {
   name: string;
   abbreviation: string;
   description: string;
-  tenologies: Technology[];
+  technologies: Technology[];
   id: string;
   dateCreate: string;
   dateUpdate: string;

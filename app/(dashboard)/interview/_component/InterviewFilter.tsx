@@ -51,7 +51,7 @@ export default function InterviewFilter() {
   };
 
   return (
-    <div className="flex items-center gap-3">
+    <div className="mb-4 flex items-center gap-3">
       <Popover placement="bottom-end">
         <PopoverTrigger>
           <Button

@@ -12,7 +12,7 @@ interface PositionInterface {
   id: string;
   name: string;
   abbreviation: string;
-  tenologies: any;
+  technologies: any;
   image: string;
 }
 

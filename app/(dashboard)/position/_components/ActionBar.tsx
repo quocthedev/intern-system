@@ -36,7 +36,7 @@ export default function ActionBar() {
   interface PositionInterface {
     name: string;
     abbreviation: string;
-    tenologies: string[];
+    technologies: string[];
     id: string;
     dateCreate: string;
     dateUpdate: string;
