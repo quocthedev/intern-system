@@ -28,6 +28,8 @@ import { toast } from "sonner";
 import { usePosition } from "@/data-store/position.store";
 import Loading from "@/components/Loading";
 import { Autocomplete } from "@nextui-org/autocomplete";
+import { useParams } from "next/navigation";
+import { useProjectDetailContext } from "@/app/(dashboard)/project/_providers/ProjectDetailProvider";
 
 const apiClient = new APIClient({
   onFulfilled: (response) => response,
@@ -48,18 +50,20 @@ export default function NewMemberModal(props: NewMemberModalProps) {
   const roleMapping: Record<string, string> = {};
   const queryClient = useQueryClient();
 
-  const { data: positionData, isLoading: isPositionLoading } = usePosition({
-    pageSize: 100,
-  });
+  // const { data: positionData, isLoading: isPositionLoading } = usePosition({
+  //   pageSize: 100,
+  // });
+
+  const { projectSummary, isLoadingProjectSummary } = useProjectDetailContext();
 
   const [positionFilter, setPositionFilter] = React.useState("");
   const [search, setSearch] = React.useState("");
-
+  const { project_id } = useParams();
   const { data, isLoading, error } = useQuery({
-    queryKey: ["members", positionFilter, search],
+    queryKey: ["members", positionFilter, search, project_id],
     queryFn: async () => {
       const response = await apiClient.get<GetCandidateUsersResponse>(
-        API_ENDPOINTS.candidateUser,
+        `${API_ENDPOINTS.project}/${project_id}/user-related-position`,
         {
           params: {
             PositionId: positionFilter === "" ? undefined : positionFilter,
@@ -169,10 +173,12 @@ export default function NewMemberModal(props: NewMemberModalProps) {
     }
   };
 
-  const positionOptions = (positionData?.positions ?? []).map((position) => ({
-    value: position.id,
-    label: position.name,
-  }));
+  const positionOptions = (projectSummary?.listPosition ?? []).map(
+    (position) => ({
+      value: position.id,
+      label: position.name,
+    }),
+  );
 
   return (
     <>
@@ -180,7 +186,7 @@ export default function NewMemberModal(props: NewMemberModalProps) {
         Add New Member
       </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-        <ModalContent className="max-w-[800px]">
+        <ModalContent className="max-w-6xl">
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
