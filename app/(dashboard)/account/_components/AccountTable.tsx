@@ -95,7 +95,7 @@ export default function AccountTable() {
     { key: "no", label: "NO" },
     { key: "fullName", label: "FULL NAME" },
     { key: "email", label: "EMAIL" },
-    // { key: "userName", label: "USERNAME" },
+    { key: "userName", label: "USERNAME" },
     { key: "gender", label: "GENDER" },
     { key: "phone", label: "PHONE" },
     // { key: "address", label: "ADDRESS" },
@@ -116,6 +116,8 @@ export default function AccountTable() {
           return <div className="text-xs">{account.fullName}</div>;
         case "email":
           return <div className="text-xs">{account.email}</div>;
+        case "userName":
+          return <div className="text-xs">{account.userName}</div>;
         case "gender":
           return <div className="text-xs">{account.gender}</div>;
         case "phone":
@@ -142,9 +144,11 @@ export default function AccountTable() {
           return (
             <div className="flex items-center">
               <Tooltip content="View detail">
-                <Button isIconOnly variant="light">
-                  <ViewIcon />
-                </Button>
+                <Link href={`account/${account.id}`}>
+                  <Button isIconOnly variant="light">
+                    <ViewIcon />
+                  </Button>
+                </Link>
               </Tooltip>
 
               <Tooltip content="Delete">

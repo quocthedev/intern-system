@@ -188,10 +188,9 @@ export default function CandidateInformationPage() {
               height={200}
               alt="Default Candidate"
               src="/icons/technology/no-avatar.png"
-              className="rounded-full object-contain"
+              className="rounded-2xl object-contain"
             />
           )}
-          {JSON.stringify(candidateData.image)}
 
           <div className="mt-4">
             <Button
