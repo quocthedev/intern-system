@@ -10,6 +10,7 @@ import { PropsWithChildren } from "react";
 import ProjectModal from "./ProjectModal";
 import { useDisclosure } from "@nextui-org/modal";
 import { useRouter } from "next/navigation";
+import ProjectDelete from "@/app/(dashboard)/project/_components/ProjectDelete";
 
 export default function ProjectCard(props: PropsWithChildren<Project>) {
   const router = useRouter();
@@ -39,6 +40,7 @@ export default function ProjectCard(props: PropsWithChildren<Project>) {
             >
               Edit
             </Button>
+            <ProjectDelete projectId={props.id} />
             <ProjectModal
               mode="edit"
               isOpen={isOpen}
@@ -46,7 +48,6 @@ export default function ProjectCard(props: PropsWithChildren<Project>) {
               selectedProjectInfo={props}
               onClose={onClose}
             />
-            <Checkbox />
           </div>
         </div>
       </CardHeader>

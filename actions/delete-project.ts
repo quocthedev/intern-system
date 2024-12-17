@@ -1,13 +1,13 @@
 "use server";
 
+import { useProjectListContext } from "@/app/(dashboard)/project/_providers/ProjectListProvider";
 import APIClient from "@/libs/api-client";
-import { API_ENDPOINTS } from "@/libs/config";
 
 const apiClient = new APIClient({
   onFulfilled: (response) => response,
   onRejected: (error) => {
     console.log(error.response.data);
-    
+  
     return {
       data: {
         error: error.response.data.message,
@@ -16,8 +16,10 @@ const apiClient = new APIClient({
   },
 });
 
-export async function deleteTask(taskId: string) {
-  const response = await apiClient.delete(API_ENDPOINTS.task + `/${taskId}`);
+
+export async function DeleteProject(projectId: string) {
+  const response = await apiClient.delete(`/project/${projectId}`);
 
   return response;
+
 }
