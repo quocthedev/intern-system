@@ -25,7 +25,11 @@ export type Account = {
   isDeleted: boolean;
 };
 
-export type AccountListFilter = Partial<{}> | null;
+export type AccountListFilter = Partial<{
+  PositionId: string;
+  RankId: string;
+  RoleId: string;
+}> | null;
 
 export type AccountListData =
   | {

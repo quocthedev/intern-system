@@ -24,4 +24,5 @@ export const API_ENDPOINTS = {
   internshipReport: `${API_BASE_URL}/internship-report`,
   statistic: `${API_BASE_URL}/statistics`,
   role: `${API_BASE_URL}/role`,
+  rank: `${API_BASE_URL}/rank`,
 };

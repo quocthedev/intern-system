@@ -1,5 +1,4 @@
 "use client";
-import { Chip } from "@nextui-org/chip";
 import { Input } from "@nextui-org/input";
 import { Select, SelectItem } from "@nextui-org/select";
 import { SharedSelection } from "@nextui-org/system";
@@ -88,11 +87,8 @@ export default function SelectSearch(props: SelectSearchProps) {
   const isOpen = props.isOpen || isOpenSearch;
   const setIsOpen = props.setIsOpen || setIsOpenSearch;
 
-  // placeholder only shows when items is empty and selection is empty
-  const placeholder = props.placeholder;
-
   return (
-    <div className="relative">
+    <div className="relative h-fit">
       <Select
         name={props.name}
         label={props.label}
@@ -100,7 +96,7 @@ export default function SelectSearch(props: SelectSearchProps) {
         variant={props.variant}
         selectionMode={props.selectionMode}
         onSelectionChange={handleSelectionChange}
-        placeholder={placeholder}
+        placeholder={props.placeholder}
         listboxProps={{
           topContent: (
             <Input
@@ -121,8 +117,14 @@ export default function SelectSearch(props: SelectSearchProps) {
           props.onSearchChange("");
         }}
         isOpen={isOpen}
+        value={selections.map((item) => item.label).join(", ")}
         renderValue={() => {
           return <></>;
+        }}
+        // placeholder only shows when items is empty and selection is empty
+
+        classNames={{
+          innerWrapper: selections.length === 0 ? "" : "opacity-0",
         }}
         className={cn(props.className)}
         items={props.items}
@@ -136,8 +138,8 @@ export default function SelectSearch(props: SelectSearchProps) {
         )}
       </Select>
 
-      {selections.length !== 0 && (
-        <div className="pointer-events-none absolute bottom-2 left-0 ml-2 flex items-center justify-center gap-1">
+      {/* {selections.length !== 0 && (
+        <div className="pointer-events-none absolute bottom-2 left-0 right-0 flex w-[100%] items-center gap-1 px-2">
           {selections.map((item) => {
             return (
               <Chip
@@ -159,11 +161,15 @@ export default function SelectSearch(props: SelectSearchProps) {
               </Chip>
             );
           })}
-          <p className="pointer-events-none text-sm text-foreground-500">
-            {props.placeholder}
-          </p>
+          
         </div>
-      )}
+      )} */}
+
+      <div className="pointer-events-none absolute bottom-2 left-0 right-0 z-10 flex w-full items-center gap-1 bg-transparent pl-3 pr-6">
+        <p className="w-full text-ellipsis text-nowrap text-base">
+          {selections.map((item) => item.chipLabel || item.label).join(", ")}
+        </p>
+      </div>
     </div>
   );
 }
