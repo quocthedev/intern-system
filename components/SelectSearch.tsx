@@ -36,6 +36,7 @@ export type SelectSearchProps = {
   isOpen?: boolean;
   setIsOpen?: (isOpen: boolean) => void;
   required?: boolean;
+  isDisabled?: boolean;
 };
 
 export default function SelectSearch(props: SelectSearchProps) {
@@ -109,6 +110,7 @@ export default function SelectSearch(props: SelectSearchProps) {
             />
           ),
         }}
+        isDisabled={props.isDisabled}
         isLoading={props.isLoading}
         scrollRef={props.scrollRef}
         onOpenChange={(isOpen) => {
