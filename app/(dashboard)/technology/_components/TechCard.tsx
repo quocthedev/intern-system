@@ -231,19 +231,19 @@ export const TechCard = () => {
                   <CardBody>
                     {technology.imageUri ? (
                       <Image
-                        width={200}
-                        height={200}
+                        width={500}
+                        height={500}
                         alt={`${technology.name} Image`}
                         src={technology.imageUri}
-                        className="grounded-md h-40 w-full object-contain"
+                        className="grounded-md h-full w-full object-contain"
                       />
                     ) : (
                       <Image
-                        width={200}
-                        height={200}
+                        width={500}
+                        height={500}
                         alt="Default University Image"
                         src="/icons/technology/noimg.png"
-                        className="grounded-md h-40 w-full object-contain"
+                        className="grounded-md h-full w-full object-contain"
                       />
                     )}
                     <div className="mb-2 mt-2">

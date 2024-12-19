@@ -5,7 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import Link from "next/link";
-import { formatDate, formatedTimeToMinutes } from "@/app/util";
+import { formatDate, formatedTimeToMinutes, truncateText } from "@/app/util";
 import { Divider } from "@nextui-org/divider";
 import { useRouter } from "next/navigation";
 import {
@@ -22,6 +22,8 @@ import { toast } from "sonner";
 import { useInterviewContext } from "../_providers/InterviewProvider";
 import { Spinner } from "@nextui-org/spinner";
 import { Pagination } from "@nextui-org/pagination";
+import { Popover, PopoverContent, PopoverTrigger } from "@nextui-org/popover";
+import { Tooltip } from "@nextui-org/tooltip";
 
 interface InterViewScheduleInterface {
   id: string;
@@ -120,7 +122,7 @@ export default function InterViewCard() {
                       </div>
                       <div className="ml-4 flex items-center gap-2">
                         <span className="font-semibold">Start time: </span>
-                        {interview.startTime}
+                        {(interview.startTime, 8)}
                       </div>
                     </div>
                     <div className="mb-2 mt-1">
@@ -140,9 +142,7 @@ export default function InterViewCard() {
                       </div>
                     </div>
                     <div className="mb-2 mt-1 flex gap-2">
-                      <span className="font-semibold">
-                        Interview location:{" "}
-                      </span>
+                      <span className="font-semibold">Location: </span>
 
                       {interview.interviewFormat === "Online" ? (
                         <Link
@@ -152,7 +152,18 @@ export default function InterViewCard() {
                           Link
                         </Link>
                       ) : (
-                        interview.interviewLocation
+                        <Popover placement="top" showArrow offset={10}>
+                          <PopoverTrigger>
+                            {truncateText(interview.interviewLocation, 28)}
+                          </PopoverTrigger>
+                          <PopoverContent>
+                            <div className="px-1 py-2">
+                              <div className="text-base">
+                                {interview.interviewLocation}
+                              </div>
+                            </div>
+                          </PopoverContent>
+                        </Popover>
                       )}
                     </div>
                   </CardBody>

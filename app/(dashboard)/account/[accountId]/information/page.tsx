@@ -1,7 +1,7 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import APIClient from "@/libs/api-client";
 import { API_ENDPOINTS } from "@/libs/config";
 import { Account } from "@/data-store/account/account-list.store";
@@ -9,6 +9,7 @@ import Image from "next/image";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import { PasswordChangeFormRefactor } from "@/app/(dashboard)/password-change/_components/PasswordChangeForm_refactor";
+import { toast } from "sonner";
 
 const apiClient = new APIClient({
   onFulfilled: (response) => response,
@@ -45,6 +46,38 @@ export default function InformationAccountDetail() {
     }
   };
 
+  const handleUpload = async () => {
+    if (!selectedFile) return;
+
+    try {
+      const formData = new FormData();
+
+      formData.append("file", selectedFile);
+
+      const response = await fetch(
+        `${API_ENDPOINTS.user}/${accountId}/upload-avatar`,
+        {
+          method: "PUT",
+          body: formData,
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("File upload failed");
+      }
+
+      refetch();
+      toast.success("Avatar change successfully!");
+    } catch (error) {
+      toast.error("Error changing avatar");
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    handleUpload();
+  }, [selectedFile]);
+
   return (
     <div className="h-full w-full bg-gray-100">
       <div className="p-6">
@@ -69,11 +102,22 @@ export default function InformationAccountDetail() {
               />
             )}
             <div>
-              <input type="file" className="mb-2 rounded border p-2" />
-              <p className="text-sm text-gray-500">Please choose picture</p>
-              <button className="mt-2 rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-500">
-                Change avatar
-              </button>
+              <div className="mb-4 text-gray-600">Please choose picture</div>
+              <Button
+                onPress={() => document.getElementById("uploadImage")?.click()}
+                color="primary"
+                size="md"
+              >
+                Change Avatar
+              </Button>
+
+              <input
+                id="uploadImage"
+                type="file"
+                accept=".png"
+                onChange={handleFileChange}
+                hidden
+              />
             </div>
           </div>
         </div>
@@ -81,6 +125,7 @@ export default function InformationAccountDetail() {
         {/* Profile Section */}
         <div className="mb-6 rounded-lg bg-white p-6 shadow-md">
           <div className="space-y-4">
+            <div className="text-xl font-medium">Profile</div>
             <div>
               <div className="mb-1 font-medium">Full Name</div>
               <Input value={accountData.fullName} variant="bordered" />
@@ -90,12 +135,15 @@ export default function InformationAccountDetail() {
               <Input value={accountData.email} variant="bordered" />
             </div>
             <div>
-              <div className="mb-1 font-medium">Email</div>
-              <Input value={accountData.email} variant="bordered" />
+              <div className="mb-1 font-medium">Role</div>
+              <Input value={accountData?.role?.name} variant="bordered" />
             </div>
             <div>
-              <div className="mb-1 font-medium">Email</div>
-              <Input value={accountData.email} variant="bordered" />
+              <div className="mb-1 font-medium">Rank</div>
+              <Input
+                value={accountData?.jobTitle?.rank?.name}
+                variant="bordered"
+              />
             </div>
             <Button color="success">Edit profile</Button>
           </div>
