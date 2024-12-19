@@ -7,17 +7,16 @@ import { API_ENDPOINTS } from "@/libs/config";
 import { Account } from "@/data-store/account/account-list.store";
 import Image from "next/image";
 import { Button } from "@nextui-org/button";
-import { Input } from "@nextui-org/input";
 import { PasswordChangeFormRefactor } from "@/app/(dashboard)/password-change/_components/PasswordChangeForm_refactor";
 import { toast } from "sonner";
+import Loading from "@/components/Loading";
+import AccountProfile from "../_components/AccountProfile";
 
 const apiClient = new APIClient({
   onFulfilled: (response) => response,
   onRejected: (error) => {
-    console.log(error.response.data);
-
     return {
-      data: { error: error.response.data.message },
+      data: error.response.data,
     };
   },
 });
@@ -78,7 +77,9 @@ export default function InformationAccountDetail() {
     handleUpload();
   }, [selectedFile]);
 
-  return (
+  return isLoading ? (
+    <Loading />
+  ) : (
     <div className="h-full w-full bg-gray-100">
       <div className="p-6">
         <div className="mb-6 rounded-lg bg-white p-6 shadow-md">
@@ -123,34 +124,14 @@ export default function InformationAccountDetail() {
         </div>
 
         {/* Profile Section */}
-        <div className="mb-6 rounded-lg bg-white p-6 shadow-md">
-          <div className="space-y-4">
-            <div className="text-xl font-medium">Profile</div>
-            <div>
-              <div className="mb-1 font-medium">Full Name</div>
-              <Input value={accountData.fullName} variant="bordered" />
-            </div>
-            <div>
-              <div className="mb-1 font-medium">Email</div>
-              <Input value={accountData.email} variant="bordered" />
-            </div>
-            <div>
-              <div className="mb-1 font-medium">Role</div>
-              <Input value={accountData?.role?.name} variant="bordered" />
-            </div>
-            <div>
-              <div className="mb-1 font-medium">Rank</div>
-              <Input
-                value={accountData?.jobTitle?.rank?.name}
-                variant="bordered"
-              />
-            </div>
-            <Button color="success">Edit profile</Button>
-          </div>
-        </div>
+        <AccountProfile
+          accountData={accountData}
+          refetch={refetch}
+          accountId={accountId}
+        />
 
         {/* Security Section */}
-        <div className="rounded-lg bg-white p-6 shadow-md">
+        <div className="mt-6 rounded-lg bg-white p-6 shadow-md">
           <h3 className="mb-8 text-lg font-semibold">Change Password</h3>
           <PasswordChangeFormRefactor />
         </div>
