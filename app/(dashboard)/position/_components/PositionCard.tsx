@@ -255,15 +255,15 @@ export default function PositionCard(props: PositonCardProps) {
                 height={200}
                 alt={`${props.data.name} Image`}
                 src={props.data.image}
-                className="h-40 w-full rounded-md object-contain"
+                className="h-full w-full rounded-md object-contain"
               />
             ) : (
               <Image
                 width={200}
                 height={200}
-                alt="Default University Image"
+                alt="Default Position Image"
                 src="/icons/technology/noimg.png"
-                className="h-40 w-full rounded-md object-contain"
+                className="h-full w-full rounded-md object-contain"
               />
             )}
           </div>

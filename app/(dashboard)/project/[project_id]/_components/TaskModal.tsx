@@ -208,12 +208,13 @@ export default function TaskModal(props: TaskModalProps) {
                     name="title"
                     defaultValue={props.selectedTaskInfo?.title}
                   />
-                  <Input
+                  <Textarea
                     type="text"
                     label="Summary"
                     labelPlacement="outside"
                     placeholder="Enter Task Summary"
                     isRequired
+                    minRows={2}
                     name="summary"
                     defaultValue={props.selectedTaskInfo?.summary}
                   />
