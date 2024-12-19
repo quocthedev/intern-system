@@ -102,6 +102,7 @@ export default function AccountTable() {
     { key: "status", label: "STATUS" },
     { key: "role", label: "ROLE" },
     { key: "jobTitle", label: "POSITION" },
+    { key: "rank", label: "RANK" },
     { key: "actions", label: "ACTIONS" },
   ];
 
@@ -132,6 +133,8 @@ export default function AccountTable() {
               ))}
             </div>
           );
+        case "rank":
+          return <div className="text-xs">{account.jobTitle?.rank?.name}</div>;
         case "status":
           return (
             <div className="text-xs">
