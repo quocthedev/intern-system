@@ -23,7 +23,7 @@ export default function UserDropdown() {
   const handleMove = () => {
     if (role === "Candidate") {
       router.push(`/userCandidate/${id}`);
-    } else router.push("/");
+    } else router.push(`/account/${id}`);
   };
 
   return (
