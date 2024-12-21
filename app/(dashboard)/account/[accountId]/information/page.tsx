@@ -131,10 +131,10 @@ export default function InformationAccountDetail() {
         />
 
         {/* Security Section */}
-        <div className="mt-6 rounded-lg bg-white p-6 shadow-md">
+        {/* <div className="mt-6 rounded-lg bg-white p-6 shadow-md">
           <h3 className="mb-8 text-lg font-semibold">Change Password</h3>
           <PasswordChangeFormRefactor />
-        </div>
+        </div> */}
       </div>
     </div>
   );

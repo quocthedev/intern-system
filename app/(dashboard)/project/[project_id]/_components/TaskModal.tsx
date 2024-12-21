@@ -322,39 +322,48 @@ export default function TaskModal(props: TaskModalProps) {
                     )}
                   </div>
                   <div className="grid grid-cols-2 gap-3">
-                    <Select
-                      label="Select position"
-                      labelPlacement="outside"
-                      placeholder="Select position"
-                      value={selectedPositionId}
-                      onChange={(e) => setSelectedPositionId(e.target.value)}
-                    >
-                      {(projectSummary?.listPosition ?? []).map((position) => (
-                        <SelectItem key={position.id} value={position.id}>
-                          {position.name}
-                        </SelectItem>
-                      ))}
-                    </Select>
+                    {props.mode === "create" && (
+                      <div>
+                        <Select
+                          label="Select position"
+                          labelPlacement="outside"
+                          placeholder="Select position"
+                          value={selectedPositionId}
+                          onChange={(e) =>
+                            setSelectedPositionId(e.target.value)
+                          }
+                        >
+                          {(projectSummary?.listPosition ?? []).map(
+                            (position) => (
+                              <SelectItem key={position.id} value={position.id}>
+                                {position.name}
+                              </SelectItem>
+                            ),
+                          )}
+                        </Select>
 
-                    <Select
-                      label="Assignee"
-                      labelPlacement="outside"
-                      placeholder="Select Assignee"
-                      defaultSelectedKeys={[
-                        `${props.selectedTaskInfo?.assignedPerson.id ?? ""}`,
-                      ]}
-                      name="userId"
-                      required
-                      isDisabled={
-                        !data || !Array.isArray(data) || data.length === 0
-                      }
-                    >
-                      {data?.map((user: any) => (
-                        <SelectItem key={user.id} value={user.id}>
-                          {user.fullName}
-                        </SelectItem>
-                      ))}
-                    </Select>
+                        <Select
+                          label="Assignee"
+                          labelPlacement="outside"
+                          placeholder="Select Assignee"
+                          defaultSelectedKeys={[
+                            `${props.selectedTaskInfo?.assignedPerson.id ?? ""}`,
+                          ]}
+                          name="userId"
+                          required
+                          isDisabled={
+                            !data || !Array.isArray(data) || data.length === 0
+                          }
+                        >
+                          {data?.map((user: any) => (
+                            <SelectItem key={user.id} value={user.id}>
+                              {user.fullName}
+                            </SelectItem>
+                          ))}
+                        </Select>
+                      </div>
+                    )}
+
                     {
                       // Only show status select for edit mode
                       props.mode === "edit" && (
@@ -378,18 +387,6 @@ export default function TaskModal(props: TaskModalProps) {
                       )
                     }
                   </div>
-
-                  {/* <Textarea
-                    type="text"
-                    label="Notes"
-                    labelPlacement="outside"
-                    placeholder="Enter Task Notes"
-                    minRows={1}
-                    maxRows={2}
-                    // isRequired
-                    name="note"
-                    // defaultValue={props.selectedTaskInfo?.description}
-                  /> */}
 
                   <div className="grid grid-cols-2 gap-4">
                     <Button color="primary" fullWidth type="submit">

@@ -37,6 +37,9 @@ interface InterViewScheduleInterface {
   interviewerId: string;
   createdByUser: any;
   interviewer: any;
+  numberOfNotYetInvitations: number;
+  numberOfConfirmedInvitations: number;
+  numberOfInvitationsDeclined: number;
 }
 
 export default function InterViewCard() {
@@ -114,57 +117,72 @@ export default function InterViewCard() {
                     </div>
                   </CardHeader>
                   <Divider />
-                  <CardBody onClick={() => handlePress(interview.id)}>
-                    <div className="mb-2 grid grid-cols-2">
+                  <CardBody
+                    onClick={() => handlePress(interview.id)}
+                    className="cursor-pointer rounded-lg border p-4 shadow-sm transition-shadow duration-200 hover:shadow-md"
+                  >
+                    {/* Header Section */}
+                    <div className="mb-4 grid grid-cols-2 gap-4">
                       <div className="flex items-center gap-2">
-                        <span className="font-semibold">Start date: </span>
-                        {formatDate(interview.interviewDate)}
+                        <span className="font-semibold text-gray-700">
+                          Start date:
+                        </span>
+                        <span className="text-gray-600">
+                          {formatDate(interview.interviewDate)}
+                        </span>
                       </div>
-                      <div className="ml-4 flex items-center gap-2">
-                        <span className="font-semibold">Start time: </span>
-                        {(interview.startTime, 8)}
+                      <div className="flex items-center gap-2">
+                        <span className="font-semibold text-gray-700">
+                          Start time:
+                        </span>
+                        <span className="text-gray-600">
+                          {interview.startTime}
+                        </span>
                       </div>
-                    </div>
-                    <div className="mb-2 mt-1">
-                      {" "}
-                      <span className="font-semibold">Interviewed by: </span>
-                      {interview.interviewer?.fullName}
                     </div>
 
-                    <div className="mb-2 mt-1">
-                      <span className="font-semibold">Duration: </span>
-                      {formatedTimeToMinutes(interview.timeDuration)} mins
-                    </div>
-                    <div className="mb-2 mt-1 flex gap-2">
-                      <span className="font-semibold">Interview type: </span>
-                      <div className="text-blue-600">
-                        {interview.interviewFormat}
+                    {/* Details Section */}
+                    <div className="mb-2">
+                      <div className="flex items-center gap-2">
+                        <span className="font-semibold text-gray-700">
+                          Interviewed by:
+                        </span>
+                        <span className="text-gray-600">
+                          {interview.interviewer?.fullName || "N/A"}
+                        </span>
+                      </div>
+                      <div className="mt-2 flex items-center gap-2">
+                        <span className="font-semibold text-gray-700">
+                          Duration:
+                        </span>
+                        <span className="text-gray-600">
+                          {formatedTimeToMinutes(interview.timeDuration)} mins
+                        </span>
                       </div>
                     </div>
-                    <div className="mb-2 mt-1 flex gap-2">
-                      <span className="font-semibold">Location: </span>
-
-                      {interview.interviewFormat === "Online" ? (
-                        <Link
-                          href="http://localhost:3000"
-                          className="text-blue-600 underline"
-                        >
-                          Link
-                        </Link>
-                      ) : (
-                        <Popover placement="top" showArrow offset={10}>
-                          <PopoverTrigger>
-                            {truncateText(interview.interviewLocation, 28)}
-                          </PopoverTrigger>
-                          <PopoverContent>
-                            <div className="px-1 py-2">
-                              <div className="text-base">
-                                {interview.interviewLocation}
-                              </div>
-                            </div>
-                          </PopoverContent>
-                        </Popover>
-                      )}
+                    <div className="mb-2 font-semibold">
+                      Number of invitations :{" "}
+                    </div>
+                    {/* Invitation Status Section */}
+                    <div className="grid grid-cols-3 gap-4">
+                      <div className="flex flex-col items-center">
+                        <span className="text-lg font-bold text-yellow-500">
+                          {interview.numberOfNotYetInvitations}
+                        </span>
+                        <span className="text-sm text-gray-600">Not Yet</span>
+                      </div>
+                      <div className="flex flex-col items-center">
+                        <span className="text-lg font-bold text-green-500">
+                          {interview.numberOfConfirmedInvitations}
+                        </span>
+                        <span className="text-sm text-gray-600">Confirmed</span>
+                      </div>
+                      <div className="flex flex-col items-center">
+                        <span className="text-lg font-bold text-red-500">
+                          {interview.numberOfInvitationsDeclined}
+                        </span>
+                        <span className="text-sm text-gray-600">Declined</span>
+                      </div>
                     </div>
                   </CardBody>
                 </Card>

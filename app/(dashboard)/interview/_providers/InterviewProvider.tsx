@@ -19,6 +19,9 @@ export interface InterviewContextInterface {
           interviewerId: string;
           createdByUser: any;
           interviewer: any;
+          numberOfNotYetInvitations: number;
+          numberOfConfirmedInvitations: number;
+          numberOfInvitationsDeclined: number;
         }[];
         pageIndex: number;
         totalPages: number;

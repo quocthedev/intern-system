@@ -18,6 +18,9 @@ interface InterViewSchedule {
   interviewerId: string;
   createdByUser: any;
   interviewer: any;
+  numberOfNotYetInvitations: number;
+  numberOfConfirmedInvitations: number;
+  numberOfInvitationsDeclined: number;
 }
 
 export type InterviewFilter = Partial<{

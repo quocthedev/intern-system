@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import APIClient from "@/libs/api-client";
 import { API_ENDPOINTS } from "@/libs/config";
 import { Account } from "@/data-store/account/account-list.store";
-
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import { toast } from "sonner";
@@ -16,6 +15,7 @@ import { useToggle } from "usehooks-ts";
 import { cn } from "@nextui-org/theme";
 import { usePosition } from "@/data-store/position.store";
 import SelectSearch, { SelectSearchItem } from "@/components/SelectSearch";
+import { getCookie } from "@/app/util";
 
 const apiClient = new APIClient({
   onFulfilled: (response) => response,
@@ -159,6 +159,8 @@ export default function AccountProfile({
     })),
   );
 
+  const userRole = getCookie("userRole");
+
   return (
     <form
       className="flex flex-col gap-3 rounded-lg bg-white p-6 shadow-md"
@@ -215,54 +217,107 @@ export default function AccountProfile({
         labelPlacement="outside"
       />
 
-      <Autocomplete
-        label="Role"
-        placeholder="Choose role"
-        labelPlacement="outside"
-        defaultItems={roleData?.roles || []}
-        defaultSelectedKey={accountData.role?.id || ""}
-        isDisabled={!editMode}
-        name="role"
-      >
-        {(role) => (
-          <AutocompleteItem key={role.id}>{role.name}</AutocompleteItem>
-        )}
-      </Autocomplete>
+      {userRole === "Administrator" ? (
+        <div>
+          <Autocomplete
+            label="Role"
+            placeholder="Choose role"
+            labelPlacement="outside"
+            defaultItems={roleData?.roles || []}
+            defaultSelectedKey={accountData.role?.id || ""}
+            isDisabled={!editMode}
+            name="role"
+          >
+            {(role) => (
+              <AutocompleteItem key={role.id}>{role.name}</AutocompleteItem>
+            )}
+          </Autocomplete>
 
-      <Autocomplete
-        label="Rank"
-        placeholder="Choose rank"
-        labelPlacement="outside"
-        defaultItems={rankData?.ranks || []}
-        defaultSelectedKey={accountData.jobTitle?.rank?.id || ""}
-        name="rank"
-        isDisabled={!editMode}
-      >
-        {(rank) => (
-          <AutocompleteItem key={rank.id}>{rank.name}</AutocompleteItem>
-        )}
-      </Autocomplete>
+          <Autocomplete
+            label="Rank"
+            placeholder="Choose rank"
+            labelPlacement="outside"
+            defaultItems={rankData?.ranks || []}
+            defaultSelectedKey={accountData.jobTitle?.rank?.id || ""}
+            name="rank"
+            isDisabled={!editMode}
+          >
+            {(rank) => (
+              <AutocompleteItem key={rank.id}>{rank.name}</AutocompleteItem>
+            )}
+          </Autocomplete>
 
-      <SelectSearch
-        label="Positions"
-        placeholder="Select positions"
-        selectionMode="multiple"
-        isLoading={isPositionsLoading}
-        items={(dynamicPositionList || []).map((position) => ({
-          key: position.id,
-          value: position.name,
-          label: position.name,
-          chipLabel: position.abbreviation,
-        }))}
-        inputSearchPlaceholder="Search positions by name"
-        scrollRef={positionScrollerRef}
-        onSearchChange={setPositionSearch}
-        isOpen={isOpenPositionSearch}
-        setIsOpen={setIsOpenPositionSearch}
-        selectedItems={selectedPositions}
-        setSelectedItems={setSelectedPositions}
-        isDisabled={!editMode}
-      />
+          <SelectSearch
+            label="Positions"
+            placeholder="Select positions"
+            selectionMode="multiple"
+            isLoading={isPositionsLoading}
+            items={(dynamicPositionList || []).map((position) => ({
+              key: position.id,
+              value: position.name,
+              label: position.name,
+              chipLabel: position.abbreviation,
+            }))}
+            inputSearchPlaceholder="Search positions by name"
+            scrollRef={positionScrollerRef}
+            onSearchChange={setPositionSearch}
+            isOpen={isOpenPositionSearch}
+            setIsOpen={setIsOpenPositionSearch}
+            selectedItems={selectedPositions}
+            setSelectedItems={setSelectedPositions}
+            isDisabled={!editMode}
+          />
+        </div>
+      ) : (
+        <div>
+          <Autocomplete
+            label="Role"
+            placeholder="Choose role"
+            labelPlacement="outside"
+            defaultItems={roleData?.roles || []}
+            defaultSelectedKey={accountData.role?.id || ""}
+            isReadOnly
+            isDisabled={!editMode}
+            name="role"
+          >
+            {(role) => (
+              <AutocompleteItem key={role.id}>{role.name}</AutocompleteItem>
+            )}
+          </Autocomplete>
+          <Autocomplete
+            label="Rank"
+            placeholder="Choose rank"
+            labelPlacement="outside"
+            defaultItems={rankData?.ranks || []}
+            defaultSelectedKey={accountData.jobTitle?.rank?.id || ""}
+            name="rank"
+          >
+            {(rank) => (
+              <AutocompleteItem key={rank.id}>{rank.name}</AutocompleteItem>
+            )}
+          </Autocomplete>
+
+          <SelectSearch
+            label="Positions"
+            placeholder="Select positions"
+            selectionMode="multiple"
+            isLoading={isPositionsLoading}
+            items={(dynamicPositionList || []).map((position) => ({
+              key: position.id,
+              value: position.name,
+              label: position.name,
+              chipLabel: position.abbreviation,
+            }))}
+            inputSearchPlaceholder="Search positions by name"
+            scrollRef={positionScrollerRef}
+            onSearchChange={setPositionSearch}
+            isOpen={isOpenPositionSearch}
+            setIsOpen={setIsOpenPositionSearch}
+            selectedItems={selectedPositions}
+            setSelectedItems={setSelectedPositions}
+          />
+        </div>
+      )}
 
       <div className="flex gap-3">
         <Button
@@ -280,6 +335,14 @@ export default function AccountProfile({
           className={cn(!editMode && "hidden")}
         >
           Save
+        </Button>
+        <Button
+          color={"default"}
+          className={cn(!editMode && "hidden")}
+          type="button"
+          onPress={toggleEditMode}
+        >
+          Cancel
         </Button>
       </div>
     </form>
