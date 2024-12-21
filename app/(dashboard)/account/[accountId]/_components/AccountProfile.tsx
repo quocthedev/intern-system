@@ -281,6 +281,14 @@ export default function AccountProfile({
         >
           Save
         </Button>
+        <Button
+          color={"default"}
+          className={cn(!editMode && "hidden")}
+          type="button"
+          onPress={toggleEditMode}
+        >
+          Cancel
+        </Button>
       </div>
     </form>
   );
