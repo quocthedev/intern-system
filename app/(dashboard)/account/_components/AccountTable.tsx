@@ -203,16 +203,20 @@ export default function AccountTable() {
         </TableBody>
       </Table>
 
-      <Pagination
-        isCompact
-        loop
-        showControls
-        total={Number(totalPages) || 1}
-        initialPage={Number(pageIndex) || 1}
-        onChange={(page) => {
-          setAccountListPageId(page);
-        }}
-      />
+      {pageIndex ? (
+        <Pagination
+          isCompact
+          loop
+          showControls
+          total={Number(totalPages) || 1}
+          initialPage={Number(pageIndex) || 1}
+          onChange={(page) => {
+            setAccountListPageId(page);
+          }}
+        />
+      ) : (
+        <></>
+      )}
 
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="max-w-fit">
         <ModalContent>

@@ -89,11 +89,11 @@ export default function TaskList() {
         return item.title;
 
       case "summary":
-        const shortSummary = truncateText(item.summary, 8);
-
         return (
           <Popover placement="top" showArrow offset={10}>
-            <PopoverTrigger>{shortSummary}</PopoverTrigger>
+            <PopoverTrigger>
+              <Chip>View</Chip>
+            </PopoverTrigger>
             <PopoverContent>
               <div className="px-1 py-2">
                 <div className="text-base">{item.summary}</div>
