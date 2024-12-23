@@ -15,7 +15,7 @@ export default function page() {
                 We’re sorry to hear you won’t be able to attend the interview
                 this time.
                 <br />
-                We hope to see you again in the next interview <br />
+                We hope to see you again in the next interview.🚀
               </p>
             </div>
           </form>

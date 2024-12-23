@@ -8,7 +8,13 @@ export default function ExpiredInterviewSchedule() {
           <form className="flex w-full flex-col gap-3 p-3">
             <div>
               <p>
-                This interview link has been expired due to it expiration date.
+                ⚠️ Unfortunately, this interview link is no longer valid as its
+                expiration date has passed.
+              </p>
+
+              <p>
+                📧 Please check your email or contact the recruitment team for
+                further assistance.
               </p>
             </div>
           </form>
