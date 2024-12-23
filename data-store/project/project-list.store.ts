@@ -59,10 +59,8 @@ export type Project = {
 
 export type ProjectListFilter = Partial<{
   Status: string;
-  PositionId: string;
-  UserId: string;
-  Priority: string;
-  Difficulty: string;
+  FromDate: string;
+  ToDate: string;
 }> | null;
 
 export type ProjectListData =
