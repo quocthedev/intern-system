@@ -16,7 +16,7 @@ export default function ProjectPage() {
           Project management
         </h1>
 
-        <ActionBar toggleShowFilter={toggleShowFilter} />
+        <ActionBar />
         <div className="flex w-full gap-6">
           <ProjectList isShowFilter={showFilter} />
           {showFilter && <FilterSelector />}

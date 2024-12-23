@@ -27,6 +27,8 @@ import React from "react";
 import { Button } from "@nextui-org/button";
 import { EllipsisIcon } from "@/app/(dashboard)/internPeriod/_components/Icons";
 import { keys } from "ramda";
+import { useInterviewDetailContext } from "@/app/(dashboard)/interview/_providers/InterviewDetailProvider";
+import { Tab, Tabs } from "@nextui-org/tabs";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   Confirmed: "success",
@@ -34,6 +36,25 @@ const statusColorMap: Record<string, ChipProps["color"]> = {
   Pending: "warning",
   NotYet: "primary",
 };
+
+const statusOptions = [
+  {
+    key: "0",
+    value: "Not Yet",
+  },
+  {
+    key: "1",
+    value: "Confirmed",
+  },
+  {
+    key: "2",
+    value: "Reject",
+  },
+  {
+    key: "3",
+    value: "Reschedule",
+  },
+];
 
 export default function InterViewDetailPage() {
   const params = useParams();
@@ -54,8 +75,11 @@ export default function InterViewDetailPage() {
     },
   });
 
+  const { interviewDetailData, filter, setFilter, removeAllFilter } =
+    useInterviewDetailContext();
+
   const interviewScheduleData = data?.data || {};
-  const candidateData = data?.data?.interviewScheduleDetails || [];
+  const candidateData = interviewDetailData?.interviewScheduleDetails || [];
   const columnCandidate = [
     {
       key: "no",
@@ -122,7 +146,10 @@ export default function InterViewDetailPage() {
             </Chip>
           );
         case "reason":
-          if (candidate.status === "Refused") {
+          if (
+            candidate.status === "Refused" ||
+            candidate.status === "Reschedule"
+          ) {
             return (
               <Chip size="sm">
                 <Tooltip content={candidate.reason}>Show reason</Tooltip>
@@ -244,6 +271,24 @@ export default function InterViewDetailPage() {
         </div>
       )}
       <div className="mb-2 mt-8 text-lg">List of interview candidates</div>
+      <Tabs
+        key={"md"}
+        size={"md"}
+        color="primary"
+        fullWidth
+        aria-label="Tabs sizes"
+        onSelectionChange={(key) => {
+          setFilter(
+            Object.assign({}, filter, {
+              Status: key as string,
+            }),
+          );
+        }}
+      >
+        {statusOptions.map((statusOption) => (
+          <Tab key={statusOption.key} title={statusOption.value} />
+        ))}
+      </Tabs>
       <Table>
         <TableHeader columns={columnCandidate}>
           {(columns) => (
