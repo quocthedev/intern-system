@@ -14,7 +14,7 @@ export default function page() {
                 Thank you for your response. <br />
                 We’re sorry to hear you won’t be able to attend the interview.{" "}
                 <br />
-                Wishing you all the best! <br />
+                🌟 Wishing you all the best! <br />
               </p>
             </div>
           </form>

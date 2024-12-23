@@ -8,10 +8,12 @@ export default function page() {
         <CardBody>
           <form className="flex w-full flex-col gap-3 p-3">
             <p>
-              Thank you for confirming your attendance for the interview. <br />
+              🎉 Thank you for confirming your attendance for the interview.{" "}
+              <br />
               We’re excited to meet with you and learn more about your skills
               <br />
-              and experience. We look forward to speaking with you soon! <br />
+              and experience. We look forward to speaking with you soon! 🤝
+              <br />
             </p>
           </form>
         </CardBody>
