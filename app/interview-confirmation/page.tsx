@@ -19,6 +19,7 @@ export default function InterviewConfirmation() {
 
   const [isSending, setIsSending] = React.useState(false);
   const [isReject, setIsReject] = React.useState(true);
+  const [isReschedule, setIsReschedule] = React.useState(false);
 
   // Ensure the scheduleId and candidateId are not null
   if (!scheduleId || !candidateId) {
@@ -41,6 +42,10 @@ export default function InterviewConfirmation() {
       toast.success("You have accepted to an interview");
       window.history.replaceState(null, "", "interview-confirmation/detail");
       router.push("/interview-confirmation/detail");
+    } else if (isReschedule) {
+      toast.success("You have rescheduled the interview");
+      window.history.replaceState(null, "", "/reschedule");
+      router.push("/reschedule");
     } else {
       setIsSending(false);
       toast.success("You have delinced to an interview");
@@ -68,8 +73,8 @@ export default function InterviewConfirmation() {
 
               <p>
                 Please confirm your attendance to the interview. If you are
-                unable to attend, please reject the invitation and provide a
-                reason.
+                unable to attend, please rescheulde of reject the invitation and
+                provide a reason.
               </p>
 
               <RadioGroup
@@ -91,6 +96,13 @@ export default function InterviewConfirmation() {
                   isDisabled={isSending}
                 >
                   Reject
+                </Radio>
+                <Radio
+                  value={"3"}
+                  onClick={() => setIsReschedule(true)}
+                  isDisabled={isSending}
+                >
+                  Reschedule
                 </Radio>
               </RadioGroup>
               {isReject && (
