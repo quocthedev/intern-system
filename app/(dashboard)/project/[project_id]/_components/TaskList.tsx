@@ -90,17 +90,24 @@ export default function TaskList() {
 
       case "summary":
         return (
-          <Popover placement="top" showArrow offset={10}>
-            <PopoverTrigger>
-              <Chip>View</Chip>
-            </PopoverTrigger>
-            <PopoverContent>
-              <div className="px-1 py-2">
-                <div className="text-base">{item.summary}</div>
-              </div>
-            </PopoverContent>
-          </Popover>
+          <div>
+            {item.summary ? (
+              <Popover placement="top" showArrow offset={10}>
+                <PopoverTrigger>
+                  <Chip>View</Chip>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <div className="px-1 py-2">
+                    <div className="text-base">{item.summary}</div>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            ) : (
+              <></>
+            )}
+          </div>
         );
+
       case "startDate":
         return item.startDate.split("T")[0];
       case "dueDate":
