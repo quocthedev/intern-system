@@ -29,15 +29,20 @@ import { EllipsisIcon } from "@/app/(dashboard)/internPeriod/_components/Icons";
 import { keys } from "ramda";
 import { useInterviewDetailContext } from "@/app/(dashboard)/interview/_providers/InterviewDetailProvider";
 import { Tab, Tabs } from "@nextui-org/tabs";
+import RescheduleModal from "@/app/(dashboard)/interview/details/[detailId]/RescheduleModal";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   Confirmed: "success",
   Refused: "danger",
-  Pending: "warning",
+  Reschedule: "warning",
   NotYet: "primary",
 };
 
 const statusOptions = [
+  {
+    key: "all",
+    value: "All",
+  },
   {
     key: "0",
     value: "Not Yet",
@@ -47,12 +52,12 @@ const statusOptions = [
     value: "Confirmed",
   },
   {
-    key: "2",
-    value: "Reject",
-  },
-  {
     key: "3",
     value: "Reschedule",
+  },
+  {
+    key: "2",
+    value: "Reject",
   },
 ];
 
@@ -145,6 +150,7 @@ export default function InterViewDetailPage() {
               {candidate.status}
             </Chip>
           );
+
         case "reason":
           if (
             candidate.status === "Refused" ||
@@ -270,7 +276,10 @@ export default function InterViewDetailPage() {
           </div>
         </div>
       )}
-      <div className="mb-2 mt-8 text-lg">List of interview candidates</div>
+      <div className="flex items-center justify-between">
+        <div className="mb-2 mt-8 text-lg">List of interview candidates</div>
+        <RescheduleModal />
+      </div>
       <Tabs
         key={"md"}
         size={"md"}
@@ -278,11 +287,15 @@ export default function InterViewDetailPage() {
         fullWidth
         aria-label="Tabs sizes"
         onSelectionChange={(key) => {
-          setFilter(
-            Object.assign({}, filter, {
-              Status: key as string,
-            }),
-          );
+          if (key === "all") {
+            removeAllFilter();
+          } else {
+            setFilter(
+              Object.assign({}, filter, {
+                Status: key as string,
+              }),
+            );
+          }
         }}
       >
         {statusOptions.map((statusOption) => (

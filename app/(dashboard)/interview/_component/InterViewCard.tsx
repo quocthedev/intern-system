@@ -16,31 +16,10 @@ import {
 } from "@nextui-org/modal";
 import { Button } from "@nextui-org/button";
 import { DeleteIcon } from "@/app/(dashboard)/technology/_components/Icons";
-
 import { toast } from "sonner";
-
 import { useInterviewContext } from "../_providers/InterviewProvider";
 import { Spinner } from "@nextui-org/spinner";
 import { Pagination } from "@nextui-org/pagination";
-import { Popover, PopoverContent, PopoverTrigger } from "@nextui-org/popover";
-import { Tooltip } from "@nextui-org/tooltip";
-
-interface InterViewScheduleInterface {
-  id: string;
-  title: string;
-  interviewDate: string;
-  startTime: string;
-  timeDuration: string;
-  interviewFormat: string;
-  interviewLocation: string;
-  createdByUserId: string;
-  interviewerId: string;
-  createdByUser: any;
-  interviewer: any;
-  numberOfNotYetInvitations: number;
-  numberOfConfirmedInvitations: number;
-  numberOfInvitationsDeclined: number;
-}
 
 export default function InterViewCard() {
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
@@ -96,7 +75,7 @@ export default function InterViewCard() {
           <div className="grid h-fit grid-cols-3 gap-6">
             {" "}
             {interViewData &&
-              interViewData.map((interview: InterViewScheduleInterface) => (
+              interViewData.map((interview: any) => (
                 <Card
                   key={interview.id as string}
                   className="h-fit w-full"
@@ -164,9 +143,9 @@ export default function InterViewCard() {
                       Number of invitations :{" "}
                     </div>
                     {/* Invitation Status Section */}
-                    <div className="grid grid-cols-3 gap-4">
+                    <div className="grid grid-cols-4 gap-2">
                       <div className="flex flex-col items-center">
-                        <span className="text-lg font-bold text-yellow-500">
+                        <span className="text-lg font-bold text-blue-500">
                           {interview.numberOfNotYetInvitations}
                         </span>
                         <span className="text-sm text-gray-600">Not Yet</span>
@@ -176,6 +155,14 @@ export default function InterViewCard() {
                           {interview.numberOfConfirmedInvitations}
                         </span>
                         <span className="text-sm text-gray-600">Confirmed</span>
+                      </div>
+                      <div className="flex flex-col items-center">
+                        <span className="text-lg font-bold text-yellow-500">
+                          {interview.numberOfInvitationsReschedule}
+                        </span>
+                        <span className="text-sm text-gray-600">
+                          Reschedule
+                        </span>
                       </div>
                       <div className="flex flex-col items-center">
                         <span className="text-lg font-bold text-red-500">
