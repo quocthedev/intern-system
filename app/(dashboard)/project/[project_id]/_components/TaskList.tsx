@@ -35,6 +35,7 @@ export default function TaskList() {
     setProjectTaskFilter,
     projectTaskFilter,
     projectSummary,
+    removeAllProjectTaskFilter,
   } = useProjectDetailContext();
 
   const statusColorMap: Record<string, ChipProps["color"]> = {
@@ -61,6 +62,7 @@ export default function TaskList() {
   ];
 
   const statusOptions = [
+    { key: "all", value: "All" },
     {
       key: "0",
       value: "Not Started",
@@ -189,13 +191,16 @@ export default function TaskList() {
         color="primary"
         fullWidth
         aria-label="Tabs sizes"
-        onSelectionChange={(key) =>
-          setProjectTaskFilter(
-            Object.assign({}, projectTaskFilter, {
-              Status: key as string,
-            }),
-          )
-        }
+        onSelectionChange={(key) => {
+          if (key === "all") {
+            removeAllProjectTaskFilter();
+          } else
+            setProjectTaskFilter(
+              Object.assign({}, projectTaskFilter, {
+                Status: key as string,
+              }),
+            );
+        }}
       >
         {statusOptions.map((statusOption) => (
           <Tab key={statusOption.key} title={statusOption.value} />
@@ -269,19 +274,25 @@ export default function TaskList() {
         </TableBody>
       </Table>
 
-      <Pagination
-        className="m-4 flex justify-center"
-        isCompact
-        loop
-        showControls
-        total={projectTasks?.totalPages ? Number(projectTasks?.totalPages) : 0}
-        initialPage={
-          projectTasks?.pageIndex ? Number(projectTasks?.pageIndex) : 1
-        }
-        onChange={(page) => {
-          setProjectTaskPageIndex(page);
-        }}
-      />
+      {projectTasks ? (
+        <Pagination
+          className="m-4 flex justify-center"
+          isCompact
+          loop
+          showControls
+          total={
+            projectTasks?.totalPages ? Number(projectTasks?.totalPages) : 0
+          }
+          initialPage={
+            projectTasks?.pageIndex ? Number(projectTasks?.pageIndex) : 1
+          }
+          onChange={(page) => {
+            setProjectTaskPageIndex(page);
+          }}
+        />
+      ) : (
+        <></>
+      )}
     </div>
   );
 }

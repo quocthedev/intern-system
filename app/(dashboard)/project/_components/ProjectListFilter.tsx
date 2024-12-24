@@ -89,7 +89,6 @@ export default function ProjectListFilter() {
             name="fromDate"
             showMonthAndYearPickers
             granularity="day"
-            defaultValue={today(getLocalTimeZone())}
           />
           <DatePicker
             label="To date"
@@ -97,7 +96,6 @@ export default function ProjectListFilter() {
             showMonthAndYearPickers
             granularity="day"
             minValue={today(getLocalTimeZone())}
-            defaultValue={today(getLocalTimeZone())}
           />
 
           <Button color="primary" variant="shadow" fullWidth type="submit">
