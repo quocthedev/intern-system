@@ -18,14 +18,6 @@ export default function ActionBar() {
           size="md"
           onChange={(e) => setSearch(e.target.value)}
         />
-
-        <InterviewScheduleModal
-          isAddingCandidate
-          callback={() => {
-            refetchListInterview && refetchListInterview();
-            setInterviewPageIndex && setInterviewPageIndex(1);
-          }}
-        />
       </div>
       <InterviewFilter />
     </div>

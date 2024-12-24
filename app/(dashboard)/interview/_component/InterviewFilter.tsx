@@ -75,7 +75,6 @@ export default function InterviewFilter() {
             showMonthAndYearPickers
             granularity="day"
             maxValue={today(getLocalTimeZone())}
-            defaultValue={today(getLocalTimeZone())}
           />
           <DatePicker
             label="To date"
@@ -83,7 +82,6 @@ export default function InterviewFilter() {
             showMonthAndYearPickers
             granularity="day"
             minValue={today(getLocalTimeZone())}
-            defaultValue={today(getLocalTimeZone())}
           />
 
           <Button color="primary" variant="shadow" fullWidth type="submit">
