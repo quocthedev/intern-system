@@ -26,7 +26,6 @@ import { useParams } from "next/navigation";
 import React from "react";
 import { Button } from "@nextui-org/button";
 import { EllipsisIcon } from "@/app/(dashboard)/internPeriod/_components/Icons";
-import { keys } from "ramda";
 import { useInterviewDetailContext } from "@/app/(dashboard)/interview/_providers/InterviewDetailProvider";
 import { Tab, Tabs } from "@nextui-org/tabs";
 import RescheduleModal from "@/app/(dashboard)/interview/details/[detailId]/RescheduleModal";
