@@ -169,9 +169,7 @@ export default function PositionCard(props: PositonCardProps) {
     abbreviation: string,
     technologies: Tech[],
   ) => {
-    // setSelectedPosition(id);
-    // setUpdateData({ name, abbreviation });
-    // setTechnologyId(technologies.map((tech) => tech.id));
+    setUpdateData({ name, abbreviation });
     onOpenEdit();
   };
 
