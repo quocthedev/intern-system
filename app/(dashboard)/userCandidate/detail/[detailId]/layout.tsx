@@ -17,26 +17,21 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       title: "CV",
       href: "/cv",
     },
-    {
-      key: "interview-information",
-      title: "Interview Information",
-      href: "/interview-information",
-    },
-    {
-      key: "final-report",
-      title: "Evaluation",
-      href: "/final-report",
-    },
+    { key: "project", title: "Projects", href: "/projectUser" },
+    // {
+    //   key: "final-report",
+    //   title: "Evaluation",
+    //   href: "/final-report",
+    // },
   ];
   const router = useRouter(); //use router to advoid reload entire page instead of using href
   const pathname = usePathname();
 
   const startPath = `/userCandidate/detail/${detailId}`;
 
-  let activeTab =
-    pathname === startPath
-      ? "information"
-      : pathname.replace(startPath, "").replace("/", "") || "information";
+  const activeTab =
+    subRoutes.find((route) => pathname === `${startPath}${route.href}`)?.key ||
+    "information";
 
   const handleTabChange = (key: string) => {
     const selectedRoute = subRoutes.find((route) => route.key === key);
@@ -47,28 +42,26 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <>
-      <div className="flex h-full w-full flex-col gap-3 p-6">
-        <div className="text-xl font-semibold">User profile</div>
-        <Tabs
-          aria-label="Options"
-          radius="sm"
-          color="primary"
-          className="mt-3"
-          selectedKey={activeTab}
-          onSelectionChange={handleTabChange as any}
-        >
-          {subRoutes.map((route) => (
-            <Tab
-              key={route.key}
-              title={route.title}
-              // href={`${startPath}${route.href}`} replace with useRouter
-            />
-          ))}
-        </Tabs>
+    <div className="flex h-full w-full flex-col gap-3 p-6">
+      <div className="text-xl font-semibold">Your profile</div>
+      <Tabs
+        aria-label="Options"
+        radius="sm"
+        color="primary"
+        className="mt-3"
+        selectedKey={activeTab}
+        onSelectionChange={handleTabChange as any}
+      >
+        {subRoutes.map((route) => (
+          <Tab
+            key={route.key}
+            title={route.title}
+            // href={`${startPath}${route.href}`} replace with useRouter
+          />
+        ))}
+      </Tabs>
 
-        {children}
-      </div>
-    </>
+      {children}
+    </div>
   );
 }
