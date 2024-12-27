@@ -1,10 +1,6 @@
 "use client";
-import { Button } from "@nextui-org/button";
-
-import { FilterIcon } from "@/app/(dashboard)/intern/_components/Icons";
 
 import { Input } from "@nextui-org/input";
-import { CreateIcon } from "@/app/(dashboard)/technology/_components/Icons";
 import NewTechModal from "@/app/(dashboard)/technology/_components/NewTechModal";
 
 export default function ActionBar() {

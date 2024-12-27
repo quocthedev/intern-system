@@ -7,14 +7,12 @@ import {
   EyeSlashFilledIcon,
   GoogleIcon,
 } from "@/app/login/_component/Icon";
-import { Checkbox } from "@nextui-org/checkbox";
 import { Button } from "@nextui-org/button";
 import { redirect, useRouter } from "next/navigation";
 import { login } from "@/actions/auth";
 import { useMutation } from "@tanstack/react-query";
 import { API_ENDPOINTS } from "@/libs/config";
-import { toast } from "sonner";
-import { cn } from "@nextui-org/theme";
+import { cn } from "@nextui-org/react";
 
 type GOOGLE_AUTH_KEYS =
   | "client_id"
@@ -54,6 +52,7 @@ export const LoginForm = () => {
       scope: oauth_google.scopes,
     };
     const url = new URL(oauth_google.endpoint);
+
     url.search = new URLSearchParams(query).toString();
     window.location.href = url.toString();
   };

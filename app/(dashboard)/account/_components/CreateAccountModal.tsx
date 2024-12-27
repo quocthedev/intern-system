@@ -10,7 +10,6 @@ import {
 } from "@nextui-org/modal";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
-import { DatePicker } from "@nextui-org/date-picker";
 import { CreateIcon } from "@/app/(dashboard)/intern/_components/Icons";
 import { useRank } from "@/data-store/rank.store";
 import { useRole } from "@/data-store/role.store";

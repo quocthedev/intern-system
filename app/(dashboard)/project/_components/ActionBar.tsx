@@ -1,7 +1,7 @@
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import React from "react";
-import { AddIcon, DeleteIcon, ExcelIcon, FilterIcon } from "./Icons";
+import { AddIcon } from "./Icons";
 import ProjectModal from "./ProjectModal";
 import { useDisclosure } from "@nextui-org/modal";
 import ProjectListProvider, {

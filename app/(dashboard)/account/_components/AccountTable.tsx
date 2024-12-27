@@ -12,7 +12,7 @@ import {
 import { Chip, ChipProps } from "@nextui-org/chip";
 import React, { useState } from "react";
 import { Tooltip } from "@nextui-org/tooltip";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { API_ENDPOINTS } from "@/libs/config";
 import {
   Modal,

@@ -1,7 +1,6 @@
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import React, { useState } from "react";
-import { AddIcon, FilterIcon } from "./Icons";
 import NewPrositionModal from "./NewPositionModal";
 import {
   Modal,

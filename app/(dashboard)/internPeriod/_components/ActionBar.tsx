@@ -1,6 +1,5 @@
 "use client";
 import { Input } from "@nextui-org/input";
-import ImportExcelModal from "@/app/(dashboard)/intern/_components/ImportExcelModal";
 import NewPeriodModalNext from "./NewPeriodModal_next";
 import { useInternPeriodContext } from "../_providers/InternPeriodProvider";
 import InternPeriodFilter from "./InternPeriodFilter";

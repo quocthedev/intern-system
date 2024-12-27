@@ -1,10 +1,9 @@
 "use client";
 
-import { getCookie } from "@/app/util";
 import { API_ENDPOINTS } from "@/libs/config";
 import { useQuery } from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 
 export default function UserCandidatePage() {
   const params = useParams();

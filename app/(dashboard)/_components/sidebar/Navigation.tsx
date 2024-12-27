@@ -11,7 +11,7 @@ import {
 } from "./Icons";
 import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
-import { cn } from "@nextui-org/theme";
+import { cn } from "@nextui-org/react";
 import { usePathname } from "next/navigation";
 import { Accordion, AccordionItem } from "@nextui-org/accordion";
 import { getCookie } from "@/app/util";

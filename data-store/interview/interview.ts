@@ -43,6 +43,7 @@ const validate = (filter: InterviewFilter) => {
 
     return fromDate < toDate;
   }
+
   return true;
 };
 
@@ -105,7 +106,8 @@ export function useInterview(params: { pageSize: number }) {
       });
 
       if (response?.statusCode === "200") {
-        const { data } = response as PaginationResponseSuccess<InterViewSchedule>;
+        const { data } =
+          response as PaginationResponseSuccess<InterViewSchedule>;
 
         return {
           interviews: data.pagingData,

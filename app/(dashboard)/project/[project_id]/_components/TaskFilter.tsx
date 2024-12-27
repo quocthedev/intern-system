@@ -1,12 +1,8 @@
 "use client";
-import { Select, SelectItem } from "@nextui-org/select";
-import React, { useState } from "react";
+import { SelectItem } from "@nextui-org/select";
+import React from "react";
 import { useProjectDetailContext } from "../../_providers/ProjectDetailProvider";
-import {
-  Autocomplete,
-  AutocompleteSection,
-  AutocompleteItem,
-} from "@nextui-org/autocomplete";
+import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
 
 export default function TaskFilter() {
   const {

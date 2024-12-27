@@ -24,13 +24,17 @@ export default function MemberDeleteModal(props: MemberDeleteModalProps) {
   const { refetchProjectSummary } = useProjectDetailContext();
 
   const mutation = useMutation({
-    mutationFn: async () => deleteMember(props.projectId, props.memberId),
-    onSuccess: () => {
+    mutationFn: async () => {
+      const response = await deleteMember(props.projectId, props.memberId);
+
+      if (response.statusCode !== "200") {
+        toast.error(response.message);
+
+        return;
+      }
+
       toast.success("Member deleted successfully");
       refetchProjectSummary();
-    },
-    onError: (error: any) => {
-      toast.error(error);
     },
   });
 

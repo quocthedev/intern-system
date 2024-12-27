@@ -2,7 +2,7 @@
 import { Input } from "@nextui-org/input";
 import { Select, SelectItem } from "@nextui-org/select";
 import { SharedSelection } from "@nextui-org/system";
-import { cn } from "@nextui-org/theme";
+import { cn } from "@nextui-org/react";
 import { useState } from "react";
 
 export type SelectSearchItem = {
@@ -167,11 +167,16 @@ export default function SelectSearch(props: SelectSearchProps) {
         </div>
       )} */}
 
-      <div className="pointer-events-none absolute bottom-2 left-0 right-0 z-10 flex w-full items-center gap-1 bg-transparent pl-3 pr-6">
-        <p className="w-full text-ellipsis text-nowrap text-base">
+      <div className="pointer-events-none absolute left-0 right-0 top-9 z-10 flex w-full items-center gap-1 bg-transparent pl-3 pr-6">
+        <p className="w-full overflow-hidden text-ellipsis text-nowrap text-sm">
           {selections.map((item) => item.chipLabel || item.label).join(", ")}
         </p>
       </div>
+
+      <p className="mt-2 w-full text-xs text-gray-500">
+        Selected:{" "}
+        {selections.map((item) => item.chipLabel || item.label).join(", ")}
+      </p>
     </div>
   );
 }

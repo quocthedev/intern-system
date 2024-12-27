@@ -7,7 +7,7 @@ const apiClient = new APIClient({
   onFulfilled: (response) => response,
   onRejected: (error) => {
     console.log(error.response.data);
-    
+
     return {
       data: {
         error: error.response.data.message,

@@ -61,6 +61,7 @@ export default function NewTechModal() {
   const handleSubmit = () => {
     if (!name || !abbreviation || !description || !selectedFile) {
       toast.error("Please fill out all fields and select an image.");
+
       return;
     }
 

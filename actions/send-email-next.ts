@@ -45,6 +45,7 @@ export async function sendEmail(data: FormData) {
   console.log(params);
 
   const formData = new FormData();
+
   formData.append("Subject", params.subject);
 
   params.recipients.forEach((recipient) => {

@@ -18,7 +18,7 @@ import { toast } from "sonner";
 import { useUniversity } from "@/data-store/university";
 import { Select, SelectItem } from "@nextui-org/select";
 import { useInternPeriodContext } from "../_providers/InternPeriodProvider";
-import { parseDate } from "@internationalized/date";
+import { CalendarDate, parseDate } from "@internationalized/date";
 import { addMonths } from "date-fns";
 
 interface CreatePeriodData {
@@ -186,7 +186,7 @@ export default function NewPeriodModalNext() {
                   label="Start date"
                   labelPlacement="outside"
                   value={startDate}
-                  onChange={(newDate) => setStartDate(newDate)}
+                  onChange={(newDate) => setStartDate(newDate as CalendarDate)}
                   isRequired
                   name="startDate"
                 />
@@ -194,7 +194,7 @@ export default function NewPeriodModalNext() {
                   label="End date"
                   labelPlacement="outside"
                   value={endDate}
-                  onChange={(newDate) => setEndDate(newDate)}
+                  onChange={(newDate) => setEndDate(newDate as CalendarDate)}
                   isRequired
                   name="endDate"
                 />

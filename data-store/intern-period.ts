@@ -43,6 +43,7 @@ const validate = (filter: InternPeriodFilter) => {
 
     return fromDate < toDate;
   }
+
   return true;
 };
 

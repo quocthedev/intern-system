@@ -1,7 +1,6 @@
 "use client";
 import SideBarUserCandidate from "@/app/sidebarUserCandidate/SideBar";
 import { Tab, Tabs } from "@nextui-org/tabs";
-import Link from "next/link";
 import { useParams, usePathname, useRouter } from "next/navigation";
 
 export default function Layout({ children }: { children: React.ReactNode }) {

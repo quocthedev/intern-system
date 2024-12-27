@@ -71,6 +71,7 @@ const apiClient = new APIClient({
 });
 
 const role = getCookie("userRole");
+
 console.log(role);
 
 export default function InternsTable({

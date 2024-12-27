@@ -18,14 +18,13 @@ import {
   TableHeader,
   TableRow,
 } from "@nextui-org/table";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import { CandidateUser, GetCandidateUsersResponse } from "../_types/Candidate";
 import APIClient from "@/libs/api-client";
 import { API_ENDPOINTS } from "@/libs/config";
 import { addNewMembers } from "@/actions/add-new-members";
 import { toast } from "sonner";
-import { usePosition } from "@/data-store/position.store";
 import Loading from "@/components/Loading";
 import { Autocomplete } from "@nextui-org/autocomplete";
 import { useParams } from "next/navigation";
@@ -43,23 +42,23 @@ export type NewMemberModalProps = {
 };
 
 export default function NewMemberModal(props: NewMemberModalProps) {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
   const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
 
   const roleMapping: Record<string, string> = {};
-  const queryClient = useQueryClient();
 
   // const { data: positionData, isLoading: isPositionLoading } = usePosition({
   //   pageSize: 100,
   // });
 
-  const { projectSummary, isLoadingProjectSummary } = useProjectDetailContext();
+  const { projectSummary, isLoadingProjectSummary, refetchProjectSummary } =
+    useProjectDetailContext();
 
   const [positionFilter, setPositionFilter] = React.useState("");
   const [search, setSearch] = React.useState("");
   const { project_id } = useParams();
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["members", positionFilter, search, project_id],
     queryFn: async () => {
       const response = await apiClient.get<GetCandidateUsersResponse>(
@@ -88,18 +87,24 @@ export default function NewMemberModal(props: NewMemberModalProps) {
   });
 
   const submitAddNewMembers = async () => {
-    try {
-      const candidates = Array.from(selectedKeys).map((key) => ({
-        userId: key,
-        role: Number(roleMapping[key] || "3"),
-      }));
+    const candidates = Array.from(selectedKeys).map((key) => ({
+      userId: key,
+      role: Number(roleMapping[key] || "3"),
+    }));
 
-      await addNewMembers(props.projectId, candidates);
-      toast.success("New members added successfully");
-      queryClient.invalidateQueries();
-    } catch (error) {
-      console.log(error);
+    const res = await addNewMembers(props.projectId, candidates);
+
+    console.log(res);
+
+    if (res.statusCode !== "200") {
+      toast.error(res.message);
+
+      return;
     }
+
+    toast.success("New members added successfully");
+    refetchProjectSummary();
+    onClose();
   };
 
   const columns = [

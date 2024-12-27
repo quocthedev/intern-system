@@ -22,7 +22,6 @@ import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import { Divider } from "@nextui-org/divider";
 import { Pagination } from "@nextui-org/pagination";
 import Image from "next/image";
-import { useUniversity } from "@/data-store/university";
 import { useUniversityContext } from "@/app/(dashboard)/university/_providers/UniversityProvider";
 import { Spinner } from "@nextui-org/spinner";
 

@@ -66,6 +66,7 @@ export default function InterviewConfirmation() {
               onSubmit={(e) => {
                 e.preventDefault();
                 const formData = new FormData(e.currentTarget);
+
                 handleSubmit(formData);
               }}
             >
