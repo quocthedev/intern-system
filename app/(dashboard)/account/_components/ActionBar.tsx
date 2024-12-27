@@ -1,8 +1,6 @@
 "use client";
-import { FilterIcon } from "@/components/icons/ActionBarIcons";
-import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
-import React, { useState } from "react";
+import React from "react";
 import { useAccountContext } from "../_providers/AccountProvider";
 import CreateAccountModal from "./CreateAccountModal";
 import { useRank } from "@/data-store/rank.store";

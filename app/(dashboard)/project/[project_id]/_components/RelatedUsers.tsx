@@ -64,6 +64,7 @@ export default function RelatedUsers() {
             </div>
           );
         }
+
         return null;
       default:
         return null;

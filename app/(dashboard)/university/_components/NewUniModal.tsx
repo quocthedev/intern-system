@@ -61,6 +61,7 @@ export default function NewUniverModal() {
   const handleSubmit = () => {
     if (!name || !abbreviation || !address || !selectedFile) {
       toast.error("All fields are required and select an image!");
+
       return;
     }
 

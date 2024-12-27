@@ -13,11 +13,10 @@ import { Chip, ChipProps } from "@nextui-org/chip";
 import React, { useState } from "react";
 import {
   DeleteIcon,
-  EllipsisIcon,
   ViewIcon,
 } from "@/app/(dashboard)/internPeriod/_components/Icons";
 import { Tooltip } from "@nextui-org/tooltip";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { API_ENDPOINTS } from "@/libs/config";
 import { Spinner } from "@nextui-org/spinner";
 import {
@@ -31,13 +30,6 @@ import { toast } from "sonner";
 import Link from "next/link";
 import { useInternPeriodContext } from "../_providers/InternPeriodProvider";
 import { Pagination } from "@nextui-org/pagination";
-import { formatDate } from "@/app/util";
-import {
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
-} from "@nextui-org/dropdown";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   InProgress: "warning",
@@ -170,6 +162,7 @@ export default function InternPeriodTable() {
                       toast.error(
                         "Cannot delete a period with active candidates.",
                       );
+
                       return;
                     }
                     handleDeleteConfirmation(period.id);

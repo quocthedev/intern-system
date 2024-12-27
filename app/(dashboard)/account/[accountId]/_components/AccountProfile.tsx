@@ -1,5 +1,5 @@
 "use client";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import React, { useState } from "react";
 import APIClient from "@/libs/api-client";
 import { API_ENDPOINTS } from "@/libs/config";
@@ -12,7 +12,7 @@ import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
 import { useRank } from "@/data-store/rank.store";
 import { useRole } from "@/data-store/role.store";
 import { useToggle } from "usehooks-ts";
-import { cn } from "@nextui-org/theme";
+import { cn } from "@nextui-org/react";
 import { usePosition } from "@/data-store/position.store";
 import SelectSearch, { SelectSearchItem } from "@/components/SelectSearch";
 import { getCookie } from "@/app/util";
@@ -67,6 +67,7 @@ export default function AccountProfile({
 
       if (updateAccountRes.statusCode !== "200") {
         toast.error(updateAccountRes.message);
+
         return;
       }
 
@@ -81,6 +82,7 @@ export default function AccountProfile({
 
       if (updateRankRes.statusCode !== "200") {
         toast.error(updateRankRes.message);
+
         return;
       }
 
@@ -112,6 +114,7 @@ export default function AccountProfile({
 
         if (addPostionsRes.statusCode !== "200") {
           toast.error(addPostionsRes.message);
+
           return;
         }
       }
@@ -127,6 +130,7 @@ export default function AccountProfile({
 
         if (removePositionsRes.statusCode !== "200") {
           toast.error(removePositionsRes.message);
+
           return;
         }
       }

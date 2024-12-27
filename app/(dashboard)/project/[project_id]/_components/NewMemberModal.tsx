@@ -18,14 +18,13 @@ import {
   TableHeader,
   TableRow,
 } from "@nextui-org/table";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import { CandidateUser, GetCandidateUsersResponse } from "../_types/Candidate";
 import APIClient from "@/libs/api-client";
 import { API_ENDPOINTS } from "@/libs/config";
 import { addNewMembers } from "@/actions/add-new-members";
 import { toast } from "sonner";
-import { usePosition } from "@/data-store/position.store";
 import Loading from "@/components/Loading";
 import { Autocomplete } from "@nextui-org/autocomplete";
 import { useParams } from "next/navigation";
@@ -99,6 +98,7 @@ export default function NewMemberModal(props: NewMemberModalProps) {
 
     if (res.statusCode !== "200") {
       toast.error(res.message);
+
       return;
     }
 

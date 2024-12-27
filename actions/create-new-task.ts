@@ -37,7 +37,7 @@ export async function createNewTask(formData: FormData) {
     difficulty,
     userId,
     projectId,
-    positionId
+    positionId,
   };
 
   const response = await apiClient.post(API_ENDPOINTS.task, params);

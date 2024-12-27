@@ -38,6 +38,7 @@ export default function AddTechModal({
   const [positionId, setPositionId] = useState("");
   const [technologyId, setTechnologyId] = useState<string[]>([]);
   const queryClient = useQueryClient();
+
   console.log(selectedPositionId);
 
   const { isLoading, error, data, refetch } = useQuery({

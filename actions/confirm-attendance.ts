@@ -10,6 +10,7 @@ export async function confirmAttendance(data: FormData) {
   const reason = data.get("reason")?.toString() as string;
 
   const formData = new FormData();
+
   formData.append("CandidateId", candidateId);
   formData.append("InterviewScheduleId", scheduleId);
   formData.append("Status", status);
@@ -20,6 +21,7 @@ export async function confirmAttendance(data: FormData) {
     {
       onRejected: (error) => {
         console.log(error);
+
         return {
           data: {
             error: error.message,

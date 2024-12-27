@@ -1,7 +1,7 @@
 import { Card, CardBody } from "@nextui-org/card";
 import React from "react";
 import { FigureIcon } from "./Icons";
-import { cn } from "@nextui-org/theme";
+import { cn } from "@nextui-org/react";
 
 const figures = [
   {
@@ -21,6 +21,7 @@ const figures = [
     description: "Total students interning",
   },
 ];
+
 type FigureProps = {
   className?: string;
 };

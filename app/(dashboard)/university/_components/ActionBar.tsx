@@ -1,7 +1,4 @@
 "use client";
-import { Button } from "@nextui-org/button";
-
-import { FilterIcon } from "@/app/(dashboard)/intern/_components/Icons";
 
 import { Input } from "@nextui-org/input";
 import NewUniverModal from "@/app/(dashboard)/university/_components/NewUniModal";

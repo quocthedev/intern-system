@@ -4,8 +4,7 @@ import { API_ENDPOINTS } from "@/libs/config";
 import { useMutation } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
-import Link from "next/link";
-import { formatDate, formatedTimeToMinutes, truncateText } from "@/app/util";
+import { formatDate, formatedTimeToMinutes } from "@/app/util";
 import { Divider } from "@nextui-org/divider";
 import { useRouter } from "next/navigation";
 import {

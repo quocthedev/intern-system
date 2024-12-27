@@ -3,7 +3,7 @@ import { API_ENDPOINTS } from "@/libs/config";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import { useMutation } from "@tanstack/react-query";
-import React, { useState } from "react";
+import React from "react";
 import { useInternPeriodContext } from "../_providers/InternPeriodDetailProvider";
 import { toast } from "sonner";
 import { formatDate } from "@/app/util";

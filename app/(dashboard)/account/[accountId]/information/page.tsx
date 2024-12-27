@@ -7,7 +7,6 @@ import { API_ENDPOINTS } from "@/libs/config";
 import { Account } from "@/data-store/account/account-list.store";
 import Image from "next/image";
 import { Button } from "@nextui-org/button";
-import { PasswordChangeFormRefactor } from "@/app/(dashboard)/password-change/_components/PasswordChangeForm_refactor";
 import { toast } from "sonner";
 import Loading from "@/components/Loading";
 import AccountProfile from "../_components/AccountProfile";

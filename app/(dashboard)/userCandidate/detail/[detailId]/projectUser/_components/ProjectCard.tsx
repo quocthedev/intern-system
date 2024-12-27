@@ -2,15 +2,10 @@ import { Card, CardBody, CardFooter, CardHeader } from "@nextui-org/card";
 import { Divider } from "@nextui-org/divider";
 import { Link } from "@nextui-org/link";
 import { Chip } from "@nextui-org/chip";
-import { Button } from "@nextui-org/button";
-import { Checkbox } from "@nextui-org/checkbox";
-import { EditIcon } from "./Icons";
 import { Project } from "../_types/Project";
 import { PropsWithChildren } from "react";
-import ProjectModal from "./ProjectModal";
 import { useDisclosure } from "@nextui-org/modal";
 import { useRouter } from "next/navigation";
-import ProjectDelete from "@/app/(dashboard)/project/_components/ProjectDelete";
 
 export default function ProjectCard(props: PropsWithChildren<Project>) {
   const router = useRouter();

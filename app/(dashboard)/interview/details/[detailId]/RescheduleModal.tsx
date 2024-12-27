@@ -14,13 +14,13 @@ import { useToggle } from "usehooks-ts";
 import { Tab, Tabs } from "@nextui-org/tabs";
 import { DatePicker } from "@nextui-org/date-picker";
 
-import { now, getLocalTimeZone, today } from "@internationalized/date";
+import { now, getLocalTimeZone } from "@internationalized/date";
 import { Select, SelectItem } from "@nextui-org/select";
 import { sendEmail } from "@/actions/send-email-next";
 import { InterviewIcon } from "@/components/icons/ActionBarIcons";
 import { toast } from "sonner";
 import { isWeekend } from "date-fns";
-import { Chip, ChipProps } from "@nextui-org/chip";
+import { ChipProps } from "@nextui-org/chip";
 import { I18nProvider } from "@react-aria/i18n";
 import { useInterviewDetailContext } from "@/app/(dashboard)/interview/_providers/InterviewDetailProvider";
 import Loading from "@/components/Loading";

@@ -1,9 +1,5 @@
 import APIClient from "@/libs/api-client";
-import {
-  BaseResponse,
-  BaseResponseSuccess,
-  PaginationResponse,
-} from "../../libs/types";
+import { BaseResponse, BaseResponseSuccess } from "../../libs/types";
 import { useQuery } from "@tanstack/react-query";
 
 type User = {

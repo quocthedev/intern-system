@@ -2,11 +2,7 @@ import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import React from "react";
 
-import {
-  InterviewIcon,
-  AddIcon,
-  ExcelIcon,
-} from "@/components/icons/ActionBarIcons";
+import { InterviewIcon, ExcelIcon } from "@/components/icons/ActionBarIcons";
 import ImportExcelModal from "@/app/(dashboard)/intern/_components/ImportExcelModal";
 
 type ActionBarProps = {

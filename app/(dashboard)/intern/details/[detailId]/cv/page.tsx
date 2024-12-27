@@ -78,6 +78,7 @@ export default function CandidateCVPage() {
       }
 
       const result = await response.json();
+
       console.log("Upload successful:", result);
       toast.success("CV uploaded successfully!");
       await refetch();

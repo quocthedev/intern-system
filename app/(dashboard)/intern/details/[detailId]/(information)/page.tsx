@@ -18,7 +18,7 @@ import Image from "next/image";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { parseDate } from "@internationalized/date";
+import { CalendarDate, parseDate } from "@internationalized/date";
 
 export default function CandidateInformationPage() {
   const params = useParams();
@@ -271,7 +271,7 @@ export default function CandidateInformationPage() {
                       onChange={(e) =>
                         setUpdateData({
                           ...updateData,
-                          doB: e,
+                          doB: e as CalendarDate,
                         })
                       }
                     />

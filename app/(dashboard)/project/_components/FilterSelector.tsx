@@ -1,8 +1,7 @@
 "use client";
 import { Card, CardBody } from "@nextui-org/card";
-import { Input } from "@nextui-org/input";
 import React from "react";
-import { Select, SelectSection, SelectItem } from "@nextui-org/select";
+import { Select, SelectItem } from "@nextui-org/select";
 import { Button } from "@nextui-org/button";
 export const animals = [
   { key: "cat", label: "Cat" },
