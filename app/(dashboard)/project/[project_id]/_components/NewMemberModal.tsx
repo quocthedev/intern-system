@@ -43,23 +43,23 @@ export type NewMemberModalProps = {
 };
 
 export default function NewMemberModal(props: NewMemberModalProps) {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
   const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
 
   const roleMapping: Record<string, string> = {};
-  const queryClient = useQueryClient();
 
   // const { data: positionData, isLoading: isPositionLoading } = usePosition({
   //   pageSize: 100,
   // });
 
-  const { projectSummary, isLoadingProjectSummary } = useProjectDetailContext();
+  const { projectSummary, isLoadingProjectSummary, refetchProjectSummary } =
+    useProjectDetailContext();
 
   const [positionFilter, setPositionFilter] = React.useState("");
   const [search, setSearch] = React.useState("");
   const { project_id } = useParams();
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["members", positionFilter, search, project_id],
     queryFn: async () => {
       const response = await apiClient.get<GetCandidateUsersResponse>(
@@ -88,18 +88,23 @@ export default function NewMemberModal(props: NewMemberModalProps) {
   });
 
   const submitAddNewMembers = async () => {
-    try {
-      const candidates = Array.from(selectedKeys).map((key) => ({
-        userId: key,
-        role: Number(roleMapping[key] || "3"),
-      }));
+    const candidates = Array.from(selectedKeys).map((key) => ({
+      userId: key,
+      role: Number(roleMapping[key] || "3"),
+    }));
 
-      await addNewMembers(props.projectId, candidates);
-      toast.success("New members added successfully");
-      queryClient.invalidateQueries();
-    } catch (error) {
-      console.log(error);
+    const res = await addNewMembers(props.projectId, candidates);
+
+    console.log(res);
+
+    if (res.statusCode !== "200") {
+      toast.error(res.message);
+      return;
     }
+
+    toast.success("New members added successfully");
+    refetchProjectSummary();
+    onClose();
   };
 
   const columns = [

@@ -19,11 +19,11 @@ const universities = [
   { key: "Hanoi University of Science and Technology", label: "HUST" },
   { key: "Hanoi University of Business and Technology", label: "HUBT" },
 ];
-const AreaChart: React.FC = () => {
+const LineChart: React.FC = () => {
   const options: any = {
     chart: {
       height: 350,
-      type: "area",
+      type: "line",
     },
     dataLabels: {
       enabled: false,
@@ -55,24 +55,31 @@ const AreaChart: React.FC = () => {
       name: "Total Students Received CV",
       data: [31, 40, 28, 51, 42, 109, 100],
     },
-    {
-      name: "Total Students Interviewed",
-      data: [11, 32, 45, 32, 34, 52, 41],
-    },
-    {
-      name: "Total Students Passed",
-      data: [21, 42, 55, 32, 44, 62, 51],
-    },
-    {
-      name: "Total Students Interning",
-      data: [31, 52, 65, 32, 54, 72, 61],
-    },
   ];
 
   return (
     <div className="mt-4">
       {typeof window !== "undefined" && (
-        <Chart options={options} series={series} type="area" height={350} />
+        <Chart options={options} series={series} type="line" height={350} />
+      )}
+    </div>
+  );
+};
+
+const PieChart: React.FC = () => {
+  const options: any = {
+    chart: {
+      type: "donut",
+    },
+    labels: ["Team A", "Team B", "Team C", "Team D", "Team E"],
+  };
+
+  const series = [44, 55, 13, 43, 22];
+
+  return (
+    <div className="mt-4">
+      {typeof window !== "undefined" && (
+        <Chart options={options} series={series} type="pie" height={350} />
       )}
     </div>
   );
@@ -103,8 +110,10 @@ export default function Charts() {
           ))}
         </Select>
       </div>
-
-      <AreaChart />
+      <div className="grid grid-cols-2">
+        <LineChart />
+        <PieChart />
+      </div>
     </div>
   );
 }
