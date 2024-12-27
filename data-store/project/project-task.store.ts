@@ -28,6 +28,10 @@ export interface ProjectTask {
     dateUpdate: string;
     isDeleted: boolean;
   };
+  typeTask: {
+    name: string;
+    abbreviation: string;
+  }
   id: string;
   dateCreate: string;
   dateUpdate: string;

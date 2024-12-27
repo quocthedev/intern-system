@@ -3,9 +3,8 @@
 import {
   ProjectListData,
   ProjectListFilter,
-  useProjectList,
-} from "@/data-store/project/project-list.store";
-
+  useProjectListCandidate,
+} from "@/data-store/project/project-list-candidate.store";
 import { createContext, useContext } from "react";
 
 export interface ProjectListContextInterface {
@@ -41,7 +40,7 @@ export default function ProjectListProvider({
     setFilter: setProjectListFilter,
     removeOneFilter: removeOneProjectListFilter,
     removeAllFilter: removeAllProjectListFilter,
-  } = useProjectList({
+  } = useProjectListCandidate({
     pageSize: 6,
   });
 

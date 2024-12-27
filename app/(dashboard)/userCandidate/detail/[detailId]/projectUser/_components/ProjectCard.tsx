@@ -30,24 +30,6 @@ export default function ProjectCard(props: PropsWithChildren<Project>) {
             <Chip className="bg-warning-400/50 text-warning-700" size="sm">
               {props.status}
             </Chip>
-
-            <Button
-              variant="light"
-              size="sm"
-              startContent={<EditIcon />}
-              className="text-grey"
-              onPress={onOpen}
-            >
-              Edit
-            </Button>
-            <ProjectDelete projectId={props.id} />
-            <ProjectModal
-              mode="edit"
-              isOpen={isOpen}
-              onOpenChange={onOpenChange}
-              selectedProjectInfo={props}
-              onClose={onClose}
-            />
           </div>
         </div>
       </CardHeader>

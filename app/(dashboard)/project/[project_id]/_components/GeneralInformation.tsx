@@ -12,8 +12,8 @@ export default function GeneralInformation() {
   }
 
   return (
-    <div className="mt-3 flex w-[700px] flex-col">
-      <h1 className="text-xl font-semibold">General Information</h1>
+    <div className="mt-2 flex w-[700px] flex-col">
+      <h1 className="text-lg font-medium">General Information</h1>
 
       <div className="flex flex-col gap-1">
         <p className="mt-2">Title: {projectSummary?.title}</p>

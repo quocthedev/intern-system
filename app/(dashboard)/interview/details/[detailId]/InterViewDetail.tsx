@@ -196,6 +196,7 @@ export default function InterViewDetailPage() {
     },
     [],
   );
+  console.log(candidateData);
 
   return (
     <div>
@@ -277,7 +278,13 @@ export default function InterViewDetailPage() {
       )}
       <div className="flex items-center justify-between">
         <div className="mb-2 mt-8 text-lg">List of interview candidates</div>
-        <RescheduleModal />
+        {candidateData.find(
+          (candidate: any) => candidate?.status === "Reschedule",
+        ) ? (
+          <RescheduleModal disabled={false} />
+        ) : (
+          <RescheduleModal disabled={true} />
+        )}
       </div>
       <Tabs
         key={"md"}
