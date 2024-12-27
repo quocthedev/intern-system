@@ -64,15 +64,6 @@ export default function ProjectCard(props: PropsWithChildren<Project>) {
                 .join(", ")}
             </p>
           </div>
-          {/* <div className="flex gap-1 text-xs">
-            <p className="font-semibold">Mentor:</p>
-            <p>
-              {props.groupUserRelated
-                ?.find((group) => group.role === "Mentor")
-                ?.users.map((user) => user.fullName)
-                .join(", ")}
-            </p>
-          </div> */}
           <div className="flex items-center gap-1 text-xs">
             <p className="font-semibold">Zalo Group:</p>
             <Link href={props.zaloUri} isExternal className="text-xs">

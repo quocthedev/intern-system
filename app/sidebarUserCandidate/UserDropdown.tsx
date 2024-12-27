@@ -29,9 +29,14 @@ export default function UserDropdown() {
   return (
     <DropdownMenu>
       <DropdownSection>
-        <DropdownItem onClick={handleMove}>Profile</DropdownItem>
-        <DropdownItem>Settings</DropdownItem>
-        <DropdownItem className="text-danger-500" onClick={logoutUser}>
+        <DropdownItem key="profile" onPress={handleMove}>
+          Profile
+        </DropdownItem>
+        <DropdownItem
+          key="logout"
+          className="text-danger-500"
+          onPress={logoutUser}
+        >
           Logout
         </DropdownItem>
       </DropdownSection>
