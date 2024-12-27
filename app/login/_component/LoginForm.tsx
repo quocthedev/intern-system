@@ -177,7 +177,7 @@ export const LoginForm = () => {
                     {isLoading ? "Signing in..." : "Sign in"}
                   </Button>
 
-                  <div className="mt-2 w-full">
+                  {/* <div className="mt-2 w-full">
                     <hr className="h-0.5 w-full bg-gray-300" />
                     <p className="z-10 mx-auto -mt-3 w-fit bg-white px-3 text-center text-gray-300">
                       OR
@@ -190,7 +190,7 @@ export const LoginForm = () => {
                     onPress={() => loginWithGoogle()}
                   >
                     Sign in with Google
-                  </Button>
+                  </Button> */}
                   <Button
                     className="font-medium text-blue-500 underline underline-offset-4"
                     variant="light"
