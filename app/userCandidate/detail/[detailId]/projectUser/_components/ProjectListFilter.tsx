@@ -1,5 +1,4 @@
 import { FilterIcon } from "@/app/(dashboard)/project/_components/Icons";
-import { useProjectListContext } from "@/app/(dashboard)/userCandidate/detail/[detailId]/projectUser/_providers/ProjectListProvider";
 import { removeEmptyFields } from "@/libs/utils";
 import { Button } from "@nextui-org/button";
 import { Chip } from "@nextui-org/chip";
@@ -9,6 +8,7 @@ import { getLocalTimeZone, today } from "@internationalized/date";
 import { Popover, PopoverContent, PopoverTrigger } from "@nextui-org/popover";
 import React from "react";
 import { Select, SelectItem } from "@nextui-org/select";
+import { useProjectListContext } from "@/app/userCandidate/detail/[detailId]/projectUser/_providers/ProjectListProvider";
 
 const ProjectListStatusMapping = {
   0: "NotStarted",

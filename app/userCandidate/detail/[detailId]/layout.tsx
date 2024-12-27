@@ -1,4 +1,5 @@
 "use client";
+import SideBarUserCandidate from "@/app/sidebarUserCandidate/SideBar";
 import { Tab, Tabs } from "@nextui-org/tabs";
 import { useParams, usePathname, useRouter } from "next/navigation";
 
@@ -41,26 +42,25 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <div className="flex h-full w-full flex-col gap-3 p-6">
-      <div className="text-xl font-semibold">Your profile</div>
-      <Tabs
-        aria-label="Options"
-        radius="sm"
-        color="primary"
-        className="mt-3"
-        selectedKey={activeTab}
-        onSelectionChange={handleTabChange as any}
-      >
-        {subRoutes.map((route) => (
-          <Tab
-            key={route.key}
-            title={route.title}
-            // href={`${startPath}${route.href}`} replace with useRouter
-          />
-        ))}
-      </Tabs>
+    <div>
+      <div className="flex h-full w-full flex-col p-6">
+        <SideBarUserCandidate />
+        <div className="text-xl font-semibold">Your profile</div>
+        <Tabs
+          aria-label="Options"
+          radius="sm"
+          color="primary"
+          className="mb-3 mt-3"
+          selectedKey={activeTab}
+          onSelectionChange={handleTabChange as any}
+        >
+          {subRoutes.map((route) => (
+            <Tab key={route.key} title={route.title} />
+          ))}
+        </Tabs>
 
-      {children}
+        {children}
+      </div>
     </div>
   );
 }

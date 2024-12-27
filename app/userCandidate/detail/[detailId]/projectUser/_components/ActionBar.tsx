@@ -1,10 +1,10 @@
 import { Input } from "@nextui-org/input";
 import React from "react";
 import { useDisclosure } from "@nextui-org/modal";
-import ProjectListFilter from "@/app/(dashboard)/userCandidate/detail/[detailId]/projectUser/_components/ProjectListFilter";
 import ProjectListProvider, {
   useProjectListContext,
-} from "@/app/(dashboard)/userCandidate/detail/[detailId]/projectUser/_providers/ProjectListProvider";
+} from "@/app/userCandidate/detail/[detailId]/projectUser/_providers/ProjectListProvider";
+import ProjectListFilter from "@/app/userCandidate/detail/[detailId]/projectUser/_components/ProjectListFilter";
 
 export default function ActionBar() {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
