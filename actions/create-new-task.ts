@@ -26,7 +26,7 @@ export async function createNewTask(formData: FormData) {
   const difficulty = Number(formData.get("difficulty")?.toString());
   const userId = formData.get("userId")?.toString();
   const projectId = formData.get("projectId")?.toString();
-
+  const positionId = formData.get("positionId")?.toString();
   const params = {
     title,
     summary,
@@ -37,6 +37,7 @@ export async function createNewTask(formData: FormData) {
     difficulty,
     userId,
     projectId,
+    positionId
   };
 
   const response = await apiClient.post(API_ENDPOINTS.task, params);

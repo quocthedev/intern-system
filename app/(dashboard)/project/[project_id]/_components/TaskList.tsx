@@ -16,7 +16,6 @@ import Loading from "@/components/Loading";
 import TaskFilter from "./TaskFilter";
 import { Pagination } from "@nextui-org/pagination";
 import { Chip, ChipProps } from "@nextui-org/chip";
-import { truncateText } from "@/app/util";
 import { Popover, PopoverContent, PopoverTrigger } from "@nextui-org/popover";
 import {
   Dropdown,
@@ -26,6 +25,7 @@ import {
 } from "@nextui-org/dropdown";
 import { Button } from "@nextui-org/button";
 import { EllipsisIcon } from "@/app/(dashboard)/internPeriod/_components/Icons";
+import { getCookie } from "@/app/util";
 
 export default function TaskList() {
   const {
@@ -37,6 +37,7 @@ export default function TaskList() {
     projectSummary,
     removeAllProjectTaskFilter,
   } = useProjectDetailContext();
+  const role = getCookie("userRole");
 
   const statusColorMap: Record<string, ChipProps["color"]> = {
     NotStarted: "default",
@@ -132,7 +133,7 @@ export default function TaskList() {
       case "memberName":
         return item.assignedPerson.assignedPerson;
       case "position":
-        return item.assignedPerson.position;
+        return item.typeTask.name;
       case "completionProgress":
         return item.completionProgress;
       case "progressAssessment":
@@ -178,11 +179,15 @@ export default function TaskList() {
   };
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="mt-4 flex flex-col gap-2">
       <div className="flex items-center justify-between">
-        <p className="text-xl font-semibold">Task Lists</p>
+        <p className="text-lg font-medium">Task Lists</p>
 
-        <TaskModal mode="create" projectId={projectSummary?.id as string} />
+        {role === "Administrator" || role === "Mentor" ? (
+          <TaskModal mode="create" projectId={projectSummary?.id as string} />
+        ) : (
+          <></>
+        )}
       </div>
 
       <Tabs
@@ -226,6 +231,9 @@ export default function TaskList() {
               column.key == "actions"
             ) {
               return false;
+            }
+            if (!projectTaskFilter?.Status && column.key === "actions") {
+              return false;
             } else {
               return true;
             }
@@ -259,6 +267,9 @@ export default function TaskList() {
                       projectTaskFilter?.Status === "4") &&
                     column.key === "actions"
                   ) {
+                    return false;
+                  }
+                  if (!projectTaskFilter?.Status && column.key === "actions") {
                     return false;
                   }
 

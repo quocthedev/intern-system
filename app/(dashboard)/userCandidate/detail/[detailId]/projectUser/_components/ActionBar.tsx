@@ -16,7 +16,7 @@ export default function ActionBar() {
         <div className="mb-3 flex w-full gap-3">
           <Input
             size="md"
-            placeholder="Search by name, mentor, technology,..."
+            placeholder="Search by name"
             className="flex-1"
             onChange={(e) => setProjectListSearch(e.target.value)}
           />

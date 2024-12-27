@@ -120,7 +120,7 @@ export function useProjectListCandidate(params: { pageSize: number }) {
     ],
     queryFn: async () => {
       const response = await apiClient.get<PaginationResponse<Project>>(
-        API_ENDPOINTS.project,
+        API_ENDPOINTS.project + "/user-projects",
         {
           headers: {
             Authorization: `Bearer ${token}`,

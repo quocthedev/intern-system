@@ -11,11 +11,7 @@ export default function ProjectPage() {
 
   return (
     <ProjectListProvider>
-      <div className="flex h-full w-full flex-col gap-4 p-9">
-        <h1 className="text-left text-2xl font-semibold capitalize text-black">
-          Project management
-        </h1>
-
+      <div className="flex h-full w-full flex-col">
         <ActionBar />
         <div className="flex w-full gap-6">
           <ProjectList isShowFilter={showFilter} />

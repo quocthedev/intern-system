@@ -47,6 +47,7 @@ export type InterviewScheduleModalProps = {
   universityId?: string;
   internPeriodId?: string;
   callback?: () => void;
+  disabled?: boolean;
 };
 export default function InterviewRescheduleModal(
   props: InterviewScheduleModalProps,
@@ -105,6 +106,7 @@ export default function InterviewRescheduleModal(
         variant="shadow"
         startContent={<InterviewIcon />}
         className="px-6"
+        isDisabled={props.disabled}
       >
         Reschedule interview
       </Button>

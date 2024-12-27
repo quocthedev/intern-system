@@ -41,6 +41,8 @@ export type User = {
 export default function TaskModal(props: TaskModalProps) {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [selectedPositionId, setSelectedPositionId] = useState("");
+  const [selectedPositionTaskId, setSelectedPositionTaskId] = useState("");
+
   const { project_id } = useParams();
 
   const { projectSummary, refetchProjectTask } = useProjectDetailContext();
@@ -321,48 +323,44 @@ export default function TaskModal(props: TaskModalProps) {
                       </>
                     )}
                   </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    {props.mode === "create" && (
-                      <div>
-                        <Select
-                          label="Select position"
-                          labelPlacement="outside"
-                          placeholder="Select position"
-                          value={selectedPositionId}
-                          onChange={(e) =>
-                            setSelectedPositionId(e.target.value)
-                          }
-                        >
-                          {(projectSummary?.listPosition ?? []).map(
-                            (position) => (
-                              <SelectItem key={position.id} value={position.id}>
-                                {position.name}
-                              </SelectItem>
-                            ),
-                          )}
-                        </Select>
-
-                        <Select
-                          label="Assignee"
-                          labelPlacement="outside"
-                          placeholder="Select Assignee"
-                          defaultSelectedKeys={[
-                            `${props.selectedTaskInfo?.assignedPerson.id ?? ""}`,
-                          ]}
-                          name="userId"
-                          required
-                          isDisabled={
-                            !data || !Array.isArray(data) || data.length === 0
-                          }
-                        >
-                          {data?.map((user: any) => (
-                            <SelectItem key={user.id} value={user.id}>
-                              {user.fullName}
+                  <div>
+                    <div className="-mt-2 grid grid-cols-2 gap-2">
+                      <Select
+                        label="Select position"
+                        labelPlacement="outside"
+                        placeholder="Select position"
+                        value={selectedPositionId}
+                        onChange={(e) => setSelectedPositionId(e.target.value)}
+                      >
+                        {(projectSummary?.listPosition ?? []).map(
+                          (position) => (
+                            <SelectItem key={position.id} value={position.id}>
+                              {position.name}
                             </SelectItem>
-                          ))}
-                        </Select>
-                      </div>
-                    )}
+                          ),
+                        )}
+                      </Select>
+
+                      <Select
+                        label="Assignee"
+                        labelPlacement="outside"
+                        placeholder="Select Assignee"
+                        defaultSelectedKeys={[
+                          `${props.selectedTaskInfo?.assignedPerson.id ?? ""}`,
+                        ]}
+                        name="userId"
+                        required
+                        isDisabled={
+                          !data || !Array.isArray(data) || data.length === 0
+                        }
+                      >
+                        {data?.map((user: any) => (
+                          <SelectItem key={user.id} value={user.id}>
+                            {user.fullName}
+                          </SelectItem>
+                        ))}
+                      </Select>
+                    </div>
 
                     {
                       // Only show status select for edit mode
@@ -387,6 +385,21 @@ export default function TaskModal(props: TaskModalProps) {
                       )
                     }
                   </div>
+
+                  <Select
+                    label="Select position for task"
+                    labelPlacement="outside"
+                    placeholder="Select position"
+                    name="positionId"
+                    value={selectedPositionTaskId}
+                    onChange={(e) => setSelectedPositionTaskId(e.target.value)}
+                  >
+                    {(projectSummary?.listPosition ?? []).map((position) => (
+                      <SelectItem key={position.id} value={position.id}>
+                        {position.name}
+                      </SelectItem>
+                    ))}
+                  </Select>
 
                   <div className="grid grid-cols-2 gap-4">
                     <Button color="primary" fullWidth type="submit">
