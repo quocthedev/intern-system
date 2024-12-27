@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import InternTable from "@/app/(dashboard)/intern/_components/InternTable";
 import ActionBar from "./_components/ActionBar";
 

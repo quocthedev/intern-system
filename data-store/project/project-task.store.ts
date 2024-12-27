@@ -7,7 +7,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { API_ENDPOINTS } from "@/libs/config";
 import { create } from "zustand";
-import { toast } from "sonner";
 
 export interface ProjectTask {
   title: string;
@@ -31,7 +30,7 @@ export interface ProjectTask {
   typeTask: {
     name: string;
     abbreviation: string;
-  }
+  };
   id: string;
   dateCreate: string;
   dateUpdate: string;

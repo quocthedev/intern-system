@@ -207,6 +207,7 @@ export default function QuestionBankPage() {
   const handleCreate = () => {
     if (!content || !difficulty || !technologyId) {
       toast.error("All fields are required");
+
       return;
     }
 

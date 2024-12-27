@@ -1,5 +1,5 @@
 import { Card, CardBody } from "@nextui-org/card";
-import { cn } from "@nextui-org/theme";
+import { cn } from "@nextui-org/react";
 import { User as UserComponent } from "@nextui-org/user";
 import { Dropdown, DropdownTrigger } from "@nextui-org/dropdown";
 import UserDropdown from "./UserDropdown";

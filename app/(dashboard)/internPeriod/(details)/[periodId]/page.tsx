@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import React, { useState } from "react";
+import React from "react";
 import InternPeriodProvider from "./_providers/InternPeriodDetailProvider";
 import InternPeriodInformation from "./_components/InternPeriodInformation";
 import RelatedUniversities from "./_components/RelatedUniversities";

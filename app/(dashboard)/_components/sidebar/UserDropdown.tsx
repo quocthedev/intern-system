@@ -2,11 +2,7 @@
 import { logout } from "@/actions/auth";
 import { useRouter } from "next/navigation";
 import React from "react";
-import {
-  DropdownMenu,
-  DropdownSection,
-  DropdownItem,
-} from "@nextui-org/dropdown";
+import { DropdownMenu, DropdownItem } from "@nextui-org/dropdown";
 import { getCookie } from "@/app/util";
 
 export default function UserDropdown() {
@@ -26,22 +22,39 @@ export default function UserDropdown() {
     } else router.push(`/account/${id}`);
   };
 
+  const items = [
+    {
+      name: "Profile",
+      key: "profile",
+      onClick: handleMove,
+    },
+    {
+      name: "Settings",
+      key: "settings",
+    },
+    {
+      name: "Change Password",
+      key: "changePassword",
+    },
+    {
+      name: "Logout",
+      key: "logout",
+      onClick: logoutUser,
+    },
+  ];
+
   return (
-    <DropdownMenu>
-      <DropdownSection>
-        <DropdownItem onClick={handleMove}>Profile</DropdownItem>
-        <DropdownItem>Settings</DropdownItem>
-        <DropdownItem
-          href="
-          /password-change
-        "
-        >
-          Change Password
-        </DropdownItem>
-        <DropdownItem className="text-danger-500" onClick={logoutUser}>
-          Logout
-        </DropdownItem>
-      </DropdownSection>
+    <DropdownMenu
+      items={items}
+      onAction={async (key) => {
+        const item = items.find((item) => item.key === key);
+
+        if (item?.onClick) {
+          await item.onClick();
+        }
+      }}
+    >
+      {(item) => <DropdownItem key={item.key}>{item.name}</DropdownItem>}
     </DropdownMenu>
   );
 }

@@ -1,6 +1,5 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import APIClient from "@/libs/api-client";
 import { API_ENDPOINTS } from "@/libs/config";

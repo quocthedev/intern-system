@@ -2,7 +2,7 @@
 import { Input } from "@nextui-org/input";
 import { Select, SelectItem } from "@nextui-org/select";
 import { SharedSelection } from "@nextui-org/system";
-import { cn } from "@nextui-org/theme";
+import { cn } from "@nextui-org/react";
 import { useState } from "react";
 
 export type SelectSearchItem = {

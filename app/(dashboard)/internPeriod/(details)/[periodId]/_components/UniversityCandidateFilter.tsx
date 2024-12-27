@@ -13,8 +13,10 @@ const CandidateStatusMapping = {
   1: "Approved",
   2: "Rejected",
   3: "InterviewEmailSent",
-  4: "CompletedOJT",
-  5: "Out",
+  4: "InterviewResultEmailSent",
+  5: "InProgress",
+  6: "CompletedOjt",
+  7: "Out",
 };
 
 //test
@@ -63,7 +65,11 @@ export default function UniversityCandidateFilter() {
         <PopoverContent
           className="w-[250px] gap-3 p-3"
           as={"form"}
-          action={applyFilter}
+          onSubmit={(e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target as HTMLFormElement);
+            applyFilter(formData);
+          }}
         >
           <Select
             label="Status"

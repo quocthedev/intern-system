@@ -196,6 +196,7 @@ export default function InterViewDetailPage() {
     },
     [],
   );
+
   console.log(candidateData);
 
   return (

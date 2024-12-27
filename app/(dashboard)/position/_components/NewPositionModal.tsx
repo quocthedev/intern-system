@@ -59,6 +59,7 @@ export default function NewPostionModal() {
   const handleSubmit = () => {
     if (!name || !abbreviation || !selectedFile) {
       toast.error("Please fill out all fields and select an image.");
+
       return;
     }
 

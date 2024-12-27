@@ -29,6 +29,7 @@ export default function MemberDeleteModal(props: MemberDeleteModalProps) {
 
       if (response.statusCode !== "200") {
         toast.error(response.message);
+
         return;
       }
 

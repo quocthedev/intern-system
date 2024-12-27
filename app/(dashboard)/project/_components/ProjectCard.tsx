@@ -3,7 +3,6 @@ import { Divider } from "@nextui-org/divider";
 import { Link } from "@nextui-org/link";
 import { Chip } from "@nextui-org/chip";
 import { Button } from "@nextui-org/button";
-import { Checkbox } from "@nextui-org/checkbox";
 import { EditIcon } from "./Icons";
 import { Project } from "../_types/Project";
 import { PropsWithChildren } from "react";

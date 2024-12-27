@@ -2,6 +2,7 @@
 import dynamic from "next/dynamic";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
+
 import { Select, SelectItem } from "@nextui-org/select";
 import React from "react";
 import { CalendarIcon, UniversityIcon } from "./Icons";

@@ -24,14 +24,14 @@ import {
 } from "@/libs/_types/Candidate";
 import APIClient from "@/libs/api-client";
 import { API_ENDPOINTS } from "@/libs/config";
-import { PaginationResponseSuccess, PagingData } from "@/libs/types";
+import { PaginationResponseSuccess } from "@/libs/types";
 import { Pagination } from "@nextui-org/pagination";
 import { Link } from "@nextui-org/link";
 import { useToggle } from "usehooks-ts";
 import { Tab, Tabs } from "@nextui-org/tabs";
 import { DatePicker } from "@nextui-org/date-picker";
 
-import { now, getLocalTimeZone, today } from "@internationalized/date";
+import { now, getLocalTimeZone } from "@internationalized/date";
 import { Select, SelectItem } from "@nextui-org/select";
 import { GetUsersByRoleResponse } from "../libs/_types/GetUsersResponse";
 import { sendEmail } from "@/actions/send-email-next";

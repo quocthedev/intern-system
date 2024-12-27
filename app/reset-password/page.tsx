@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { redirect, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Input } from "@nextui-org/input";
 import { EyeFilledIcon, EyeSlashFilledIcon } from "../login/_component/Icon";
 import { useToggle } from "usehooks-ts";

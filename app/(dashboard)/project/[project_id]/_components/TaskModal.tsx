@@ -167,6 +167,7 @@ export default function TaskModal(props: TaskModalProps) {
 
       if (res?.error) {
         toast.error(res.error);
+
         return;
       }
 

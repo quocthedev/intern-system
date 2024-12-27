@@ -12,7 +12,7 @@ import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import { DatePicker } from "@nextui-org/date-picker";
 import { CreateIcon } from "@/app/(dashboard)/intern/_components/Icons";
-import { Calendar, CalendarDate, parseDate } from "@internationalized/date"; // Parses a date string or Date object to DateValue
+import { CalendarDate, parseDate } from "@internationalized/date"; // Parses a date string or Date object to DateValue
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { API_ENDPOINTS } from "@/libs/config";
 import { toast } from "sonner";
@@ -184,14 +184,14 @@ export default function NewPeriodModal() {
                   label="Start date"
                   labelPlacement="outside"
                   value={startDate}
-                  onChange={(newDate) => setStartDate(newDate)}
+                  onChange={(newDate) => setStartDate(newDate as CalendarDate)}
                   isRequired
                 />
                 <DatePicker
                   label="End date"
                   labelPlacement="outside"
                   value={endDate}
-                  onChange={(endDate) => setEndDate(endDate)}
+                  onChange={(endDate) => setEndDate(endDate as CalendarDate)}
                   isRequired
                 />
               </div>

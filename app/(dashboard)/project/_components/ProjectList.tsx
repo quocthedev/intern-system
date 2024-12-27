@@ -1,13 +1,9 @@
 "use client";
 import React from "react";
 import ProjectCard from "./ProjectCard";
-import { cn } from "@nextui-org/theme";
+import { cn } from "@nextui-org/react";
 import { Pagination } from "@nextui-org/pagination";
-import { useQuery } from "@tanstack/react-query";
 import APIClient from "@/libs/api-client";
-import { API_ENDPOINTS } from "@/libs/config";
-import { GetProjectsResponse, Project } from "../_types/Project";
-import { PaginationResponseSuccess } from "@/libs/types";
 import { useProjectListContext } from "../_providers/ProjectListProvider";
 import Loading from "@/components/Loading";
 

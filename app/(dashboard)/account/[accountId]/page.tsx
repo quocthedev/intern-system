@@ -1,6 +1,4 @@
 import InformationAccountDetail from "@/app/(dashboard)/account/[accountId]/information/page";
-import { PasswordChangeForm } from "@/app/(dashboard)/password-change/_components/PasswordChangeForm";
-import Link from "next/link";
 import React from "react";
 
 export default function AccountDetailPage() {

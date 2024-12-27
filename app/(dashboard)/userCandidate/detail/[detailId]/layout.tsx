@@ -1,6 +1,5 @@
 "use client";
 import { Tab, Tabs } from "@nextui-org/tabs";
-import Link from "next/link";
 import { useParams, usePathname, useRouter } from "next/navigation";
 
 export default function Layout({ children }: { children: React.ReactNode }) {

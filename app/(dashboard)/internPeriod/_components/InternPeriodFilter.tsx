@@ -86,7 +86,11 @@ export default function InternPeriodFilter() {
         <PopoverContent
           className="w-[250px] gap-3 p-3"
           as={"form"}
-          action={applyFilter}
+          onSubmit={(e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target as HTMLFormElement);
+            applyFilter(formData);
+          }}
         >
           <DatePicker
             label="From date"
