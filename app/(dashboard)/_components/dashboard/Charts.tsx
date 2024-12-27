@@ -19,48 +19,27 @@ const universities = [
   { key: "Hanoi University of Science and Technology", label: "HUST" },
   { key: "Hanoi University of Business and Technology", label: "HUBT" },
 ];
-const LineChart: React.FC = () => {
+const BarChart: React.FC = () => {
   const options: any = {
     chart: {
-      height: 350,
-      type: "line",
-    },
-    dataLabels: {
-      enabled: false,
-    },
-    stroke: {
-      curve: "smooth",
+      id: "basic-bar",
     },
     xaxis: {
-      type: "datetime",
-      categories: [
-        "2018-09-19T00:00:00.000Z",
-        "2018-09-19T01:30:00.000Z",
-        "2018-09-19T02:30:00.000Z",
-        "2018-09-19T03:30:00.000Z",
-        "2018-09-19T04:30:00.000Z",
-        "2018-09-19T05:30:00.000Z",
-        "2018-09-19T06:30:00.000Z",
-      ],
-    },
-    tooltip: {
-      x: {
-        format: "dd/MM/yy HH:mm",
-      },
+      categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998],
     },
   };
 
   const series = [
     {
-      name: "Total Students Received CV",
-      data: [31, 40, 28, 51, 42, 109, 100],
+      name: "series-1",
+      data: [30, 40, 45, 50, 49, 60, 70, 91],
     },
   ];
 
   return (
     <div className="mt-4">
       {typeof window !== "undefined" && (
-        <Chart options={options} series={series} type="line" height={350} />
+        <Chart options={options} series={series} type="bar" height={350} />
       )}
     </div>
   );
@@ -111,7 +90,7 @@ export default function Charts() {
         </Select>
       </div>
       <div className="grid grid-cols-2">
-        <LineChart />
+        <BarChart />
         <PieChart />
       </div>
     </div>
