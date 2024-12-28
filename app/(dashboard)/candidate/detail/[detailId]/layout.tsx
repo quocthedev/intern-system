@@ -27,7 +27,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const router = useRouter(); //use router to advoid reload entire page instead of using href
   const pathname = usePathname();
 
-  const startPath = `/userCandidate/detail/${detailId}`;
+  const startPath = `/candidate/detail/${detailId}`;
 
   const activeTab =
     subRoutes.find((route) => pathname === `${startPath}${route.href}`)?.key ||

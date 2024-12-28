@@ -153,8 +153,6 @@ export function useProjectListCandidate(params: { pageSize: number }) {
     },
   });
 
-  console.log(data);
-
   return {
     isLoading,
     error,
