@@ -1,5 +1,4 @@
 "use client";
-import SideBarUserCandidate from "@/app/sidebarUserCandidate/SideBar";
 import { Tab, Tabs } from "@nextui-org/tabs";
 import { useParams, usePathname, useRouter } from "next/navigation";
 
@@ -27,7 +26,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const router = useRouter(); //use router to advoid reload entire page instead of using href
   const pathname = usePathname();
 
-  const startPath = `/userCandidate/detail/${detailId}`;
+  const startPath = `/candidate/detail/${detailId}`;
 
   const activeTab =
     subRoutes.find((route) => pathname === `${startPath}${route.href}`)?.key ||
@@ -44,7 +43,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div>
       <div className="flex h-full w-full flex-col p-6">
-        <SideBarUserCandidate />
         <div className="text-xl font-semibold">Your profile</div>
         <Tabs
           aria-label="Options"

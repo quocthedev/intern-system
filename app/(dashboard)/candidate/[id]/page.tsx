@@ -27,7 +27,7 @@ export default function UserCandidatePage() {
   useEffect(() => {
     if (candidateDataId) {
       // Redirect to the candidate page once the ID is fetched
-      router.replace(`/userCandidate/detail/${candidateDataId}?tab=2`);
+      router.replace(`/candidate/detail/${candidateDataId}`);
     }
   }, [candidateDataId, router]);
 

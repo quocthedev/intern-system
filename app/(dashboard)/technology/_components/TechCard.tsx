@@ -231,16 +231,16 @@ export const TechCard = () => {
                   <CardBody>
                     {technology.imageUri ? (
                       <Image
-                        width={500}
-                        height={500}
+                        width={200}
+                        height={200}
                         alt={`${technology.name} Image`}
                         src={technology.imageUri}
-                        className="grounded-md h-full w-full object-contain"
+                        className="grounded-md h-40 w-full object-contain"
                       />
                     ) : (
                       <Image
-                        width={500}
-                        height={500}
+                        width={200}
+                        height={200}
                         alt="Default University Image"
                         src="/icons/technology/noimg.png"
                         className="grounded-md h-full w-full object-contain"
@@ -281,12 +281,12 @@ export const TechCard = () => {
                 Are you sure you want to delete?
                 <div className="mt-5 grid grid-cols-2 gap-5">
                   <Button
-                    onClick={() => handleDelete(selectedTech)}
+                    onPress={() => handleDelete(selectedTech)}
                     color="primary"
                   >
                     Yes
                   </Button>
-                  <Button onClick={onCloseDelete}>No</Button>
+                  <Button onPress={onCloseDelete}>No</Button>
                 </div>
               </ModalBody>
             </ModalContent>
@@ -354,10 +354,10 @@ export const TechCard = () => {
                 </div>
 
                 <div className="mt-2 grid grid-cols-2 gap-5">
-                  <Button onClick={handleUpdate} color="primary">
+                  <Button onPress={handleUpdate} color="primary">
                     Update
                   </Button>
-                  <Button onClick={onCloseEdit}>Cancel</Button>
+                  <Button onPress={onCloseEdit}>Cancel</Button>
                 </div>
               </ModalBody>
             </ModalContent>
