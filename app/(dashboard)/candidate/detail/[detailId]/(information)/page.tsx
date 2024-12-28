@@ -79,9 +79,9 @@ export default function InformationAccountDetail() {
   return isLoading ? (
     <Loading />
   ) : (
-    <div className="w-full bg-gray-100">
-      <div className="p-6">
-        <div className="mb-6 rounded-lg bg-white p-6 shadow-md">
+    <div className="w-full">
+      <div>
+        <div className="mb-6 rounded-lg bg-white p-4 shadow-md">
           <h3 className="mb-4 text-lg font-semibold">Avatar</h3>
           <div className="flex items-center space-x-4">
             {accountData?.avatar ? (
@@ -130,7 +130,7 @@ export default function InformationAccountDetail() {
         />
 
         {/* Security Section */}
-        <div className="mt-6 rounded-lg bg-white p-6 shadow-md">
+        <div className="mt-4 rounded-lg bg-white p-4 shadow-md">
           <h3 className="mb-8 text-lg font-semibold">Change Password</h3>
           <PasswordChangeFormRefactor />
         </div>
