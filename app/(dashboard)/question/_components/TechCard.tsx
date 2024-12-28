@@ -58,12 +58,6 @@ export const TechCard = () => {
     handleSelectPosition(defaultId);
   }, []);
 
-  // const getPositionNameById = (id: any) => {
-  //   const position = positionData.find((pos: any) => pos.id === id);
-
-  //   return position?.name;
-  // };
-
   return (
     <>
       <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4">

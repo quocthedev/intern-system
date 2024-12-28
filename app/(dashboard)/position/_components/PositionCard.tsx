@@ -144,8 +144,9 @@ export default function PositionCard(props: PositonCardProps) {
     name: "",
     abbreviation: "",
   });
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  const handleUpdate = () => {
+  const handleUpdate = async () => {
     updateMutation.mutate();
     // get added technologies
     const addedTechnologies = selectedTechnologies.filter(
@@ -161,6 +162,37 @@ export default function PositionCard(props: PositonCardProps) {
 
     addTechMutation.mutate(addedTechnologies.map((tech) => tech.key));
     deleteTechMutation.mutate(removedTechnologies.map((tech: Tech) => tech.id));
+
+    if (!selectedFile) return;
+
+    try {
+      const formData = new FormData();
+
+      formData.append("file", selectedFile);
+
+      const response = await fetch(
+        `${API_ENDPOINTS.position}/${props.data.id}/upload-position-image`,
+        {
+          method: "PUT",
+          body: formData,
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error("File upload failed");
+      }
+
+      props.refetch();
+    } catch (error) {
+      toast.error("Error uploading image");
+      console.error(error);
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setSelectedFile(e.target.files[0]);
+    }
   };
 
   const openEditModal = (
@@ -253,7 +285,7 @@ export default function PositionCard(props: PositonCardProps) {
                 height={200}
                 alt={`${props.data.name} Image`}
                 src={props.data.image}
-                className="h-full w-full rounded-md object-contain"
+                className="h-40 w-full rounded-md object-contain"
               />
             ) : (
               <Image
@@ -261,7 +293,7 @@ export default function PositionCard(props: PositonCardProps) {
                 height={200}
                 alt="Default Position Image"
                 src="/icons/technology/noimg.png"
-                className="h-full w-full rounded-md object-contain"
+                className="h-40 w-full rounded-md object-contain"
               />
             )}
           </div>
@@ -324,22 +356,6 @@ export default function PositionCard(props: PositonCardProps) {
                 setUpdateData({ ...updateData, abbreviation: e.target.value })
               }
             />
-
-            {/* <Select
-              value={technologyId}
-              placeholder="Select technology"
-              selectionMode="multiple"
-              onSelectionChange={(id) =>
-                handleSelectTechnology(id as Set<string>)
-              }
-            >
-              {technologyData.map((technology: Tech) => (
-                <SelectItem key={technology.id} value={technology.id}>
-                  {technology.name}
-                </SelectItem>
-              ))}
-            </Select> */}
-
             <SelectSearch
               label="Technologies"
               placeholder="Select technologies"
@@ -361,11 +377,33 @@ export default function PositionCard(props: PositonCardProps) {
               setSelectedItems={setSelectedTechnologies}
             />
 
+            <div className="mb-4">
+              <label
+                htmlFor="file-upload"
+                className="cursor-pointer text-blue-500 hover:text-blue-700"
+              >
+                Change Image
+              </label>
+              <input
+                id="file-upload"
+                type="file"
+                accept=".png, .jpg"
+                onChange={handleFileChange}
+                className="hidden"
+              />
+              {selectedFile && (
+                <p className="mt-2 text-sm text-gray-600">
+                  <span className="font-semibold">Selected file: </span>
+                  {selectedFile.name}
+                </p>
+              )}
+            </div>
+
             <div className="mt-2 grid grid-cols-2 gap-5">
-              <Button onClick={handleUpdate} color="primary">
+              <Button onPress={handleUpdate} color="primary">
                 Update
               </Button>
-              <Button onClick={onCloseEdit}>Cancel</Button>
+              <Button onPress={onCloseEdit}>Cancel</Button>
             </div>
           </ModalBody>
         </ModalContent>
