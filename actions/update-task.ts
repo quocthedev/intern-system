@@ -33,6 +33,7 @@ export async function updateTask(formData: FormData) {
   const userId = formData.get("userId")?.toString() ?? null;
   const projectId = formData.get("projectId")?.toString() ?? null;
   const taskId = formData.get("taskId")?.toString() ?? null;
+  const positionId = formData.get("positionId")?.toString() ?? null;
 
   const params = R.compose(
     R.fromPairs,
@@ -48,6 +49,7 @@ export async function updateTask(formData: FormData) {
     projectId,
     status,
     completionProgress,
+    positionId,
     progressAssessment,
     startDate: startDate ? new Date(startDate).toISOString() : null,
     dueDate: dueDate ? new Date(dueDate).toISOString() : null,
