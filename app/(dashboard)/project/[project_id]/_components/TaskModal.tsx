@@ -331,6 +331,7 @@ export default function TaskModal(props: TaskModalProps) {
                         labelPlacement="outside"
                         placeholder="Select position"
                         value={selectedPositionId}
+                        name="positionId"
                         onChange={(e) => setSelectedPositionId(e.target.value)}
                       >
                         {(projectSummary?.listPosition ?? []).map(
@@ -386,21 +387,6 @@ export default function TaskModal(props: TaskModalProps) {
                       )
                     }
                   </div>
-
-                  <Select
-                    label="Select position for task"
-                    labelPlacement="outside"
-                    placeholder="Select position"
-                    name="positionId"
-                    value={selectedPositionTaskId}
-                    onChange={(e) => setSelectedPositionTaskId(e.target.value)}
-                  >
-                    {(projectSummary?.listPosition ?? []).map((position) => (
-                      <SelectItem key={position.id} value={position.id}>
-                        {position.name}
-                      </SelectItem>
-                    ))}
-                  </Select>
 
                   <div className="grid grid-cols-2 gap-4">
                     <Button color="primary" fullWidth type="submit">
