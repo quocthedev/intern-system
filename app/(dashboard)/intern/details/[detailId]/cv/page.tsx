@@ -48,12 +48,6 @@ export default function CandidateCVPage() {
     }
   };
 
-  const isGoogleDriveLink = () => {
-    const url = new URL(candidateData.cvUri);
-
-    return url.hostname === "drive.google.com";
-  };
-
   const handleUpload = async () => {
     if (!selectedFile) return;
 
@@ -77,9 +71,6 @@ export default function CandidateCVPage() {
         throw new Error("File upload failed");
       }
 
-      const result = await response.json();
-
-      console.log("Upload successful:", result);
       toast.success("CV uploaded successfully!");
       await refetch();
     } catch (error) {
@@ -90,6 +81,20 @@ export default function CandidateCVPage() {
     }
   };
 
+  const getPreviewUrl = (cvUri: string) => {
+    if (cvUri.includes("file/d/")) {
+      // Extract file ID and construct preview URL
+      const fileId = cvUri.split("file/d/")[1]?.split("/")[0];
+
+      return `https://drive.google.com/file/d/${fileId}/preview`;
+    }
+
+    // Fallback for other formats
+    return cvUri.replace("view?usp=drive_link", "preview");
+  };
+
+  const previewUrl = getPreviewUrl(candidateData?.cvUri || "");
+
   useEffect(() => {
     handleUpload();
   }, [selectedFile]);
@@ -98,7 +103,10 @@ export default function CandidateCVPage() {
     <div className="p-4">
       {uploadError && <div style={{ color: "red" }}>{uploadError}</div>}
       {isLoading ? (
-        <Spinner />
+        <div className="flex items-center justify-center gap-4 text-lg">
+          Loading
+          <Spinner size="lg" />
+        </div>
       ) : (
         <div>
           <div className="mb-4 flex justify-end space-x-2">
@@ -120,13 +128,13 @@ export default function CandidateCVPage() {
             />
           </div>
 
-          <PDFEmbed
-            pdfUrl={
-              isGoogleDriveLink()
-                ? candidateData.cvUri.replace("view?usp=drive_link", "preview")
-                : candidateData.cvUri
-            }
-          />
+          {previewUrl ? (
+            <PDFEmbed pdfUrl={previewUrl} />
+          ) : (
+            <div className="text-center text-2xl">
+              No CV available to display
+            </div>
+          )}
         </div>
       )}
     </div>

@@ -13,22 +13,16 @@ import {
   TableHeader,
   TableRow,
 } from "@nextui-org/table";
-import {
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
-} from "@nextui-org/dropdown";
+
 import { Tooltip } from "@nextui-org/tooltip";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import React from "react";
-import { Button } from "@nextui-org/button";
-import { EllipsisIcon } from "@/app/(dashboard)/internPeriod/_components/Icons";
 import { useInterviewDetailContext } from "@/app/(dashboard)/interview/_providers/InterviewDetailProvider";
 import { Tab, Tabs } from "@nextui-org/tabs";
 import RescheduleModal from "@/app/(dashboard)/interview/details/[detailId]/RescheduleModal";
+import { getCookie } from "@/app/util";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   Confirmed: "success",
@@ -84,6 +78,9 @@ export default function InterViewDetailPage() {
 
   const interviewScheduleData = data?.data || {};
   const candidateData = interviewDetailData?.interviewScheduleDetails || [];
+
+  const role = getCookie("userRole");
+
   const columnCandidate = [
     {
       key: "no",
@@ -163,33 +160,24 @@ export default function InterViewDetailPage() {
           } else {
             return <></>;
           }
+
         case "action":
-          return (
-            <div className="flex items-center">
-              <Dropdown>
-                <DropdownTrigger>
-                  <Button variant="light" isIconOnly>
-                    <EllipsisIcon />
-                  </Button>
-                </DropdownTrigger>
-                <DropdownMenu aria-label="Dynamic Actions">
-                  <DropdownItem key="view" className="flex items-center">
-                    <Tooltip content="View candidate detail">
-                      <Link
-                        href={`/intern/details/${candidate.candidateId}/interview-information`}
-                        className="w-full"
-                      >
-                        <button className="flex cursor-pointer items-center">
-                          <CreateQuestionIcon className="mr-2" /> Create
-                          interview question
-                        </button>
-                      </Link>
-                    </Tooltip>
-                  </DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
-            </div>
-          );
+          if (candidate.status === "Confirmed") {
+            return (
+              <div className="flex items-center">
+                <Tooltip content="Create question for candidate">
+                  <Link
+                    href={`/intern/details/${candidate.candidateId}/interview-information`}
+                    className="w-full"
+                  >
+                    <button className="flex cursor-pointer items-center">
+                      <CreateQuestionIcon />
+                    </button>
+                  </Link>
+                </Tooltip>
+              </div>
+            );
+          }
         default:
           return cellValue;
       }
@@ -278,12 +266,19 @@ export default function InterViewDetailPage() {
       )}
       <div className="flex items-center justify-between">
         <div className="mb-2 mt-8 text-lg">List of interview candidates</div>
-        {candidateData.find(
-          (candidate: any) => candidate?.status === "Reschedule",
-        ) ? (
-          <RescheduleModal disabled={false} />
+
+        {role === "Mentor" || role === "Administrator" ? (
+          <div>
+            {candidateData.find(
+              (candidate: any) => candidate?.status === "Reschedule",
+            ) ? (
+              <RescheduleModal disabled={false} />
+            ) : (
+              <RescheduleModal disabled={true} />
+            )}
+          </div>
         ) : (
-          <RescheduleModal disabled={true} />
+          <></>
         )}
       </div>
       <Tabs

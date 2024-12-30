@@ -5,6 +5,9 @@ import User from "./User";
 import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
+import NavigationHR from "@/app/(dashboard)/_components/sidebar/NavigationHR";
+import NavigationMentor from "@/app/(dashboard)/_components/sidebar/NavigationMentor";
+import NavigationUniversity from "@/app/(dashboard)/_components/sidebar/NavigationUniversity";
 
 export default function SideBar() {
   const cookiesStore = cookies();
@@ -19,8 +22,15 @@ export default function SideBar() {
         <p className="my-10 text-2xl font-bold text-title">Intern System</p>
         <Divider orientation="horizontal" className="bg-grey" />
 
-        {/* Navigation */}
-        <Navigation className="mt-10" />
+        {role === "HR Manager" ? (
+          <NavigationHR className="mt-10" />
+        ) : role === "Mentor" ? (
+          <NavigationMentor className="mt-10" />
+        ) : role === "University Official" ? (
+          <NavigationUniversity className="mt-10" />
+        ) : (
+          <Navigation className="mt-10" />
+        )}
 
         {/* Footer*/}
 

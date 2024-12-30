@@ -12,7 +12,7 @@ export default function ActionBar() {
       <div className="flex w-full items-center gap-2">
         <Input
           type="name"
-          placeholder="Search by name, group, technology,..."
+          placeholder="Search by intern period name"
           onChange={(e) => setSearch(e.target.value)}
         />
         <div className="flex min-w-max gap-3">
