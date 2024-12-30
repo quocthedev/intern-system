@@ -30,6 +30,7 @@ export interface ProjectTask {
   typeTask: {
     name: string;
     abbreviation: string;
+    id: string;
   };
   id: string;
   dateCreate: string;

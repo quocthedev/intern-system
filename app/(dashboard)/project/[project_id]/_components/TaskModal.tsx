@@ -40,7 +40,9 @@ export type User = {
 
 export default function TaskModal(props: TaskModalProps) {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
-  const [selectedPositionId, setSelectedPositionId] = useState("");
+  const [selectedPositionId, setSelectedPositionId] = useState(
+    props.selectedTaskInfo?.typeTask.id as string,
+  );
   const [selectedPositionTaskId, setSelectedPositionTaskId] = useState("");
 
   const { project_id } = useParams();
@@ -51,8 +53,6 @@ export default function TaskModal(props: TaskModalProps) {
     queryKey: ["userPositions", selectedPositionId],
 
     queryFn: async () => {
-      if (!selectedPositionId) return [];
-
       const response = (await apiClient.get(
         `/project/${project_id}/position/${selectedPositionId}/user-relates`,
       )) as { statusCode: string; data: any };
@@ -330,7 +330,9 @@ export default function TaskModal(props: TaskModalProps) {
                         label="Select position"
                         labelPlacement="outside"
                         placeholder="Select position"
-                        value={selectedPositionId}
+                        defaultSelectedKeys={[
+                          props.selectedTaskInfo?.typeTask.id || "",
+                        ]}
                         name="positionId"
                         onChange={(e) => setSelectedPositionId(e.target.value)}
                       >
@@ -348,13 +350,11 @@ export default function TaskModal(props: TaskModalProps) {
                         labelPlacement="outside"
                         placeholder="Select Assignee"
                         defaultSelectedKeys={[
-                          `${props.selectedTaskInfo?.assignedPerson.id ?? ""}`,
+                          props.selectedTaskInfo?.assignedPerson.id || "",
                         ]}
                         name="userId"
                         required
-                        isDisabled={
-                          !data || !Array.isArray(data) || data.length === 0
-                        }
+                        isLoading={isLoading}
                       >
                         {data?.map((user: any) => (
                           <SelectItem key={user.id} value={user.id}>
