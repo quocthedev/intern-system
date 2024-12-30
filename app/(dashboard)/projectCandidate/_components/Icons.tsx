@@ -1,5 +1,5 @@
 import ExcelSVG from "@/public/icons/actionbar/excel-icon.svg";
-import DeleteSVG from "@/public/icons/actionbar/delete-red-icon.svg";
+import DeleteSVG from "@/public/icons/actionbar/delete-icon.svg";
 import AddSVG from "@/public/icons/actionbar/add-icon.svg";
 
 import FilterSVG from "@/public/icons/actionbar/filter-icon.svg";
@@ -50,7 +50,7 @@ export const FilterIcon = ({ size = 24, className }: ActionBarIconProps) => (
   />
 );
 
-export const EditIcon = ({ size = 18, className }: ActionBarIconProps) => (
+export const EditIcon = ({ size = 16, className }: ActionBarIconProps) => (
   <Image
     src={EditSVG}
     alt="Edit"
