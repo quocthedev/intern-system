@@ -222,7 +222,7 @@ export default function AccountProfile({
       />
 
       {userRole === "Administrator" ? (
-        <div>
+        <div className="flex flex-col gap-3">
           <Autocomplete
             label="Role"
             placeholder="Choose role"
@@ -273,7 +273,7 @@ export default function AccountProfile({
           />
         </div>
       ) : (
-        <div>
+        <div className="flex flex-col gap-3">
           <Autocomplete
             label="Role"
             placeholder="Choose role"
