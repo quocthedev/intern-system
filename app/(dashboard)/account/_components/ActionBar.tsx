@@ -26,7 +26,7 @@ export default function ActionBar() {
     <div>
       <Input
         size="md"
-        placeholder="Search by name, mentor, technology,..."
+        placeholder="Search by name, email"
         className="flex-1"
         fullWidth
         onChange={(e) => setAccountSearch(e.target.value)}

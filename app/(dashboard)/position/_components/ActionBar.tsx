@@ -141,7 +141,7 @@ export default function ActionBar() {
       <div className="flex w-full gap-2">
         <Input
           size="md"
-          placeholder="Search by name, mentor, technology,..."
+          placeholder="Search by position name"
           className="flex-1"
         />
         <NewPrositionModal />
