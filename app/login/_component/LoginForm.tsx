@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "@nextui-org/input";
 import {
   EyeFilledIcon,
@@ -44,6 +44,8 @@ export const LoginForm = () => {
     setVisible(!visible);
   };
 
+  const [timer, setTimer] = useState(0);
+
   const loginWithGoogle = () => {
     const query = {
       client_id: oauth_google.client_id,
@@ -56,6 +58,23 @@ export const LoginForm = () => {
     url.search = new URLSearchParams(query).toString();
     window.location.href = url.toString();
   };
+
+  const [isDisabled, setIsDisabled] = useState(false);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout | undefined = undefined;
+
+    if (isDisabled && timer > 0) {
+      interval = setInterval(() => {
+        setTimer((prev) => prev - 1);
+      }, 1000);
+    } else if (timer === 0) {
+      setIsDisabled(false);
+      clearInterval(interval);
+    }
+
+    return () => clearInterval(interval);
+  }, [isDisabled, timer]);
 
   // create a mutation to reset the password
   const resetPassword = useMutation({
@@ -70,6 +89,8 @@ export const LoginForm = () => {
 
       if (res.statusCode === "200") {
         setResetPasswordMessage(defaultSuccessMessage);
+        setIsDisabled(true);
+        setTimer(30);
       } else {
         setResetPasswordMessage(res.message);
       }
@@ -242,13 +263,15 @@ export const LoginForm = () => {
 
                   <Button
                     isLoading={resetPassword.isPending}
-                    isDisabled={resetPassword.isPending}
+                    isDisabled={resetPassword.isPending || isDisabled}
                     type="submit"
                     color="primary"
                   >
                     {resetPassword.isPending
                       ? "Processing..."
-                      : "Reset password"}
+                      : isDisabled
+                        ? `Retry in ${timer}s`
+                        : "Reset password"}
                   </Button>
                 </>
               ),
