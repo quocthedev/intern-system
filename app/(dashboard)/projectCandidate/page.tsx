@@ -2,7 +2,7 @@
 import React from "react";
 import ActionBar from "./_components/ActionBar";
 import ProjectList from "./_components/ProjectList";
-import ProjectListProvider from "./_providers/ProjectListProvider";
+import ProjectListProvider from "@/app/(dashboard)/projectCandidate/_providers/ProjectListProvider";
 
 export default function ProjectPage() {
   return (

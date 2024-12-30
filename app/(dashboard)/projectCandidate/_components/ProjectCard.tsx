@@ -2,10 +2,10 @@ import { Card, CardBody, CardFooter, CardHeader } from "@nextui-org/card";
 import { Divider } from "@nextui-org/divider";
 import { Link } from "@nextui-org/link";
 import { Chip } from "@nextui-org/chip";
-import { Project } from "../_types/Project";
 import { PropsWithChildren } from "react";
 import { useDisclosure } from "@nextui-org/modal";
 import { useRouter } from "next/navigation";
+import { Project } from "@/data-store/project/project-list-candidate.store";
 
 export default function ProjectCard(props: PropsWithChildren<Project>) {
   const router = useRouter();

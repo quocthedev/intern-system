@@ -97,22 +97,18 @@ export default function InterViewCard() {
                   <Divider />
                   <CardBody
                     onClick={() => handlePress(interview.id)}
-                    className="cursor-pointer rounded-lg border p-4 shadow-sm transition-shadow duration-200 hover:shadow-md"
+                    className="cursor-pointer border p-4 shadow-sm transition-shadow duration-200 hover:shadow-md"
                   >
                     {/* Header Section */}
-                    <div className="mb-4 grid grid-cols-2 gap-4">
+                    <div className="mb-2 grid grid-cols-2 gap-4">
                       <div className="flex items-center gap-2">
-                        <span className="font-semibold text-gray-700">
-                          Start date:
-                        </span>
+                        <span className="font-medium">Start date:</span>
                         <span className="text-gray-600">
                           {formatDate(interview.interviewDate)}
                         </span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="font-semibold text-gray-700">
-                          Start time:
-                        </span>
+                        <span className="font-medium">Start time:</span>
                         <span className="text-gray-600">
                           {interview.startTime}
                         </span>
@@ -122,23 +118,19 @@ export default function InterViewCard() {
                     {/* Details Section */}
                     <div className="mb-2">
                       <div className="flex items-center gap-2">
-                        <span className="font-semibold text-gray-700">
-                          Interviewed by:
-                        </span>
+                        <span className="font-medium">Interviewed by:</span>
                         <span className="text-gray-600">
                           {interview.interviewer?.fullName || "N/A"}
                         </span>
                       </div>
                       <div className="mt-2 flex items-center gap-2">
-                        <span className="font-semibold text-gray-700">
-                          Duration:
-                        </span>
+                        <span className="font-medium">Duration:</span>
                         <span className="text-gray-600">
                           {formatedTimeToMinutes(interview.timeDuration)} mins
                         </span>
                       </div>
                     </div>
-                    <div className="mb-2 font-semibold">
+                    <div className="mb-2 font-medium">
                       Number of invitations :{" "}
                     </div>
                     {/* Invitation Status Section */}

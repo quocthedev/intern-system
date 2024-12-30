@@ -49,7 +49,7 @@ export default function RelatedUsers() {
       case "actions":
         if (role === "Administrator" || role === "Mentor") {
           return (
-            <div className="flex gap-1">
+            <div className="flex">
               <MemberUpdate
                 projectName={projectSummary?.title as string}
                 projectId={projectSummary?.id as string}

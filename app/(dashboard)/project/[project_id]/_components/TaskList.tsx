@@ -47,6 +47,18 @@ export default function TaskList() {
     OverDue: "danger",
   };
 
+  const textColorMap: Record<string, string> = {
+    Easy: "text-green-600",
+    MediumEasy: "text-green-600",
+    Medium: "text-yellow-600",
+    MediumHard: "text-yellow-600",
+    Hard: "text-red-600",
+    Highest: "text-red-600",
+    High: "text-yellow-600",
+    Low: "text-green-600",
+    Lowest: "text-green-600",
+  };
+
   const columns = [
     { key: "title", label: "Title" },
     { key: "summary", label: "Summary" },
@@ -116,9 +128,13 @@ export default function TaskList() {
       case "dueDate":
         return item.dueDate.split("T")[0];
       case "priority":
-        return item.priority;
+        return (
+          <div className={textColorMap[item.priority]}>{item.priority}</div>
+        );
       case "difficulty":
-        return item.difficulty;
+        return (
+          <div className={textColorMap[item.difficulty]}>{item.difficulty}</div>
+        );
       case "status":
         return (
           <Chip

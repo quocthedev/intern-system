@@ -4,11 +4,13 @@ import Navigation from "./Navigation";
 import User from "./User";
 import { cookies } from "next/headers";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function SideBar() {
   const cookiesStore = cookies();
 
   const role = cookiesStore.get("userRole")?.value as string;
+  const id = cookiesStore.get("userId")?.value as string;
 
   if (role !== "Candidate") {
     return (
@@ -34,8 +36,20 @@ export default function SideBar() {
           alt="Amazing tech logo"
           src="/icons/technology/amazingtech.png"
         />
-        <div className="text-2xl font-bold text-title">
-          Intern Management Systerm
+
+        <div className="flex gap-4">
+          <Link
+            className="text-xl font-semibold text-slate-600 transition duration-200 hover:text-blue-600"
+            href={`/candidate/${id}`}
+          >
+            Home
+          </Link>
+          <Link
+            className="text-xl font-semibold text-slate-600 transition duration-200 hover:text-blue-600"
+            href="/projectCandidate"
+          >
+            Projects
+          </Link>
         </div>
         <User className="mb-3 mt-auto max-w-fit" />
       </div>

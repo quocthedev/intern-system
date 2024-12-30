@@ -13,6 +13,7 @@ import { deleteMember } from "@/actions/delete-member";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useProjectDetailContext } from "@/app/(dashboard)/project/_providers/ProjectDetailProvider";
+import { DeleteIcon } from "@/app/(dashboard)/project/_components/Icons";
 export type MemberDeleteModalProps = {
   projectId: string;
   memberId: string;
@@ -44,8 +45,8 @@ export default function MemberDeleteModal(props: MemberDeleteModalProps) {
 
   return (
     <>
-      <Button onClick={onOpen} isIconOnly variant="light">
-        <TrashIcon size={16} />
+      <Button onPress={onOpen} isIconOnly variant="light">
+        <DeleteIcon size={20} />
       </Button>
 
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="w-[800px]">

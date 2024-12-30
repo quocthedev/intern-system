@@ -3,8 +3,8 @@ import React from "react";
 import ProjectCard from "./ProjectCard";
 import { cn } from "@nextui-org/react";
 import { Pagination } from "@nextui-org/pagination";
-import { useProjectListContext } from "../_providers/ProjectListProvider";
 import Loading from "@/components/Loading";
+import { useProjectListContext } from "@/app/(dashboard)/projectCandidate/_providers/ProjectListProvider";
 
 export type ProjectListProps = {
   className?: string;

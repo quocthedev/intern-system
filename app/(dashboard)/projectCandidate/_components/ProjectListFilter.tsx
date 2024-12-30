@@ -8,7 +8,7 @@ import { getLocalTimeZone, today } from "@internationalized/date";
 import { Popover, PopoverContent, PopoverTrigger } from "@nextui-org/popover";
 import React from "react";
 import { Select, SelectItem } from "@nextui-org/select";
-import { useProjectListContext } from "@/app/(dashboard)/candidate/detail/[detailId]/projectUser/_providers/ProjectListProvider";
+import { useProjectListContext } from "@/app/(dashboard)/projectCandidate/_providers/ProjectListProvider";
 
 const ProjectListStatusMapping = {
   0: "NotStarted",

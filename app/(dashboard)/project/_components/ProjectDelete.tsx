@@ -8,11 +8,11 @@ import {
   useDisclosure,
 } from "@nextui-org/modal";
 import React from "react";
-import { TrashIcon } from "@/components/icons/OtherIcons";
 import { toast } from "sonner";
 import { DeleteProject } from "@/actions/delete-project";
 import { useProjectListContext } from "@/app/(dashboard)/project/_providers/ProjectListProvider";
 import { useMutation } from "@tanstack/react-query";
+import { DeleteIcon } from "@/app/(dashboard)/project/_components/Icons";
 export type ProjectDeleteProps = {
   projectId: string;
 };
@@ -38,8 +38,8 @@ export default function ProjectDelete(props: ProjectDeleteProps) {
 
   return (
     <>
-      <Button onClick={onOpen} isIconOnly variant="light">
-        <TrashIcon size={16} />
+      <Button onPress={onOpen} isIconOnly variant="light">
+        <DeleteIcon size={24} />
       </Button>
 
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="w-[800px]">

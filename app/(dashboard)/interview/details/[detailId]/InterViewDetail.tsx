@@ -197,8 +197,6 @@ export default function InterViewDetailPage() {
     [],
   );
 
-  console.log(candidateData);
-
   return (
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4">
@@ -213,9 +211,7 @@ export default function InterViewDetailPage() {
           <span className="font-semibold">Internship schedule details</span>
         </div>
       </div>
-      <div className="mb-2 mt-4 text-xl font-semibold">
-        {interviewScheduleData?.title}
-      </div>
+
       {isLoading ? (
         <div className="rounded-lg bg-white p-4 shadow-md">
           <div className="grid grid-cols-2 gap-3 text-sm text-gray-600">
@@ -245,8 +241,11 @@ export default function InterViewDetailPage() {
           </div>
         </div>
       ) : (
-        <div className="rounded-lg bg-white p-4 shadow-md">
-          <div className="grid grid-cols-2 gap-3 text-sm text-gray-600">
+        <div className="mt-4 rounded-lg bg-white p-4 shadow-md">
+          <div className="flex justify-start border-b pb-2 text-xl font-semibold">
+            <span>{interviewScheduleData?.title}</span>
+          </div>
+          <div className="mt-3 grid grid-cols-2 gap-3 text-sm text-gray-600">
             <div className="flex items-center border-b pb-2">
               <span className="w-1/2 font-medium">Interviewer name:</span>
               <span className="w-1/2 font-bold">
@@ -288,6 +287,7 @@ export default function InterViewDetailPage() {
         )}
       </div>
       <Tabs
+        className="mb-4"
         key={"md"}
         size={"md"}
         color="primary"

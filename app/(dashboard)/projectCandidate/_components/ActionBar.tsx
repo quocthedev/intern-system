@@ -3,8 +3,8 @@ import React from "react";
 import { useDisclosure } from "@nextui-org/modal";
 import ProjectListProvider, {
   useProjectListContext,
-} from "@/app/(dashboard)/candidate/detail/[detailId]/projectUser/_providers/ProjectListProvider";
-import ProjectListFilter from "@/app/(dashboard)/candidate/detail/[detailId]/projectUser/_components/ProjectListFilter";
+} from "@/app/(dashboard)/projectCandidate/_providers/ProjectListProvider";
+import ProjectListFilter from "@/app/(dashboard)/projectCandidate/_components/ProjectListFilter";
 
 export default function ActionBar() {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();

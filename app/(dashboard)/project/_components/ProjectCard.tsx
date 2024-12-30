@@ -1,7 +1,7 @@
 import { Card, CardBody, CardFooter, CardHeader } from "@nextui-org/card";
 import { Divider } from "@nextui-org/divider";
 import { Link } from "@nextui-org/link";
-import { Chip } from "@nextui-org/chip";
+import { Chip, ChipProps } from "@nextui-org/chip";
 import { Button } from "@nextui-org/button";
 import { EditIcon } from "./Icons";
 import { Project } from "../_types/Project";
@@ -10,6 +10,11 @@ import ProjectModal from "./ProjectModal";
 import { useDisclosure } from "@nextui-org/modal";
 import { useRouter } from "next/navigation";
 import ProjectDelete from "@/app/(dashboard)/project/_components/ProjectDelete";
+
+const statusColorMap: Record<string, ChipProps["color"]> = {
+  Open: "success",
+  NotStarted: "warning",
+};
 
 export default function ProjectCard(props: PropsWithChildren<Project>) {
   const router = useRouter();
@@ -22,11 +27,11 @@ export default function ProjectCard(props: PropsWithChildren<Project>) {
       isPressable
       onPress={() => router.push(`/project/${props.id}` as string)}
     >
-      <CardHeader className="flex gap-1">
-        <div className="flex w-full justify-between">
+      <CardHeader>
+        <div className="flex w-full items-center justify-between">
           <p className="text-lg font-semibold">{props.title}</p>
-          <div className="flex items-center gap-1">
-            <Chip className="bg-warning-400/50 text-warning-700" size="sm">
+          <div className="flex items-center">
+            <Chip color={statusColorMap[props.status]} variant="flat" size="sm">
               {props.status}
             </Chip>
 
@@ -34,7 +39,7 @@ export default function ProjectCard(props: PropsWithChildren<Project>) {
               variant="light"
               size="sm"
               startContent={<EditIcon />}
-              className="text-grey"
+              className="mt-1 text-grey"
               onPress={onOpen}
             >
               Edit
