@@ -16,6 +16,8 @@ import { ExcelIcon } from "@/app/(dashboard)/intern/_components/Icons";
 import { Divider } from "@nextui-org/divider";
 import Link from "next/link";
 import APIClient from "@/libs/api-client";
+import { useInternPeriodContext } from "@/app/(dashboard)/internPeriod/_providers/InternPeriodProvider";
+import { useUniversityCandidateContext } from "@/app/(dashboard)/internPeriod/(details)/[periodId]/_providers/UniversityCandidateProvider";
 
 interface PeriodModalIdProps {
   internPeriodId: string | null;
@@ -32,7 +34,7 @@ function ImportExcelModal3({
   const [selectedInternPeriodId] = useState<string | null>(internPeriodId);
 
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
-
+  const { refetch } = useUniversityCandidateContext();
   const apiClient = new APIClient({
     onFulfilled: (response) => response,
     onRejected: (error) => {
@@ -53,10 +55,8 @@ function ImportExcelModal3({
     }
   };
 
-  const queryClient = useQueryClient();
-
   // Mutation for file upload
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: async (formData: FormData) => {
       const response = await apiClient.post<{
         statusCode: string;
@@ -85,7 +85,7 @@ function ImportExcelModal3({
     },
     onSuccess: () => {
       toast.success("Upload file successfully!");
-      queryClient.invalidateQueries(); // Refetch relevant queries
+      refetch();
       onClose(); // Close modal or reset state
     },
   });
@@ -178,10 +178,10 @@ function ImportExcelModal3({
                 <div className="grid grid-cols-2 gap-5">
                   <Button
                     color="primary"
-                    onPressStart={handleFileUpload}
+                    onPress={handleFileUpload}
                     className="w-full"
                   >
-                    Submit
+                    {isPending ? "Uploading..." : "Upload"}{" "}
                   </Button>
                   <Button
                     color="default"

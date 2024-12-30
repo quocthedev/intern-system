@@ -140,40 +140,44 @@ export default function InternPeriodInformation() {
             <h2 className="text-2xl font-semibold text-amber-600">
               Intern Period Details
             </h2>
-            {!edit ? (
-              <Button
-                variant="shadow"
-                size="md"
-                onClick={(e) => {
-                  e.preventDefault();
-                  toggleEdit();
-                }}
-                startContent={<EditIcon />}
-                type="button"
-              >
-                Edit
-              </Button>
+            {internPeriodData?.status == "InProgress" ? (
+              <></>
             ) : (
-              <div className="flex gap-2">
-                <Button
-                  size="md"
-                  variant="shadow"
-                  color="primary"
-                  type="submit"
-                >
-                  Save
-                </Button>
-                <Button
-                  variant="shadow"
-                  size="md"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    toggleEdit();
-                  }}
-                  type="button"
-                >
-                  Cancel
-                </Button>
+              <div>
+                {!edit ? (
+                  <Button
+                    variant="shadow"
+                    size="md"
+                    onPress={() => {
+                      toggleEdit();
+                    }}
+                    startContent={<EditIcon />}
+                    type="button"
+                  >
+                    Edit
+                  </Button>
+                ) : (
+                  <div className="flex gap-2">
+                    <Button
+                      size="md"
+                      variant="shadow"
+                      color="primary"
+                      type="submit"
+                    >
+                      Save
+                    </Button>
+                    <Button
+                      variant="shadow"
+                      size="md"
+                      onPress={() => {
+                        toggleEdit();
+                      }}
+                      type="button"
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                )}
               </div>
             )}
           </div>
