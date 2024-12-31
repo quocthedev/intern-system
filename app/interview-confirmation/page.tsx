@@ -38,7 +38,7 @@ export default function InterviewConfirmation() {
     await confirmAttendance(formData);
 
     // Navigate to the home page if the user accepted
-    if (isReject == false) {
+    if (!isReject) {
       toast.success("You have accepted to an interview");
       window.history.replaceState(null, "", "interview-confirmation/detail");
       router.push("/interview-confirmation/detail");
@@ -85,7 +85,10 @@ export default function InterviewConfirmation() {
               >
                 <Radio
                   value={"1"}
-                  onClick={() => setIsReject(false)}
+                  onChange={() => {
+                    setIsReject(false);
+                    setIsReschedule(false);
+                  }}
                   isDisabled={isSending}
                 >
                   Accept
@@ -93,14 +96,20 @@ export default function InterviewConfirmation() {
 
                 <Radio
                   value={"2"}
-                  onClick={() => setIsReject(true)}
+                  onChange={() => {
+                    setIsReject(true);
+                    setIsReschedule(false);
+                  }}
                   isDisabled={isSending}
                 >
                   Reject
                 </Radio>
                 <Radio
                   value={"3"}
-                  onClick={() => setIsReschedule(true)}
+                  onChange={() => {
+                    setIsReschedule(true);
+                    setIsReject(true);
+                  }}
                   isDisabled={isSending}
                 >
                   Reschedule
