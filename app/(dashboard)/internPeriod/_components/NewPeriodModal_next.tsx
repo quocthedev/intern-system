@@ -157,7 +157,6 @@ export default function NewPeriodModalNext() {
                   label="Description"
                   placeholder="Enter description"
                   labelPlacement="outside"
-                  isRequired
                   name="description"
                 />
 
