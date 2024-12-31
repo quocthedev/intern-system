@@ -29,6 +29,7 @@ import Loading from "@/components/Loading";
 import { Autocomplete } from "@nextui-org/autocomplete";
 import { useParams } from "next/navigation";
 import { useProjectDetailContext } from "@/app/(dashboard)/project/_providers/ProjectDetailProvider";
+import { AddIcon } from "@/app/(dashboard)/project/_components/Icons";
 
 const apiClient = new APIClient({
   onFulfilled: (response) => response,
@@ -188,7 +189,7 @@ export default function NewMemberModal(props: NewMemberModalProps) {
   return (
     <>
       <Button onPress={onOpen} color="primary" variant="shadow">
-        Add New Member
+        <AddIcon /> Add New Member
       </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent className="max-w-6xl">

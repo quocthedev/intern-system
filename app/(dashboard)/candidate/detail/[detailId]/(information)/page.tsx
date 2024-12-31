@@ -11,6 +11,7 @@ import Loading from "@/components/Loading";
 import AccountProfile from "./_components/AccountProfile";
 import { getCookie } from "@/app/util";
 import { PasswordChangeFormRefactor } from "@/app/(dashboard)/password-change/_components/PasswordChangeForm_refactor";
+import { Avatar } from "@nextui-org/react";
 
 const apiClient = new APIClient({
   onFulfilled: (response) => response,
@@ -85,24 +86,19 @@ export default function InformationAccountDetail() {
           <h3 className="mb-4 text-lg font-semibold">Avatar</h3>
           <div className="flex items-center space-x-4">
             {accountData?.avatar ? (
-              <Image
-                width={150}
-                height={150}
+              <Avatar
                 alt={`${accountData.name}`}
                 src={accountData.avatar}
-                className="rounded-2xl object-contain"
+                className="h-40 w-40 object-contain"
               />
             ) : (
-              <Image
-                width={150}
-                height={150}
+              <Avatar
                 alt="Default Candidate"
                 src="/icons/technology/no-avatar.png"
-                className="rounded-2xl object-contain"
+                className="h-40 w-40 object-contain"
               />
             )}
             <div>
-              <div className="mb-4 text-gray-600">Please select picture</div>
               <Button
                 onPress={() => document.getElementById("uploadImage")?.click()}
                 color="primary"

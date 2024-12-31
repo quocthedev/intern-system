@@ -38,7 +38,7 @@ export default function InterviewConfirmation() {
     await confirmAttendance(formData);
 
     // Navigate to the home page if the user accepted
-    if (!isReject) {
+    if (isReject == false) {
       toast.success("You have accepted to an interview");
       window.history.replaceState(null, "", "interview-confirmation/detail");
       router.push("/interview-confirmation/detail");

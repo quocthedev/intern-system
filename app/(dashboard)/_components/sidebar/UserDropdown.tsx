@@ -24,16 +24,13 @@ export default function UserDropdown() {
 
   const items = [
     {
-      name: "Profile",
+      name: "Profile settings",
       key: "profile",
       onClick: handleMove,
     },
+
     {
-      name: "Settings",
-      key: "settings",
-    },
-    {
-      name: "Change Password",
+      name: "Change password",
       key: "changePassword",
     },
     {
@@ -54,7 +51,14 @@ export default function UserDropdown() {
         }
       }}
     >
-      {(item) => <DropdownItem key={item.key}>{item.name}</DropdownItem>}
+      {(item) => (
+        <DropdownItem
+          className={item.key === "logout" ? "text-red-500" : ""}
+          key={item.key}
+        >
+          {item.name}
+        </DropdownItem>
+      )}
     </DropdownMenu>
   );
 }

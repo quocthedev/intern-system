@@ -13,7 +13,7 @@ import { Select, SelectItem } from "@nextui-org/select";
 const ProjectListStatusMapping = {
   0: "NotStarted",
   1: "Open",
-  2: "Closed",
+  3: "Closed",
 };
 
 type ProjectListFilter = Partial<{
@@ -52,7 +52,7 @@ export default function ProjectListFilter() {
   };
 
   return (
-    <div className="mb-4 flex items-center gap-3">
+    <div className="mb-2 flex items-center gap-3">
       <Popover placement="bottom-end">
         <PopoverTrigger>
           <Button
@@ -109,7 +109,7 @@ export default function ProjectListFilter() {
             color="default"
             variant="shadow"
             fullWidth
-            onClick={() => removeAllProjectListFilter()}
+            onPress={() => removeAllProjectListFilter()}
           >
             Clear
           </Button>
@@ -127,7 +127,7 @@ export default function ProjectListFilter() {
               >
                 {key}:{}
                 {key === "Status"
-                  ? ProjectListStatusMapping[Number(value) as 0 | 1 | 2]
+                  ? ProjectListStatusMapping[Number(value) as 0 | 1 | 3]
                   : (value as string)}
               </Chip>
             ),
