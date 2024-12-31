@@ -12,7 +12,6 @@ import React, { useState } from "react";
 import { getLocalTimeZone, now, parseDate } from "@internationalized/date";
 import { Select, SelectItem } from "@nextui-org/select";
 import { createNewTask } from "@/actions/create-new-task";
-import { EditIcon } from "../../_components/Icons";
 import { updateTask } from "@/actions/update-task";
 import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
@@ -20,6 +19,7 @@ import APIClient from "@/libs/api-client";
 import { useParams } from "next/navigation";
 import { ProjectTask } from "@/data-store/project/project-task.store";
 import { useProjectDetailContext } from "../../_providers/ProjectDetailProvider";
+import { AddIcon, EditIcon } from "@/app/(dashboard)/project/_components/Icons";
 
 export type TaskModalProps = {
   mode: "create" | "edit";
@@ -66,7 +66,6 @@ export default function TaskModal(props: TaskModalProps) {
 
   const handleClose = () => {
     onClose();
-    setSelectedPositionId("");
   };
 
   const priorityOptions = [
@@ -181,12 +180,12 @@ export default function TaskModal(props: TaskModalProps) {
   return (
     <>
       {props.mode === "edit" ? (
-        <Button onClick={onOpen} isIconOnly variant="light">
+        <Button onPress={onOpen} isIconOnly variant="light">
           <EditIcon />
         </Button>
       ) : (
         <Button onPress={onOpen} color="primary" variant="shadow">
-          Add Task
+          <AddIcon /> Create New Task
         </Button>
       )}
 
@@ -202,6 +201,28 @@ export default function TaskModal(props: TaskModalProps) {
 
               <ModalBody className="">
                 <form className="flex flex-col gap-4" action={submitTask}>
+                  {
+                    // Only show status select for edit mode
+                    props.mode === "edit" && (
+                      <Select
+                        label="Status"
+                        labelPlacement="outside"
+                        defaultSelectedKeys={[
+                          statusOptions.find(
+                            (status) =>
+                              status.value === props.selectedTaskInfo?.status,
+                          )?.key ?? "0",
+                        ]}
+                        name="status"
+                      >
+                        {statusOptions.map((status) => (
+                          <SelectItem key={status.key}>
+                            {status.value}
+                          </SelectItem>
+                        ))}
+                      </Select>
+                    )
+                  }
                   <Input
                     type="text"
                     label="Title"
@@ -363,29 +384,6 @@ export default function TaskModal(props: TaskModalProps) {
                         ))}
                       </Select>
                     </div>
-
-                    {
-                      // Only show status select for edit mode
-                      props.mode === "edit" && (
-                        <Select
-                          label="Status"
-                          labelPlacement="outside"
-                          defaultSelectedKeys={[
-                            statusOptions.find(
-                              (status) =>
-                                status.value === props.selectedTaskInfo?.status,
-                            )?.key ?? "0",
-                          ]}
-                          name="status"
-                        >
-                          {statusOptions.map((status) => (
-                            <SelectItem key={status.key}>
-                              {status.value}
-                            </SelectItem>
-                          ))}
-                        </Select>
-                      )
-                    }
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">

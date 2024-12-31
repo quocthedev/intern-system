@@ -197,7 +197,7 @@ export default function TaskList() {
   return (
     <div className="mt-4 flex flex-col gap-2">
       <div className="flex items-center justify-between">
-        <p className="text-lg font-medium">Task Lists</p>
+        <p className="text-lg font-semibold">Task List </p>
 
         {role === "Administrator" || role === "Mentor" ? (
           <TaskModal mode="create" projectId={projectSummary?.id as string} />

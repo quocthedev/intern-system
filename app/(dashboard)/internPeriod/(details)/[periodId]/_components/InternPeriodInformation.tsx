@@ -205,6 +205,7 @@ export default function InternPeriodInformation() {
                 }
                 name="name"
                 className="flex-1"
+                isRequired
               />
             </div>
             <div className="flex items-center border-b pb-2">
@@ -245,6 +246,7 @@ export default function InternPeriodInformation() {
                 className="flex-1"
                 disabled={!edit}
                 name="maxCandidateQuantity"
+                isRequired
               />
             </div>
 
@@ -287,6 +289,7 @@ export default function InternPeriodInformation() {
                 name="description"
                 className="flex-1"
                 disabled={!edit}
+                isRequired
               />
             </div>
           </div>

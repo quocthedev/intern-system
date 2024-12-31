@@ -55,7 +55,7 @@ export const LoginForm = () => {
       if (res.statusCode === "200") {
         setResetPasswordMessage(defaultSuccessMessage);
         setIsDisabled(true);
-        setTimer(30);
+        setTimer(60);
       } else {
         setResetPasswordMessage(res.message);
       }

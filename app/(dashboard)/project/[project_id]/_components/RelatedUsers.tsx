@@ -105,7 +105,7 @@ export default function RelatedUsers() {
   return (
     <div className="mt-2 flex w-full flex-col gap-3">
       <div className="flex items-center justify-between">
-        <h1 className="text-lg font-medium">Members</h1>
+        <h1 className="text-lg font-semibold">Member List</h1>
         {role === "Administrator" || role === "Mentor" ? (
           <NewMemberModal projectId={projectSummary?.id as string} />
         ) : (

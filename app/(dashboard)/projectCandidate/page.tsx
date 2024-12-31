@@ -7,7 +7,8 @@ import ProjectListProvider from "@/app/(dashboard)/projectCandidate/_providers/P
 export default function ProjectPage() {
   return (
     <ProjectListProvider>
-      <div className="flex h-full w-full flex-col">
+      <div className="flex h-full w-full flex-col p-6">
+        <div className="mb-3 text-xl font-semibold">Project assgined</div>
         <ActionBar />
         <div className="flex w-full gap-6">
           <ProjectList />

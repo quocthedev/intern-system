@@ -42,7 +42,6 @@ export default function FinalReportPage() {
 
   const params = useParams();
   const candidateId = params.detailId as string;
-  const role = getCookie("userRole");
 
   const apiClient = new APIClient({
     onFulfilled: (response) => response,
@@ -63,39 +62,6 @@ export default function FinalReportPage() {
     },
   });
 
-  console.log(candidateId);
-
-  const { mutate } = useMutation({
-    mutationFn: async (submitScore: SubmitScore[]) => {
-      const response = await apiClient.post<{
-        statusCode: string;
-        message: string;
-      }>(
-        `${API_ENDPOINTS.internshipReport}/${candidateId}/record-compliance-evaluation`,
-        submitScore,
-        {},
-        true,
-      );
-
-      if (response.statusCode !== "200") {
-        const errorData = response.message;
-
-        throw new Error(errorData || "Failed to submit score");
-      }
-
-      return response;
-    },
-    onError: (error) => {
-      console.error("Error:", error); // Log the error to the console
-      toast.error(error.message);
-    },
-    onSuccess: () => {
-      setIsEditable(false);
-      toast.success("Submit score successfully!");
-      refetch();
-    },
-  });
-
   const internPeriodViewReport = data?.data?.internPeriodViewReport || {};
   const candidateInfor = data?.data || {};
   const complianceEvaluate = data?.data?.complianceEvaluation || {};
@@ -106,19 +72,6 @@ export default function FinalReportPage() {
 
   const workPerformanceEvaluationFinal =
     data?.data?.workPerformanceEvaluationFinal;
-  const [isScored, setIsScored] = useState(false);
-
-  const handleGetIsScored = () => {
-    const result = complianceCriterias?.some((complianceCriteria: Criteria) => {
-      return complianceCriteria.evaluateScore > 0;
-    });
-
-    setIsScored(result);
-  };
-
-  useEffect(() => {
-    handleGetIsScored();
-  }, [data]);
 
   const columnsCompany = useMemo(
     () => [
@@ -182,44 +135,6 @@ export default function FinalReportPage() {
   const renderCell = (criterias: Criteria, columnKey: Key, index: number) => {
     const cellValue = criterias[columnKey as keyof Criteria];
 
-    const cloneCriterias = () => {
-      if (
-        !criteriaArray.find((criteria) => {
-          return criteria.content === criterias.content;
-        })
-      ) {
-        criteriaArray.push(criterias);
-      }
-    };
-
-    const updateTheCriteriaScore = (content: string, newScore: number) => {
-      if (!newScore) return;
-
-      const clonedCriteriaArray = [...criteriaArray];
-      const criteriaInformation = clonedCriteriaArray.find(
-        (criteria) => criteria.content === content,
-      );
-
-      if (!criteriaInformation || newScore > 10 || newScore < 0) return;
-
-      criteriaInformation.evaluateScore = newScore;
-      setcriteriaArray(clonedCriteriaArray);
-    };
-
-    const updateTheCriteriaNote = (content: string, newNote: string) => {
-      const clonedCriteriaArray = [...criteriaArray];
-      const criteriaInformation = clonedCriteriaArray.find(
-        (criteria) => criteria.content === content,
-      );
-
-      if (!criteriaInformation) return;
-
-      criteriaInformation.notes = newNote;
-      setcriteriaArray(clonedCriteriaArray);
-    };
-
-    cloneCriterias();
-
     switch (columnKey) {
       case "no":
         return <div>{index + 1}</div>;
@@ -232,72 +147,15 @@ export default function FinalReportPage() {
       case "maxScore":
         return <p className="text-xs">{criterias.maxScore}</p>;
       case "evaluateScore":
-        return (
-          <Input
-            type="number"
-            name={criterias.content}
-            readOnly={!isEditable}
-            classNames={{
-              inputWrapper: `${isEditable ? "bg-transparent shadow-none" : ""}`,
-            }}
-            value={
-              isEditable
-                ? criteriaArray[index].evaluateScore?.toString()
-                : criterias.evaluateScore?.toString()
-            }
-            onValueChange={(value) =>
-              updateTheCriteriaScore(criterias.content, Number(value))
-            }
-          />
-        );
+        return criterias.evaluateScore?.toString();
+
       case "note":
-        return (
-          <Input
-            name={criterias.content}
-            readOnly={!isEditable}
-            classNames={{
-              inputWrapper: `${isEditable ? "bg-transparent shadow-none" : ""}`,
-            }}
-            value={
-              isEditable
-                ? criteriaArray[index].notes?.toString()
-                : criterias.notes?.toString()
-            }
-            onValueChange={(note) =>
-              updateTheCriteriaNote(criterias.content, note)
-            }
-          />
-        );
+        return criterias.notes;
       case "finalScore":
         return <p className="text-xs">{criterias.finalScore}</p>;
       default:
         return null;
     }
-  };
-
-  const handleUpdateCriteria = () => {
-    const criteriaRecord: {
-      complianceCriteriaId: string;
-      evaluateScore: number;
-      notes: string;
-    }[] = [];
-
-    criteriaArray.map((criteria: Criteria) => {
-      const criteriaObject = {
-        complianceCriteriaId: "",
-        evaluateScore: 0,
-        notes: "",
-      };
-
-      criteriaObject.complianceCriteriaId = criteria.id;
-      criteriaObject.evaluateScore = criteria.evaluateScore;
-      criteriaObject.notes = criteria.notes;
-
-      criteriaRecord.push(criteriaObject);
-    });
-
-    //.....
-    mutate(criteriaRecord);
   };
 
   const pdfExportComponent = useRef<PDFExport>(null);
@@ -310,9 +168,9 @@ export default function FinalReportPage() {
 
   return (
     <div className="p-6">
-      <Button type="button" onClick={exportPDFWithComponent}>
+      {/* <Button type="button" onPress={exportPDFWithComponent}>
         Export with component
-      </Button>
+      </Button> */}
       <PDFExport ref={pdfExportComponent} paperSize="auto" margin={40}>
         <div>
           <div className="text-center text-3xl font-semibold">

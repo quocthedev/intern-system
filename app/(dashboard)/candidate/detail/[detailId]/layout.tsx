@@ -16,6 +16,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       title: "CV",
       href: "/cv",
     },
+    {
+      key: "final",
+      title: "Final Report",
+      href: "/final-report",
+    },
   ];
   const router = useRouter(); //use router to advoid reload entire page instead of using href
   const pathname = usePathname();
