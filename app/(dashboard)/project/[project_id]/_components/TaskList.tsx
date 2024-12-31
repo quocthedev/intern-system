@@ -151,7 +151,7 @@ export default function TaskList() {
       case "position":
         return item.typeTask.name;
       case "completionProgress":
-        return item.completionProgress;
+        return <div>{item.completionProgress}%</div>;
       case "progressAssessment":
         return item.progressAssessment;
       case "actions":
@@ -236,8 +236,7 @@ export default function TaskList() {
               (projectTaskFilter?.Status === "0" ||
                 projectTaskFilter?.Status === "1" ||
                 projectTaskFilter?.Status === "2") &&
-              (column.key == "completionProgress" ||
-                column.key == "progressAssessment")
+              column.key == "progressAssessment"
             ) {
               return false;
             }
@@ -274,8 +273,7 @@ export default function TaskList() {
                     (projectTaskFilter?.Status === "0" ||
                       projectTaskFilter?.Status === "1" ||
                       projectTaskFilter?.Status === "2") &&
-                    (column.key === "completionProgress" ||
-                      column.key === "progressAssessment")
+                    column.key === "progressAssessment"
                   ) {
                     return false;
                   } else if (

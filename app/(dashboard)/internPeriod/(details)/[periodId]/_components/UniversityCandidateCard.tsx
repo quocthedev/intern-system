@@ -28,7 +28,7 @@ import {
 } from "@nextui-org/modal";
 import { Button } from "@nextui-org/button";
 import { toast } from "sonner";
-import { Image } from "@nextui-org/image";
+import { Avatar } from "@nextui-org/react";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   Approved: "success",
@@ -129,15 +129,14 @@ export default function UniversityCandidateCard() {
         return (
           <div>
             {candidate.avatar ? (
-              <Image
-                width={60}
-                height={60}
+              <Avatar
                 alt={`${candidate.fullName} Image`}
                 src={candidate.avatar}
+                className="h-12 w-12"
               />
             ) : (
-              <Image
-                width={50}
+              <Avatar
+                className="h-12 w-12"
                 alt="Default Candidate Image"
                 src="/icons/technology/no-avatar.png"
               />
