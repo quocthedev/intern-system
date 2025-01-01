@@ -39,28 +39,31 @@ export default function SideBar() {
     );
   } else
     return (
-      <div className="h-sidebar-horizontal flex w-full items-center justify-between px-8 py-2">
-        <Image
-          width={150}
-          height={150}
-          alt="Amazing tech logo"
-          src="/icons/technology/amazingtech.png"
-        />
+      <div className="h-sidebar-horizontal flex w-full items-center justify-between px-12 py-2">
+        <div>
+          <div className="flex items-center gap-8">
+            <Image
+              width={150}
+              height={150}
+              alt="Amazing tech logo"
+              src="/icons/technology/amazingtech.png"
+            />
 
-        <div className="flex gap-4">
-          <Link
-            className="text-xl font-semibold text-slate-600 transition duration-200 hover:text-blue-600"
-            href={`/candidate/${id}`}
-          >
-            Home
-          </Link>
-          <Link
-            className="text-xl font-semibold text-slate-600 transition duration-200 hover:text-blue-600"
-            href="/projectCandidate"
-          >
-            Projects
-          </Link>
+            <Link
+              className="text-xl font-semibold text-slate-600 transition duration-200 hover:text-blue-600"
+              href={`/candidate/${id}`}
+            >
+              Home
+            </Link>
+            <Link
+              className="text-xl font-semibold text-slate-600 transition duration-200 hover:text-blue-600"
+              href="/projectCandidate"
+            >
+              Projects
+            </Link>
+          </div>
         </div>
+
         <User className="mb-3 mt-auto max-w-fit" />
       </div>
     );
