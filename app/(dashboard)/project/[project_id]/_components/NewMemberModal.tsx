@@ -47,7 +47,9 @@ export default function NewMemberModal(props: NewMemberModalProps) {
 
   const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
 
-  const roleMapping: Record<string, string> = {};
+  const [roleMapping, setRoleMapping] = React.useState<Record<string, string>>(
+    {},
+  );
 
   // const { data: positionData, isLoading: isPositionLoading } = usePosition({
   //   pageSize: 100,
@@ -133,16 +135,12 @@ export default function NewMemberModal(props: NewMemberModalProps) {
 
   const roles = [
     {
-      key: "0",
+      key: "1",
       name: "Leader",
     },
     {
-      key: "1",
-      name: "Subleader",
-    },
-    {
       key: "2",
-      name: "Mentor",
+      name: "Subleader",
     },
     {
       key: "3",
@@ -165,7 +163,10 @@ export default function NewMemberModal(props: NewMemberModalProps) {
           <Select
             defaultSelectedKeys={["3"]}
             onSelectionChange={(selectedKeys) => {
-              roleMapping[item.id] = selectedKeys.currentKey as string;
+              setRoleMapping((prev) => ({
+                ...prev,
+                [item.id]: selectedKeys.currentKey as string,
+              }));
             }}
             className="w-[150px]"
           >
@@ -263,7 +264,7 @@ export default function NewMemberModal(props: NewMemberModalProps) {
                 </div>
               </ModalBody>
               <ModalFooter>
-                <Button color="primary" fullWidth onClick={submitAddNewMembers}>
+                <Button color="primary" fullWidth onPress={submitAddNewMembers}>
                   Submit
                 </Button>
               </ModalFooter>
