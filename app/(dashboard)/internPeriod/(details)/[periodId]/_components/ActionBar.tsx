@@ -10,8 +10,7 @@ import InterviewScheduleModal from "@/components/InterviewScheduleModal";
 export default function ActionBar() {
   const { setSearch, universityId } = useUniversityCandidateContext();
 
-  const { periodId, internPeriodData } = useInternPeriodContext();
-  const status = internPeriodData?.status;
+  const { periodId } = useInternPeriodContext();
 
   return (
     <div className="flex w-full flex-col items-start gap-4">
@@ -21,14 +20,11 @@ export default function ActionBar() {
           placeholder="Search by student code, full name"
           onChange={(e) => setSearch(e.target.value)}
         />
-        {status == "InProgress" ? (
-          <></>
-        ) : (
-          <ImportExcelModal3
-            internPeriodId={periodId}
-            universityId={universityId}
-          />
-        )}
+
+        <ImportExcelModal3
+          internPeriodId={periodId}
+          universityId={universityId}
+        />
 
         <InterviewScheduleModal
           isAddingCandidate
