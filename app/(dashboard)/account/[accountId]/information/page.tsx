@@ -79,9 +79,9 @@ export default function InformationAccountDetail() {
   return isLoading ? (
     <Loading />
   ) : (
-    <div className="h-full w-full bg-gray-100">
+    <div className="h-full w-full">
       <div className="p-6">
-        <div className="mb-6 rounded-lg bg-white p-6 shadow-md">
+        <div className="mb-6 rounded-lg bg-white p-6 shadow-lg">
           <h3 className="mb-4 text-lg font-semibold">Avatar</h3>
           <div className="flex items-center space-x-4">
             {accountData?.avatar ? (

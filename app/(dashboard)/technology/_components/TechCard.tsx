@@ -189,8 +189,7 @@ export const TechCard = () => {
     <div className="flex flex-col">
       {isLoading ? (
         <div className="mt-20 flex items-center justify-center gap-3">
-          <Spinner size="lg" />
-          Loading...
+          Loading <Spinner size="lg" />
         </div>
       ) : (
         <div>

@@ -8,6 +8,11 @@ import Link from "next/link";
 import NavigationHR from "@/app/(dashboard)/_components/sidebar/NavigationHR";
 import NavigationMentor from "@/app/(dashboard)/_components/sidebar/NavigationMentor";
 import NavigationUniversity from "@/app/(dashboard)/_components/sidebar/NavigationUniversity";
+import { Button } from "@nextui-org/react";
+import {
+  HomeIconNavbar,
+  ProjectManagementIcon,
+} from "@/app/(dashboard)/_components/sidebar/Icons";
 
 export default function SideBar() {
   const cookiesStore = cookies();
@@ -41,26 +46,33 @@ export default function SideBar() {
     return (
       <div className="h-sidebar-horizontal flex w-full items-center justify-between px-12 py-2">
         <div>
-          <div className="flex items-center gap-8">
+          <div className="flex items-center">
             <Image
               width={150}
               height={150}
               alt="Amazing tech logo"
               src="/icons/technology/amazingtech.png"
             />
-
-            <Link
-              className="text-xl font-semibold text-slate-600 transition duration-200 hover:text-blue-600"
-              href={`/candidate/${id}`}
+            <Button className="bg-blue-100" startContent={<HomeIconNavbar />}>
+              <Link
+                className="text-xl font-semibold text-slate-600 transition duration-200 hover:text-blue-600"
+                href={`/candidate/${id}`}
+              >
+                Home
+              </Link>
+            </Button>
+            <Button
+              className="bg-blue-100"
+              startContent={<ProjectManagementIcon />}
             >
-              Home
-            </Link>
-            <Link
-              className="text-xl font-semibold text-slate-600 transition duration-200 hover:text-blue-600"
-              href="/projectCandidate"
-            >
-              Projects
-            </Link>
+              {" "}
+              <Link
+                className="text-xl font-semibold text-slate-600 transition duration-200 hover:text-blue-600"
+                href="/projectCandidate"
+              >
+                Projects
+              </Link>
+            </Button>
           </div>
         </div>
 

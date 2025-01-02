@@ -33,6 +33,7 @@ import { Button } from "@nextui-org/button";
 import { Image } from "@nextui-org/image";
 import { getCookie } from "@/app/util";
 import { toast } from "sonner";
+import Loading from "@/components/Loading";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   Approved: "success",
@@ -277,12 +278,7 @@ export default function InternsTable({
         <TableBody
           items={candidates}
           loadingState={isLoading ? "loading" : "idle"}
-          loadingContent={
-            <div className="flex items-center gap-2">
-              <Spinner />
-              Loading...
-            </div>
-          }
+          loadingContent={<Loading />}
           emptyContent={<div>No candidate found!</div>}
         >
           {candidates.map((candidate: Candidate, index: number) => (

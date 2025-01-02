@@ -201,11 +201,11 @@ export default function UniversityTable() {
                   <div className="mb-4">
                     {university.image ? (
                       <Image
-                        width={1000}
-                        height={1000}
+                        width={200}
+                        height={200}
                         alt={`${university.name} Image`}
                         src={university.image}
-                        className="h-full w-full rounded-md object-contain"
+                        className="h-40 w-full rounded-md object-contain"
                       />
                     ) : (
                       <Image
@@ -214,7 +214,7 @@ export default function UniversityTable() {
                         layout="responsive"
                         alt="Default University Image"
                         src="/icons/technology/noimg.png"
-                        className="rounded-md object-contain"
+                        className="w-ful h-40 rounded-md object-contain"
                       />
                     )}
                   </div>

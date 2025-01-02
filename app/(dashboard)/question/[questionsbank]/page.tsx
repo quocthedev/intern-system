@@ -32,6 +32,7 @@ import { toast } from "sonner";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import Image from "next/image";
+import Loading from "@/components/Loading";
 
 // interface QuestionData {
 //   content: string;
@@ -347,12 +348,7 @@ export default function QuestionBankPage() {
         <TableBody
           items={questionsData ?? []}
           loadingState={isLoading ? "loading" : "idle"}
-          loadingContent={
-            <div className="flex items-center gap-2">
-              <Spinner />
-              Loading...
-            </div>
-          }
+          loadingContent={<Loading />}
           emptyContent={<div>No question found!</div>}
         >
           {questionsData?.map(
