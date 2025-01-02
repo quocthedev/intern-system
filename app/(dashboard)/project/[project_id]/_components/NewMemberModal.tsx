@@ -30,6 +30,7 @@ import { Autocomplete } from "@nextui-org/autocomplete";
 import { useParams } from "next/navigation";
 import { useProjectDetailContext } from "@/app/(dashboard)/project/_providers/ProjectDetailProvider";
 import { AddIcon } from "@/app/(dashboard)/project/_components/Icons";
+import { Spinner } from "@nextui-org/react";
 
 const apiClient = new APIClient({
   onFulfilled: (response) => response,
@@ -60,6 +61,7 @@ export default function NewMemberModal(props: NewMemberModalProps) {
 
   const [positionFilter, setPositionFilter] = React.useState("");
   const [search, setSearch] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
   const { project_id } = useParams();
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["members", positionFilter, search, project_id],
@@ -95,13 +97,14 @@ export default function NewMemberModal(props: NewMemberModalProps) {
       role: Number(roleMapping[key] || "3"),
     }));
 
+    setLoading(true);
     const res = await addNewMembers(props.projectId, candidates);
 
     console.log(res);
 
     if (res.statusCode !== "200") {
       toast.error(res.message);
-
+      setLoading(false);
       return;
     }
 
@@ -193,7 +196,7 @@ export default function NewMemberModal(props: NewMemberModalProps) {
         <AddIcon /> Add New Member
       </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-        <ModalContent className="max-w-6xl">
+        <ModalContent className="max-w-4xl">
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
@@ -265,7 +268,13 @@ export default function NewMemberModal(props: NewMemberModalProps) {
               </ModalBody>
               <ModalFooter>
                 <Button color="primary" fullWidth onPress={submitAddNewMembers}>
-                  Submit
+                  {loading ? (
+                    <div className="flex items-center gap-2">
+                      Assigning <Spinner color="white" size="sm" />
+                    </div>
+                  ) : (
+                    "Assign"
+                  )}
                 </Button>
               </ModalFooter>
             </>

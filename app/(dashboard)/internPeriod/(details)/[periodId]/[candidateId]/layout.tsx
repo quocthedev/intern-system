@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const { detailId } = useParams();
+  const { candidateId } = useParams();
 
   const subRoutes = [
     {
@@ -31,7 +31,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   const pathname = usePathname();
 
-  const startPath = `/intern/details/${detailId}`;
+  const startPath = `/internPeriod/details/${candidateId}`;
 
   let activeTab;
 
@@ -50,10 +50,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4">
           <div className="flex items-center">
             <Link
-              href="/intern"
+              href="/internPeriod"
               className="bold font-semibold text-blue-600 hover:text-blue-800 hover:underline"
             >
-              Candidate management
+              Intern period management
             </Link>
             <span className="mx-2"> &gt; </span>
             <span className="font-semibold"> Candidate detail </span>

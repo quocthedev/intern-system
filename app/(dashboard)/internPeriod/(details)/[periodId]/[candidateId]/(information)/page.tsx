@@ -19,10 +19,10 @@ import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { CalendarDate, parseDate } from "@internationalized/date";
+import { Avatar } from "@nextui-org/react";
 
 export default function CandidateInformationPage() {
-  const params = useParams();
-  const candidateId = params.detailId as string;
+  const { candidateId } = useParams();
 
   const {
     isOpen: isEditOpen,
@@ -175,20 +175,16 @@ export default function CandidateInformationPage() {
       <div className="flex gap-4">
         <div className="mb-4 flex w-1/3 flex-col items-center">
           {candidateData?.avatar ? (
-            <Image
-              width={200}
-              height={200}
+            <Avatar
               alt={`${candidateData.name}`}
               src={candidateData.avatar}
-              className="rounded-2xl object-contain"
+              className="h-72 w-60 object-contain"
             />
           ) : (
-            <img
-              width={200}
-              height={200}
+            <Avatar
               alt="Default Candidate"
               src="/icons/technology/no-avatar.png"
-              className="rounded-2xl object-contain"
+              className="h-72 w-60 object-contain"
             />
           )}
 

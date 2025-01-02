@@ -24,8 +24,8 @@ const PDFEmbed: React.FC<PDFEmbedProps> = ({ pdfUrl }) => {
 };
 
 export default function CandidateCVPage() {
-  const params = useParams();
-  const candidateId = params.detailId as string;
+  const { candidateId } = useParams();
+
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);

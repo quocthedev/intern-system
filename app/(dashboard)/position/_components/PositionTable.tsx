@@ -7,6 +7,7 @@ import { PaginationResponse, PaginationResponseSuccess } from "@/libs/types";
 import APIClient from "@/libs/api-client";
 import { Pagination } from "@nextui-org/pagination";
 import PositionCard from "./PositionCard";
+import { Spinner } from "@nextui-org/react";
 
 interface PositionInterface {
   id: string;
@@ -28,7 +29,7 @@ export default function PositionTable() {
 
   const pageSize = 6;
 
-  const { error, data, refetch } = useQuery({
+  const { error, data, refetch, isLoading } = useQuery({
     queryKey: ["position", pageIndex, pageSize],
     queryFn: async () => {
       const response = await apiClient.get<
@@ -59,27 +60,35 @@ export default function PositionTable() {
 
   return (
     <div>
-      <div className="grid h-full grid-cols-3 gap-5">
-        {data?.positions &&
-          data.positions.map((position: PositionInterface) => (
-            <PositionCard
-              data={position}
-              refetch={refetch}
-              key={position.id as string}
-            />
-          ))}
-      </div>
-      <Pagination
-        className="m-4 flex justify-center"
-        isCompact
-        loop
-        showControls
-        total={data?.totalPages ? Number(data.totalPages) : 0}
-        initialPage={pageIndex}
-        onChange={(page) => {
-          setPageIndex(page);
-        }}
-      />
+      {isLoading ? (
+        <div className="mt-20 flex items-center justify-center gap-3">
+          Loading <Spinner size="lg" />
+        </div>
+      ) : (
+        <div>
+          <div className="grid h-full grid-cols-3 gap-5">
+            {data?.positions &&
+              data.positions.map((position: PositionInterface) => (
+                <PositionCard
+                  data={position}
+                  refetch={refetch}
+                  key={position.id as string}
+                />
+              ))}
+          </div>
+          <Pagination
+            className="m-4 flex justify-center"
+            isCompact
+            loop
+            showControls
+            total={data?.totalPages ? Number(data.totalPages) : 0}
+            initialPage={pageIndex}
+            onChange={(page) => {
+              setPageIndex(page);
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 }

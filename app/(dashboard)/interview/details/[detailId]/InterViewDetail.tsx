@@ -23,6 +23,7 @@ import { useInterviewDetailContext } from "@/app/(dashboard)/interview/_provider
 import { Tab, Tabs } from "@nextui-org/tabs";
 import RescheduleModal from "@/app/(dashboard)/interview/details/[detailId]/RescheduleModal";
 import { getCookie } from "@/app/util";
+import Loading from "@/components/Loading";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   Confirmed: "success",
@@ -313,11 +314,7 @@ export default function InterViewDetailPage() {
         <TableBody
           items={candidateData}
           loadingState={isLoading ? "loading" : "idle"}
-          loadingContent={
-            <div className="flex items-center gap-2">
-              <Spinner /> Loading...
-            </div>
-          }
+          loadingContent={<Loading />}
         >
           {candidateData.map((candidate: any, index: number) => (
             <TableRow key={candidate.candidateId}>

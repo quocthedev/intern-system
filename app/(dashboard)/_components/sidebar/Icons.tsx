@@ -14,6 +14,8 @@ import QuestionManagementActiveSVG from "@/public/icons/sidebar/question-managem
 import QuestionManagementInactiveSVG from "@/public/icons/sidebar/question-management-inactive.svg";
 import InterviewManagementActiveSVG from "@/public/icons/sidebar/interview-management-active.svg";
 import InterviewManagementInActiveSVG from "@/public/icons/sidebar/interview-management-inactive.svg";
+import HomeIconNavbarSVG from "@/public/icons/sidebar/home-icon-navbar.svg";
+import ProjectIconNavbarSVG from "@/public/icons/sidebar/project-icon-navbar.svg";
 
 import Image from "next/image";
 
@@ -129,6 +131,29 @@ export const InterviewManagementIcon = ({
 }: SidebarIconProps) => (
   <Image
     src={active ? InterviewManagementActiveSVG : InterviewManagementInActiveSVG}
+    alt="Question Management"
+    width={size}
+    height={size}
+    className={className}
+  />
+);
+
+export const HomeIconNavbar = ({ size = 24, className }: SidebarIconProps) => (
+  <Image
+    src={HomeIconNavbarSVG}
+    alt="Question Management"
+    width={size}
+    height={size}
+    className={className}
+  />
+);
+
+export const ProjectIconNavbar = ({
+  size = 24,
+  className,
+}: SidebarIconProps) => (
+  <Image
+    src={ProjectIconNavbarSVG}
     alt="Question Management"
     width={size}
     height={size}

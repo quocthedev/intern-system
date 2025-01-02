@@ -11,13 +11,13 @@ import { Input, Textarea } from "@nextui-org/input";
 import { Card, CardBody, CardHeader } from "@nextui-org/card";
 import { Chip } from "@nextui-org/chip";
 import { toast } from "sonner";
+import { useParams } from "next/navigation";
+import Image from "next/image";
+import { GetCandidateQuestionTemplateResponse } from "@/app/(dashboard)/candidate/_types/GetCandidateQuestionTemplate";
 import {
   GetPositionPaginationResponse,
   Position,
-} from "../../../_types/GetPositionPaginationResponse";
-import { GetCandidateQuestionTemplateResponse } from "../../../_types/GetCandidateQuestionTemplate";
-import { useParams } from "next/navigation";
-import Image from "next/image";
+} from "@/app/(dashboard)/candidate/_types/GetPositionPaginationResponse";
 
 const apiClient = new APIClient({
   onFulfilled: (response) => response,
@@ -40,7 +40,7 @@ enum QuestionTemplateStatus {
 }
 
 export default function InterviewInformationPage() {
-  const { detailId: candidateId } = useParams();
+  const { candidateId } = useParams();
 
   const [selectedPosition, setSelectedPosition] = React.useState<string | null>(
     null,
@@ -241,7 +241,7 @@ export default function InterviewInformationPage() {
         </div>
         {/* )} */}
         {Array.from(selectedTechnologies)[0] ? (
-          <Button onClick={createQuestions}>Create questions</Button>
+          <Button onPress={createQuestions}>Create questions</Button>
         ) : (
           <></>
         )}

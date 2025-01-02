@@ -1,10 +1,8 @@
 "use client";
 
-import {
-  Criteria,
-  SubmitScore,
-} from "@/app/(dashboard)/intern/_types/GetCriterias";
+import { Criteria } from "@/app/(dashboard)/candidate/_types/GetCriterias";
 import { formatDate, getCookie } from "@/app/util";
+import Loading from "@/components/Loading";
 import APIClient from "@/libs/api-client";
 import { API_ENDPOINTS } from "@/libs/config";
 import { Button } from "@nextui-org/button";
@@ -265,12 +263,7 @@ export default function FinalReportPage() {
                       <TableBody
                         items={projectTasks}
                         loadingState={isLoading ? "loading" : "idle"}
-                        loadingContent={
-                          <div className="flex items-center gap-2">
-                            <Spinner />
-                            Loading...
-                          </div>
-                        }
+                        loadingContent={<Loading />}
                         emptyContent={
                           <div>No tasks found for this project!</div>
                         }
@@ -354,12 +347,7 @@ export default function FinalReportPage() {
                 <TableBody
                   items={complianceCriterias}
                   loadingState={isLoading ? "loading" : "idle"}
-                  loadingContent={
-                    <div className="flex items-center gap-2">
-                      <Spinner />
-                      Loading...
-                    </div>
-                  }
+                  loadingContent={<Loading />}
                   emptyContent={<div>No evaluate found!</div>}
                 >
                   {complianceCriterias.map(

@@ -18,6 +18,7 @@ import Link from "next/link";
 import APIClient from "@/libs/api-client";
 import { useInternPeriodContext } from "@/app/(dashboard)/internPeriod/_providers/InternPeriodProvider";
 import { useUniversityCandidateContext } from "@/app/(dashboard)/internPeriod/(details)/[periodId]/_providers/UniversityCandidateProvider";
+import { Spinner } from "@nextui-org/react";
 
 interface PeriodModalIdProps {
   internPeriodId: string | null;
@@ -175,13 +176,19 @@ function ImportExcelModal3({
                   )}
                 </div>
 
-                <div className="grid grid-cols-2 gap-5">
+                <div className="grid grid-cols-2 gap-3">
                   <Button
                     color="primary"
                     onPress={handleFileUpload}
                     className="w-full"
                   >
-                    {isPending ? "Uploading..." : "Upload"}{" "}
+                    {isPending ? (
+                      <div className="flex items-center gap-2">
+                        Uploading <Spinner color="white" size="sm" />
+                      </div>
+                    ) : (
+                      "Upload"
+                    )}{" "}
                   </Button>
                   <Button
                     color="default"

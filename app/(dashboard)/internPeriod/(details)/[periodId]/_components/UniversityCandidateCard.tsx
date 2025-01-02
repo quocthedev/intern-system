@@ -29,6 +29,7 @@ import {
 import { Button } from "@nextui-org/button";
 import { toast } from "sonner";
 import { Avatar } from "@nextui-org/react";
+import Loading from "@/components/Loading";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   Approved: "success",
@@ -189,7 +190,7 @@ export default function UniversityCandidateCard() {
           <div className="flex">
             <Tooltip content="View detail">
               <Link
-                href={`/intern/details/${candidate.id}`}
+                href={`/internPeriod/details/${candidate.id}`}
                 className="w-full text-medium text-black"
               >
                 <button className="mb-1 cursor-pointer">
@@ -231,11 +232,7 @@ export default function UniversityCandidateCard() {
           <TableBody
             items={data?.candidates || []}
             loadingState={isLoading ? "loading" : "idle"}
-            loadingContent={
-              <div className="flex items-center gap-2">
-                <Spinner /> Loading...
-              </div>
-            }
+            loadingContent={<Loading />}
           >
             {(candidate) => (
               <TableRow key={candidate.id}>

@@ -167,7 +167,7 @@ export default function AccountProfile({
 
   return (
     <form
-      className="flex flex-col gap-3 rounded-lg bg-white p-6 shadow-md"
+      className="flex flex-col gap-3 rounded-lg bg-white p-6 shadow-lg"
       action={async (data: FormData) => {
         await updateAccount.mutateAsync(data);
         toggleEditMode();

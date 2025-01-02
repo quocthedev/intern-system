@@ -30,6 +30,7 @@ import { toast } from "sonner";
 import Link from "next/link";
 import { useInternPeriodContext } from "../_providers/InternPeriodProvider";
 import { Pagination } from "@nextui-org/pagination";
+import Loading from "@/components/Loading";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   InProgress: "warning",
@@ -198,11 +199,7 @@ export default function InternPeriodTable() {
         <TableBody
           items={periodData}
           loadingState={isListInternPeriodLoading ? "loading" : "idle"}
-          loadingContent={
-            <div className="flex items-center gap-2">
-              <Spinner /> Loading...
-            </div>
-          }
+          loadingContent={<Loading />}
         >
           {periodData.map((period: any, index: number) => (
             <TableRow key={period.id}>

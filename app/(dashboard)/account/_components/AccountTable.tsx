@@ -128,9 +128,14 @@ export default function AccountTable() {
         case "jobTitle":
           return (
             <div className="text-xs">
-              {account.jobTitle.positions.map((position: any) => (
-                <div key={position.id}>{position.name}</div>
-              ))}
+              {account.jobTitle.positions.map(
+                (position: any, index: number) => (
+                  <span key={position.id}>
+                    {position.name}
+                    {index < account.jobTitle.positions.length - 1 && ", "}
+                  </span>
+                ),
+              )}
             </div>
           );
         case "rank":
