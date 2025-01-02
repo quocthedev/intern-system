@@ -189,7 +189,7 @@ export default function UniversityCandidateCard() {
           <div className="flex">
             <Tooltip content="View detail">
               <Link
-                href={`/intern/details/${candidate.id}`}
+                href={`/internPeriod/details/${candidate.id}`}
                 className="w-full text-medium text-black"
               >
                 <button className="mb-1 cursor-pointer">
