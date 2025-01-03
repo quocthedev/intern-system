@@ -23,6 +23,7 @@ import {
 import { Button } from "@nextui-org/button";
 import { toast } from "sonner";
 import { Input } from "@nextui-org/input";
+import { useTechnologyContext } from "@/app/(dashboard)/technology/_providers/TechnologyProvider";
 
 export interface TechnologyInterface {
   name: string;
@@ -64,38 +65,14 @@ export const TechCard = () => {
     description: "",
     imageUri: "",
   });
-
-  const [pageIndex, setPageIndex] = useState(1);
-
-  const pageSize = 6;
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  const { isLoading, data, refetch } = useQuery({
-    queryKey: ["technology", pageIndex, pageSize],
-    queryFn: async () => {
-      const response = await apiClient.get<
-        PaginationResponse<TechnologyInterface>
-      >(API_ENDPOINTS.technology, {
-        params: new URLSearchParams({
-          PageIndex: pageIndex.toString(),
-          PageSize: pageSize.toString(),
-        }),
-      });
-
-      if (response?.statusCode === "200") {
-        const { data } =
-          response as PaginationResponseSuccess<TechnologyInterface>;
-
-        return {
-          technologies: data.pagingData,
-          pageIndex: data.pageIndex,
-          totalPages: data.totalPages,
-        };
-      }
-    },
-  });
-
-  console.log(data);
+  const {
+    listTechnologyData,
+    refetchTechnology,
+    isListTechnologyLoading,
+    setTechnologyPageIndex,
+  } = useTechnologyContext();
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) =>
@@ -108,7 +85,7 @@ export const TechCard = () => {
     },
 
     onSuccess: () => {
-      refetch();
+      refetchTechnology();
     },
   });
 
@@ -122,7 +99,7 @@ export const TechCard = () => {
     },
     onSuccess: () => {
       toast.success("Updated successfully!");
-      refetch();
+      refetchTechnology();
       onCloseEdit();
     },
   });
@@ -178,7 +155,7 @@ export const TechCard = () => {
         throw new Error("File upload failed");
       }
 
-      await refetch();
+      await refetchTechnology();
     } catch (error) {
       toast.error("Error uploading image");
       console.error(error);
@@ -187,88 +164,99 @@ export const TechCard = () => {
 
   return (
     <div className="flex flex-col">
-      {isLoading ? (
+      {isListTechnologyLoading ? (
         <div className="mt-20 flex items-center justify-center gap-3">
           Loading <Spinner size="lg" />
         </div>
       ) : (
         <div>
           <div className="grid h-full grid-cols-3 gap-5">
-            {data?.technologies &&
-              data.technologies.map((technology: TechnologyInterface) => (
-                <Card key={technology.id as string} className="w-full">
-                  <CardHeader>
-                    <div className="flex w-full justify-between">
-                      <div className="text-md font-bold">{technology.name}</div>
+            {listTechnologyData?.technologies &&
+              listTechnologyData.technologies.map(
+                (technology: TechnologyInterface) => (
+                  <Card key={technology.id as string} className="w-full">
+                    <CardHeader>
+                      <div className="flex w-full justify-between">
+                        <div className="text-md font-bold">
+                          {technology.name}
+                        </div>
 
-                      <div className="flex space-x-1">
-                        <button
-                          onClick={() =>
-                            openEditModal(
-                              technology.id,
-                              technology.name,
-                              technology.abbreviation,
-                              technology.description,
-                              technology.imageUri,
-                            )
-                          }
-                        >
-                          <EditIcon />
-                        </button>
-                        <button
-                          className="bg-transparent"
-                          onClick={() =>
-                            openModalDelete(technology.id as string)
-                          }
-                        >
-                          <DeleteIcon />
-                        </button>
+                        <div className="flex space-x-1">
+                          <button
+                            onClick={() =>
+                              openEditModal(
+                                technology.id,
+                                technology.name,
+                                technology.abbreviation,
+                                technology.description,
+                                technology.imageUri,
+                              )
+                            }
+                          >
+                            <EditIcon />
+                          </button>
+                          <button
+                            className="bg-transparent"
+                            onClick={() =>
+                              openModalDelete(technology.id as string)
+                            }
+                          >
+                            <DeleteIcon />
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  </CardHeader>
-                  <Divider />
-                  <CardBody>
-                    {technology.imageUri ? (
-                      <Image
-                        width={200}
-                        height={200}
-                        alt={`${technology.name} Image`}
-                        src={technology.imageUri}
-                        className="grounded-md h-40 w-full object-contain"
-                      />
-                    ) : (
-                      <Image
-                        width={200}
-                        height={200}
-                        alt="Default University Image"
-                        src="/icons/technology/noimg.png"
-                        className="grounded-md h-full w-full object-contain"
-                      />
-                    )}
-                    <div className="mb-2 mt-2">
-                      <span className="font-semibold">Abbreviation: </span>
-                      {technology.abbreviation}
-                    </div>
-                    <div className="mb-2 mt-1">
-                      <span className="font-semibold">Description: </span>
-                      {technology.description}
-                    </div>
-                  </CardBody>
-                </Card>
-              ))}
+                    </CardHeader>
+                    <Divider />
+                    <CardBody>
+                      {technology.imageUri ? (
+                        <Image
+                          width={200}
+                          height={200}
+                          alt={`${technology.name} Image`}
+                          src={technology.imageUri}
+                          className="grounded-md h-40 w-full object-contain"
+                        />
+                      ) : (
+                        <Image
+                          width={200}
+                          height={200}
+                          alt="Default University Image"
+                          src="/icons/technology/noimg.png"
+                          className="grounded-md h-full w-full object-contain"
+                        />
+                      )}
+                      <div className="mb-2 mt-2">
+                        <span className="font-semibold">Abbreviation: </span>
+                        {technology.abbreviation}
+                      </div>
+                      <div className="mb-2 mt-1">
+                        <span className="font-semibold">Description: </span>
+                        {technology.description}
+                      </div>
+                    </CardBody>
+                  </Card>
+                ),
+              )}
           </div>
-
-          <Pagination
-            className="m-4 flex justify-center"
-            isCompact
-            loop
-            showControls
-            total={data?.totalPages ? Number(data.totalPages) : 0}
-            initialPage={pageIndex}
-            onChange={(page) => {
-              setPageIndex(page);
-            }}
-          />
+          {listTechnologyData ? (
+            <Pagination
+              className="m-4 flex justify-center"
+              isCompact
+              loop
+              showControls
+              total={
+                listTechnologyData?.totalPages
+                  ? Number(listTechnologyData.totalPages)
+                  : 0
+              }
+              initialPage={listTechnologyData?.pageIndex}
+              onChange={(page) => {
+                setTechnologyPageIndex(page);
+              }}
+            />
+          ) : (
+            <></>
+          )}
 
           <Modal
             isOpen={isDeleteOpen}
