@@ -342,6 +342,7 @@ export default function PositionCard(props: PositonCardProps) {
             <Input
               placeholder="Full Name"
               label="Full Name"
+              labelPlacement="outside"
               value={updateData.name}
               onChange={(e) =>
                 setUpdateData({ ...updateData, name: e.target.value })
@@ -351,6 +352,7 @@ export default function PositionCard(props: PositonCardProps) {
               placeholder="Abbreviation"
               label="Abbreviation"
               className="mt-2"
+              labelPlacement="outside"
               value={updateData.abbreviation}
               onChange={(e) =>
                 setUpdateData({ ...updateData, abbreviation: e.target.value })
