@@ -24,7 +24,7 @@ export default function UserDropdown() {
 
   const items = [
     {
-      name: "Profile settings",
+      name: "Profile",
       key: "profile",
       onClick: handleMove,
     },

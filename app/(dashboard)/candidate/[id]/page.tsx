@@ -9,6 +9,7 @@ export default function UserCandidatePage() {
   const params = useParams();
   const router = useRouter();
   const userId = params?.id as string;
+  console.log(userId);
 
   const { isLoading, data: CandidateData } = useQuery({
     queryKey: ["data", userId],
@@ -30,6 +31,8 @@ export default function UserCandidatePage() {
       router.replace(`/candidate/detail/${candidateDataId}`);
     }
   }, [candidateDataId, router]);
+
+  console.log(candidateDataId);
 
   return null;
 }

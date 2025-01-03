@@ -173,7 +173,7 @@ export default function AccountProfile({
         toggleEditMode();
       }}
     >
-      <div className="text-xl font-medium">Profile</div>
+      <div className="text-lg font-semibold">Personal Information</div>
 
       <Input
         defaultValue={accountData.fullName}

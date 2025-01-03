@@ -12,6 +12,7 @@ import { API_ENDPOINTS } from "@/libs/config";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Select, SelectItem } from "@nextui-org/select";
 import { toast } from "sonner";
+import { usePositionContext } from "@/app/(dashboard)/position/_providers/PositionProvider";
 
 export default function ActionBar() {
   const {
@@ -135,6 +136,7 @@ export default function ActionBar() {
   // const handleRemoveTech = () => {
   //   removeMutation.mutate(technologyId);
   // };
+  const { setSearch } = usePositionContext();
 
   return (
     <div>
@@ -143,6 +145,7 @@ export default function ActionBar() {
           size="md"
           placeholder="Search by position name"
           className="flex-1"
+          onChange={(e) => setSearch(e.target.value)}
         />
         <NewPrositionModal />
 

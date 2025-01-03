@@ -80,7 +80,7 @@ export default function InformationAccountDetail() {
     <Loading />
   ) : (
     <div className="h-full w-full">
-      <div className="p-6">
+      <div>
         <div className="mb-6 rounded-lg bg-white p-6 shadow-lg">
           <h3 className="mb-4 text-lg font-semibold">Avatar</h3>
           <div className="flex items-center space-x-4">

@@ -60,6 +60,8 @@ export default function FinalReportPage() {
     },
   });
 
+  console.log(data);
+
   const internPeriodViewReport = data?.data?.internPeriodViewReport || {};
   const candidateInfor = data?.data || {};
   const complianceEvaluate = data?.data?.complianceEvaluation || {};

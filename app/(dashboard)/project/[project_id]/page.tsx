@@ -32,16 +32,33 @@ export default function ProjectDetailsPage() {
 
         <div className="flex flex-col">
           <div className="mt-1">
-            <div className="flex items-center">
-              <Link
-                href="/project"
-                className="bold font-semibold text-blue-600 hover:text-blue-800 hover:underline"
-              >
-                Project management
-              </Link>
-              <span className="mx-2"> &gt; </span>
-              <span className="font-semibold">Project information</span>
-            </div>
+            {role === "Candidate" ? (
+              <div className="flex items-center">
+                <Link
+                  href="/projectCandidate"
+                  className="bold text-lg font-semibold text-blue-600 hover:text-blue-800 hover:underline"
+                >
+                  Project management
+                </Link>
+                <span className="mx-2"> &gt; </span>
+                <span className="text-lg font-semibold">
+                  Project information
+                </span>
+              </div>
+            ) : (
+              <div className="flex items-center">
+                <Link
+                  href="/project"
+                  className="bold text-lg font-semibold text-blue-600 hover:text-blue-800 hover:underline"
+                >
+                  Project management
+                </Link>
+                <span className="mx-2"> &gt; </span>
+                <span className="text-lg font-semibold">
+                  Project information
+                </span>
+              </div>
+            )}
           </div>
 
           <div className="flex w-full gap-6">

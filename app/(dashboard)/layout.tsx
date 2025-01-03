@@ -25,7 +25,7 @@ export default function DashBoardLayout(props: DashBoardLayoutProps) {
       <main className="flex h-screen w-screen flex-col bg-dashboard-bg">
         <SideBar />
         <div className="flex h-full w-full justify-center overflow-scroll bg-white">
-          <div className="ml-10 mr-10 h-full w-full"> {props.children}</div>
+          <div className="ml-16 mr-16 h-full w-full"> {props.children}</div>
         </div>
       </main>
     );

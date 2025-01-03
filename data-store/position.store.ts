@@ -14,6 +14,7 @@ interface Position {
   dateCreate: string;
   dateUpdate: string;
   isDeleted: boolean;
+  image: string;
 }
 
 const apiClient = new APIClient({

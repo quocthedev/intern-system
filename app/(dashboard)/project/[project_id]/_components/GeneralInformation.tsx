@@ -44,7 +44,7 @@ export default function GeneralInformation() {
 
         <p className="flex gap-3">
           Position:{" "}
-          <span className="text-blue-500">
+          <span>
             {projectSummary?.listPosition
               .map((position) => position.name)
               .join(", ")}
@@ -52,7 +52,7 @@ export default function GeneralInformation() {
         </p>
         <p className="flex gap-3">
           Tech Stack:{" "}
-          <span className="text-blue-500">
+          <span>
             {projectSummary?.listTechnology
               .map((technology) => technology.abbreviation)
               .join(", ")}

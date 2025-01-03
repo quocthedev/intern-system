@@ -46,7 +46,7 @@ export default function NewTechModal() {
     },
 
     onSuccess: () => {
-      toast.success("New position added successfully!");
+      toast.success("New technology added successfully!");
       queryClient.invalidateQueries();
       onClose();
     },
@@ -99,7 +99,7 @@ export default function NewTechModal() {
               Add New Technology
             </ModalHeader>
 
-            <ModalBody className="gap-5">
+            <ModalBody>
               <div className="gap-5">
                 <Input
                   label="Technology Name"
@@ -107,6 +107,7 @@ export default function NewTechModal() {
                   labelPlacement="outside"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
+                  className="mb-8"
                   isRequired
                 />
                 <Input
@@ -115,6 +116,7 @@ export default function NewTechModal() {
                   labelPlacement="outside"
                   value={abbreviation}
                   onChange={(e) => setAbbreviation(e.target.value)}
+                  className="mb-8"
                   isRequired
                 />
                 <Input
@@ -123,6 +125,7 @@ export default function NewTechModal() {
                   labelPlacement="outside"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
+                  className="mb-2"
                   isRequired
                 />
                 <div className="mb-4">
