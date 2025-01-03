@@ -167,13 +167,13 @@ export default function AccountProfile({
 
   return (
     <form
-      className="flex flex-col gap-3 rounded-lg bg-white p-4 shadow-md"
+      className="flex flex-col gap-3 rounded-lg bg-white p-6 shadow-lg"
       action={async (data: FormData) => {
         await updateAccount.mutateAsync(data);
         toggleEditMode();
       }}
     >
-      <div className="text-xl font-medium">Profile</div>
+      <div className="text-lg font-semibold">Personal Information</div>
 
       <Input
         defaultValue={accountData.fullName}
@@ -222,7 +222,7 @@ export default function AccountProfile({
       />
 
       {userRole === "Administrator" ? (
-        <div>
+        <div className="flex flex-col gap-3">
           <Autocomplete
             label="Role"
             placeholder="Choose role"
@@ -269,11 +269,11 @@ export default function AccountProfile({
             setIsOpen={setIsOpenPositionSearch}
             selectedItems={selectedPositions}
             setSelectedItems={setSelectedPositions}
-            isDisabled
+            isDisabled={!editMode}
           />
         </div>
       ) : (
-        <div>
+        <div className="flex flex-col gap-3">
           <Autocomplete
             label="Role"
             placeholder="Choose role"
@@ -293,8 +293,8 @@ export default function AccountProfile({
             labelPlacement="outside"
             defaultItems={rankData?.ranks || []}
             defaultSelectedKey={accountData.jobTitle?.rank?.id || ""}
-            isReadOnly
             name="rank"
+            isReadOnly
           >
             {(rank) => (
               <AutocompleteItem key={rank.id}>{rank.name}</AutocompleteItem>

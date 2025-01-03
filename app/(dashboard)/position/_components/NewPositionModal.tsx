@@ -90,7 +90,7 @@ export default function NewPostionModal() {
               Add New Position
             </ModalHeader>
 
-            <ModalBody className="gap-5">
+            <ModalBody>
               <div className="gap-5">
                 <Input
                   label="Position Name"
@@ -98,7 +98,7 @@ export default function NewPostionModal() {
                   labelPlacement="outside"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="mb-12"
+                  className="mb-8"
                   isRequired
                 />
                 <Input
@@ -110,7 +110,7 @@ export default function NewPostionModal() {
                   isRequired
                 />
               </div>
-              <div className="mb-4">
+              <div className="mb-2">
                 <label
                   htmlFor="file-upload"
                   className="cursor-pointer text-blue-500 hover:text-blue-700"

@@ -162,7 +162,11 @@ export default function TaskList() {
               projectId={projectSummary?.id as string}
               selectedTaskInfo={item}
             />
-            <TaskDeleteModal taskId={item.id} />
+            {role === "!Candidate" ? (
+              <TaskDeleteModal taskId={item.id} />
+            ) : (
+              <></>
+            )}
           </div>
         );
       case "actions":

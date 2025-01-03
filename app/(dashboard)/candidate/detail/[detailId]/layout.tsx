@@ -8,8 +8,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const subRoutes = [
     {
       key: "information",
-      title: "Information",
+      title: "Account Profile",
       href: "/",
+    },
+    {
+      key: "candidate-profile",
+      title: "Candidate Profile",
+      href: "/candidate-profile",
     },
     {
       key: "cv",
