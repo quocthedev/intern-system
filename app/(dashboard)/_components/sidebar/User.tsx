@@ -13,14 +13,24 @@ export default function User({ className }: UserProps) {
   const cookiesStore = cookies();
 
   const userId = cookiesStore.get("userId")?.value as string;
+  const userRole = cookiesStore.get("userRole")?.value as string;
 
   return (
     <Dropdown>
       <DropdownTrigger>
-        <Card className={cn("hover:scale-105 hover:cursor-pointer", className)}>
-          <CardBody className="justify-left items-start">
-            <UserInfo userId={userId} />
-          </CardBody>
+        <Card
+          className={cn("hover:scale-105 hover:cursor-pointer", className)}
+          shadow="none"
+        >
+          {userRole === "Candidate" ? (
+            <CardBody className="justify-left items-start bg-blue-100">
+              <UserInfo userId={userId} />
+            </CardBody>
+          ) : (
+            <CardBody className="justify-left items-start">
+              <UserInfo userId={userId} />
+            </CardBody>
+          )}
         </Card>
       </DropdownTrigger>
       <UserDropdown />

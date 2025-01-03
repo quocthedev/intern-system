@@ -53,14 +53,14 @@ export default function SideBar() {
               alt="Amazing tech logo"
               src="/icons/technology/amazingtech.png"
             />
-            <Button className="bg-blue-100" startContent={<HomeIconNavbar />}>
+            {/* <Button className="bg-blue-100" startContent={<HomeIconNavbar />}>
               <Link
                 className="text-xl font-semibold text-slate-600 transition duration-200 hover:text-blue-600"
                 href={`/candidate/${id}`}
               >
                 Home
               </Link>
-            </Button>
+            </Button> */}
             <Button
               className="bg-blue-100"
               startContent={<ProjectManagementIcon />}
