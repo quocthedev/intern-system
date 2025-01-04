@@ -84,6 +84,20 @@ export default function CandidateCVPage() {
     }
   };
 
+  const getPreviewUrl = (cvUri: string) => {
+    if (cvUri.includes("file/d/")) {
+      // Extract file ID and construct preview URL
+      const fileId = cvUri.split("file/d/")[1]?.split("/")[0];
+
+      return `https://drive.google.com/file/d/${fileId}/preview`;
+    }
+
+    // Fallback for other formats
+    return cvUri.replace("view?usp=drive_link", "preview");
+  };
+
+  const previewUrl = getPreviewUrl(candidateData?.cvUri || "");
+
   useEffect(() => {
     handleUpload();
   }, [selectedFile]);
@@ -113,7 +127,11 @@ export default function CandidateCVPage() {
               hidden
             />
           </div>
-          <PDFEmbed pdfUrl={candidateData.cvUri} />
+          {previewUrl ? (
+            <PDFEmbed pdfUrl={previewUrl} />
+          ) : (
+            <div className="text-center text-2xl">No CV to display </div>
+          )}
         </div>
       )}
     </div>
