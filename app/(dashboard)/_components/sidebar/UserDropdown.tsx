@@ -22,6 +22,10 @@ export default function UserDropdown() {
     } else router.push(`/account/${id}`);
   };
 
+  const changePassword = () => {
+    router.push("/password-change");
+  };
+
   const items = [
     {
       name: "Profile",
@@ -32,6 +36,7 @@ export default function UserDropdown() {
     {
       name: "Change password",
       key: "changePassword",
+      onClick: changePassword,
     },
     {
       name: "Logout",
