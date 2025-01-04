@@ -168,7 +168,7 @@ export default function InterViewDetailPage() {
               <div className="flex items-center">
                 <Tooltip content="Create question for candidate">
                   <Link
-                    href={`/intern/details/${candidate.candidateId}/interview-information`}
+                    href={`/internPeriod/details/${candidate.candidateId}/interview-information`}
                     className="w-full"
                   >
                     <button className="flex cursor-pointer items-center">

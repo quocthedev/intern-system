@@ -131,10 +131,10 @@ export default function TaskModal(props: TaskModalProps) {
       key: "3",
       value: "Done",
     },
-    {
-      key: "4",
-      value: "OverDue",
-    },
+    // {
+    //   key: "4",
+    //   value: "OverDue",
+    // },
   ];
 
   const submitTask = async (formData: FormData) => {

@@ -4,6 +4,7 @@ import {
   InternManagementIcon,
   InterviewManagementIcon,
   ProjectManagementIcon,
+  QuestionManagementIcon,
 } from "./Icons";
 import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
@@ -24,6 +25,11 @@ export const NavigationItems = [
     label: "Projects",
     href: "/project",
     icon: ProjectManagementIcon,
+  },
+  {
+    label: "Questions",
+    href: "/question",
+    icon: QuestionManagementIcon,
   },
   {
     label: "Intern periods",
