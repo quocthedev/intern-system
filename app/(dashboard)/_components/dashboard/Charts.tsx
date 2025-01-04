@@ -6,6 +6,11 @@ const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 import { Select, SelectItem } from "@nextui-org/select";
 import React from "react";
 import { CalendarIcon, UniversityIcon } from "./Icons";
+import UniOverview from "./charts/UniOverview";
+import PassFailUni from "./charts/PassFailUni";
+import InternPeriodOverview from "./charts/InternPeriodOverview";
+import InterviewMetrics from "./charts/InterviewMetrics";
+import ProjectDistribution from "./charts/ProjectDistribution";
 
 export const intervals = [
   { key: "1_month", label: "1 Month" },
@@ -68,31 +73,12 @@ const PieChart: React.FC = () => {
 export default function Charts() {
   return (
     <div className="mt-4 flex w-full flex-col">
-      <div className="flex w-full justify-between">
-        <Select
-          defaultSelectedKeys={["FPT University"]}
-          className="w-[350px]"
-          startContent={<UniversityIcon />}
-          variant="underlined"
-          size="lg"
-        >
-          {universities.map((uni) => (
-            <SelectItem key={uni.key}>{uni.label}</SelectItem>
-          ))}
-        </Select>
-        <Select
-          defaultSelectedKeys={["1_month"]}
-          className="w-[150px]"
-          startContent={<CalendarIcon />}
-        >
-          {intervals.map((interval) => (
-            <SelectItem key={interval.key}>{interval.label}</SelectItem>
-          ))}
-        </Select>
-      </div>
-      <div className="grid grid-cols-2">
-        <BarChart />
-        <PieChart />
+      <div className="grid grid-cols-2 gap-6">
+        <UniOverview />
+        <PassFailUni />
+        <InternPeriodOverview />
+        {/* <InterviewMetrics /> */}
+        <ProjectDistribution />
       </div>
     </div>
   );

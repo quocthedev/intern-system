@@ -16,7 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from "@nextui-org/table";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import React, { Key } from "react";
 import {
   Candidate,
@@ -249,6 +249,20 @@ export default function InterviewScheduleModal(
     },
   ];
 
+  const sendEmailMutation = useMutation({
+    mutationFn: async (formData: FormData) => {
+      try {
+        await sendEmail(formData);
+
+        toast.success("Interview email send successfully! 🎉");
+      } catch (e) {
+        console.log(e);
+
+        toast.error("Failed to send email! 😢");
+      }
+    },
+  });
+
   return (
     <>
       <Button
@@ -303,20 +317,12 @@ export default function InterviewScheduleModal(
                         ).join(","),
                       );
                       formData.append("duration", duration);
-                      try {
-                        await sendEmail(formData);
 
-                        toast.success("Interview email send successfully! 🎉");
-                      } catch (e) {
-                        console.log(e);
-
-                        toast.error("Failed to send email! 😢");
-                      }
+                      await sendEmailMutation.mutateAsync(formData);
 
                       if (props.callback) {
                         props.callback();
                       }
-
                       onClose();
                     }}
                   >
@@ -458,8 +464,11 @@ export default function InterviewScheduleModal(
                       variant="shadow"
                       fullWidth
                       type="submit"
+                      isLoading={sendEmailMutation.isPending}
                     >
-                      {isLoading ? "Sending..." : "Schedule Interview"}
+                      {sendEmailMutation.isPending
+                        ? "Sending..."
+                        : "Schedule Interview"}
                     </Button>
                   </form>
                 ) : (
