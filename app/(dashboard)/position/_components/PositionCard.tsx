@@ -227,14 +227,10 @@ export default function PositionCard(props: PositonCardProps) {
     isOpen: isOpenTechnologySearch,
   } = useTechnology({ pageSize: 8 });
 
-  const defaultSelectedTechnologies = (dynamicTechnologyList || []).filter(
-    (tech) => props.data?.technologies?.find((t: any) => t.id === tech.id),
-  );
-
   const [selectedTechnologies, setSelectedTechnologies] = useState<
     Array<SelectSearchItem>
   >(
-    (defaultSelectedTechnologies || []).map((technology) => ({
+    (props.data.technologies || []).map((technology: any) => ({
       key: technology.id,
       value: technology.name,
       label: technology.name,
