@@ -20,29 +20,15 @@ export default function PassFailUni() {
       type: "donut",
       id: "PassFailUni",
     },
-    responsive: [
-      {
-        breakpoint: 480,
-        options: {
-          chart: {
-            width: 200,
-          },
-          legend: {
-            position: "bottom",
-          },
-          labels: ["Interviewing", "Interview Passed", "Interview Failed"],
-        },
-      },
-    ],
+
+    labels: ["Interviewing", "Interview Passed", "Interview Failed"],
     fill: {
       opacity: 1,
       colors: ["#58A9FB", "#48E970", "#F31260"],
     },
   };
 
-  const [state, setState] = React.useState({
-    series: [40, 20, 40],
-  });
+  const series = [44, 55, 41];
 
   return (
     <Card>
@@ -61,12 +47,7 @@ export default function PassFailUni() {
           ))}
         </Select>
         {typeof window !== "undefined" && (
-          <Chart
-            options={options}
-            series={state.series}
-            height={350}
-            type="donut"
-          />
+          <Chart options={options} series={series} height={350} type="donut" />
         )}
       </CardBody>
     </Card>
