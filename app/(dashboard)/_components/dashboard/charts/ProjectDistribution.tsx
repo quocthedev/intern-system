@@ -27,14 +27,20 @@ export default function ProjectDistribution() {
             },
           },
         },
-        borderRadius: 10,
+        borderRadius: 5,
       },
     },
     stroke: {
       width: 0,
     },
     xaxis: {
-      categories: ["FPT", "UIT", "HCMUS", "TDT", "HCMUT"],
+      categories: [
+        "Project 1",
+        "Project 2",
+        "Project 3",
+        "Project 4",
+        "Project 5",
+      ],
     },
     tooltip: {
       y: {
@@ -45,7 +51,7 @@ export default function ProjectDistribution() {
     },
     fill: {
       opacity: 1,
-      colors: ["#48E970", "#58A9FB", "#D9D9D9"],
+      colors: ["#48E970", "#58A9FB"],
     },
     legend: {
       position: "top",
@@ -59,16 +65,12 @@ export default function ProjectDistribution() {
   const [state, setState] = React.useState({
     series: [
       {
-        name: "In Progress",
+        name: "Total Members",
         data: [44, 55, 41, 37, 22],
       },
       {
-        name: "Completed OJT",
+        name: "Total Tasks",
         data: [53, 32, 33, 52, 13],
-      },
-      {
-        name: "Others",
-        data: [12, 17, 11, 9, 15],
       },
     ],
   });

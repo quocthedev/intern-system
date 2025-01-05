@@ -11,6 +11,8 @@ import PassFailUni from "./charts/PassFailUni";
 import InternPeriodOverview from "./charts/InternPeriodOverview";
 import InterviewMetrics from "./charts/InterviewMetrics";
 import ProjectDistribution from "./charts/ProjectDistribution";
+import TaskProgress from "./charts/TaskProgress";
+import AssignedProjectRate from "./charts/AssignedProjectRate";
 
 export const intervals = [
   { key: "1_month", label: "1 Month" },
@@ -79,6 +81,8 @@ export default function Charts() {
         <InternPeriodOverview />
         <InterviewMetrics />
         <ProjectDistribution />
+        <TaskProgress />
+        <AssignedProjectRate />
       </div>
     </div>
   );
