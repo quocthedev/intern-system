@@ -20,29 +20,14 @@ export default function InterviewMetrics() {
       type: "donut",
       id: "InterviewMetrics",
     },
-    responsive: [
-      {
-        breakpoint: 480,
-        options: {
-          chart: {
-            width: 200,
-          },
-          legend: {
-            position: "bottom",
-          },
-          labels: ["t", "Interview a", "Interview b"],
-        },
-      },
-    ],
+    labels: ["Interviewing", "Interview Passed", "Interview Failed"],
     fill: {
       opacity: 1,
       colors: ["#58A9FB", "#48E970", "#F31260"],
     },
   };
 
-  const [state, setState] = React.useState({
-    series: [20, 40, 40],
-  });
+  const series = [20, 40, 40];
 
   return (
     <Card>
@@ -61,11 +46,10 @@ export default function InterviewMetrics() {
         {typeof window !== "undefined" && (
           <Chart
             options={options}
-            series={state.series}
+            series={series}
             height={350}
             type="donut"
             key="InterviewMetrics"
-            id="InterviewMetrics"
           />
         )}
       </CardBody>
