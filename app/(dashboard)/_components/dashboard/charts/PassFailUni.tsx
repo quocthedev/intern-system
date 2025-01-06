@@ -2,52 +2,90 @@
 
 import React from "react";
 import dynamic from "next/dynamic";
-import { Card, CardBody, Select, SelectItem } from "@nextui-org/react";
+import { Card, CardBody } from "@nextui-org/react";
 import { ApexOptions } from "apexcharts";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-export default function PassFailUni() {
-  const internPeriods = [
-    { key: "All", label: "All Intern Period" },
-    {
-      key: "InternPeriod1",
-      label: "Intern Period 1",
-    },
-  ];
+export default function UniPassRate() {
   const options: ApexOptions = {
     chart: {
-      type: "donut",
-      id: "PassFailUni",
+      type: "bar",
+      height: 350,
+      stacked: false,
     },
-
-    labels: ["Interviewing", "Interview Passed", "Interview Failed"],
+    plotOptions: {
+      bar: {
+        horizontal: false,
+        dataLabels: {
+          total: {
+            enabled: true,
+            offsetX: 0,
+            style: {
+              fontSize: "13px",
+              fontWeight: 900,
+            },
+          },
+        },
+        borderRadius: 5,
+      },
+    },
+    stroke: {
+      width: 0,
+    },
+    xaxis: {
+      categories: [
+        "Project 1",
+        "Project 2",
+        "Project 3",
+        "Project 4",
+        "Project 5",
+      ],
+    },
+    tooltip: {
+      y: {
+        formatter: function (val) {
+          return val + "K";
+        },
+      },
+    },
     fill: {
       opacity: 1,
-      colors: ["#58A9FB", "#48E970", "#F31260"],
+      colors: ["#48E970", "#58A9FB"],
+    },
+    legend: {
+      position: "top",
+      horizontalAlign: "center",
+      markers: {
+        shape: "circle",
+      },
     },
   };
 
-  const series = [44, 55, 41];
+  const [state, setState] = React.useState({
+    series: [
+      {
+        name: "Total Members",
+        data: [44, 55, 41, 37, 22],
+      },
+      {
+        name: "Total Tasks",
+        data: [53, 32, 33, 52, 13],
+      },
+    ],
+  });
 
   return (
     <Card>
       <CardBody>
-        <p className="text-xl font-semibold">
-          Pass/Fail University Distribution
-        </p>
-        <Select
-          defaultSelectedKeys={["All"]}
-          className="w-[150px]"
-          label="Select intern period"
-          variant="underlined"
-        >
-          {internPeriods.map((internPeriod) => (
-            <SelectItem key={internPeriod.key}>{internPeriod.label}</SelectItem>
-          ))}
-        </Select>
+        <p className="text-xl font-semibold">Project Distribution Overview</p>
         {typeof window !== "undefined" && (
-          <Chart options={options} series={series} height={350} type="donut" />
+          <Chart
+            options={options}
+            series={state.series}
+            type="bar"
+            height={350}
+          />
         )}
       </CardBody>
     </Card>

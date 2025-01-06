@@ -4,17 +4,51 @@ import React from "react";
 import dynamic from "next/dynamic";
 import { Card, CardBody, Select, SelectItem } from "@nextui-org/react";
 import { ApexOptions } from "apexcharts";
+import { useQuery } from "@tanstack/react-query";
+import APIClient from "@/libs/api-client";
+import { BaseResponse, BaseResponseSuccess } from "@/libs/types";
+import { API_ENDPOINTS } from "@/libs/config";
+import Loading from "@/components/Loading";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
+const apiClient = new APIClient({
+  onFulfilled: (response) => response,
+  onRejected: (error) => {
+    return {
+      data: error.response.data,
+    };
+  },
+});
+
+export type ProjectParticipant = {
+  totalCandidates: number;
+  candidatesAssigned: number;
+  candidatesNotAssigned: number;
+};
+
 export default function AssignedProjectRate() {
-  const internPeriods = [
-    { key: "All", label: "All Intern Period" },
-    {
-      key: "InternPeriod1",
-      label: "Intern Period 1",
+  const { data: figures, isLoading } = useQuery({
+    queryKey: ["statistic", "project-participant"],
+    queryFn: async () => {
+      const response = await apiClient.get<BaseResponse<ProjectParticipant>>(
+        API_ENDPOINTS.statistic + "/project-participant",
+      );
+
+      if (response.statusCode === "200") {
+        const { data } = response as BaseResponseSuccess<ProjectParticipant>;
+
+        return data;
+      }
+
+      return null;
     },
-  ];
+  });
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
   const options: ApexOptions = {
     chart: {
       type: "donut",
@@ -28,7 +62,9 @@ export default function AssignedProjectRate() {
     },
   };
 
-  const series = [44, 55];
+  const series = figures
+    ? [figures.candidatesAssigned, figures.candidatesNotAssigned]
+    : [0, 0];
 
   return (
     <Card>
