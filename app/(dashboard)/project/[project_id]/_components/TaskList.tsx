@@ -157,42 +157,28 @@ export default function TaskList() {
       case "actions":
         return (
           <div className="flex">
-            <TaskModal
-              mode="edit"
-              projectId={projectSummary?.id as string}
-              selectedTaskInfo={item}
-            />
-            {role === "!Candidate" ? (
-              <TaskDeleteModal taskId={item.id} />
-            ) : (
+            {projectTaskFilter?.Status === "3" ||
+            projectTaskFilter?.Status === "4" ? (
               <></>
+            ) : (
+              <TaskModal
+                mode="edit"
+                projectId={projectSummary?.id as string}
+                selectedTaskInfo={item}
+              />
+            )}
+
+            {role === "Candidate" ||
+            projectTaskFilter?.Status === "1" ||
+            projectTaskFilter?.Status === "2" ||
+            projectTaskFilter?.Status === "3" ? (
+              <></>
+            ) : (
+              <TaskDeleteModal taskId={item.id} />
             )}
           </div>
         );
-      case "actions":
-        return (
-          <div className="flex items-center">
-            <Dropdown>
-              <DropdownTrigger>
-                <Button variant="light" isIconOnly>
-                  <EllipsisIcon />
-                </Button>
-              </DropdownTrigger>
-              <DropdownMenu aria-label="Dynamic Actions">
-                <DropdownItem key="edit" className="flex items-center">
-                  <TaskModal
-                    mode="edit"
-                    projectId={projectSummary?.id as string}
-                    selectedTaskInfo={item}
-                  />
-                </DropdownItem>
-                <DropdownItem key="delete" className="flex items-center">
-                  <TaskDeleteModal taskId={item.id} />
-                </DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-          </div>
-        );
+
       default:
         return null;
     }
@@ -244,13 +230,13 @@ export default function TaskList() {
             ) {
               return false;
             }
-            if (
-              (projectTaskFilter?.Status === "3" ||
-                projectTaskFilter?.Status === "4") &&
-              column.key == "actions"
-            ) {
-              return false;
-            }
+            // if (
+            //   (projectTaskFilter?.Status === "3" ||
+            //     projectTaskFilter?.Status === "4") &&
+            //   column.key == "actions"
+            // ) {
+            //   return false;
+            // }
             if (!projectTaskFilter?.Status && column.key === "actions") {
               return false;
             } else {
@@ -280,12 +266,12 @@ export default function TaskList() {
                     column.key === "progressAssessment"
                   ) {
                     return false;
-                  } else if (
-                    (projectTaskFilter?.Status === "3" ||
-                      projectTaskFilter?.Status === "4") &&
-                    column.key === "actions"
-                  ) {
-                    return false;
+                    // } else if (
+                    //   (projectTaskFilter?.Status === "3" ||
+                    //     projectTaskFilter?.Status === "4") &&
+                    //   column.key === "actions"
+                    // ) {
+                    //   return false;
                   }
                   if (!projectTaskFilter?.Status && column.key === "actions") {
                     return false;
