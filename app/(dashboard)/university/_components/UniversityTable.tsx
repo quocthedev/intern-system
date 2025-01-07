@@ -277,6 +277,7 @@ export default function UniversityTable() {
               placeholder="Full Name"
               label="Full Name"
               value={updateData.name}
+              isRequired
               onChange={(e) =>
                 setUpdateData({ ...updateData, name: e.target.value })
               }
@@ -286,6 +287,7 @@ export default function UniversityTable() {
               label="Abbreviation"
               className="mt-2"
               value={updateData.abbreviation}
+              isRequired
               onChange={(e) =>
                 setUpdateData({ ...updateData, abbreviation: e.target.value })
               }
@@ -295,6 +297,7 @@ export default function UniversityTable() {
               label="Address"
               className="mt-2"
               value={updateData.address}
+              isRequired
               onChange={(e) =>
                 setUpdateData({ ...updateData, address: e.target.value })
               }

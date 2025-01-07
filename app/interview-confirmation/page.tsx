@@ -48,7 +48,7 @@ export default function InterviewConfirmation() {
       router.push("/reschedule");
     } else {
       setIsSending(false);
-      toast.success("You have delinced to an interview");
+      toast.success("You have declined to an interview");
       window.history.replaceState(null, "", "/reject");
       router.push("/reject");
     }

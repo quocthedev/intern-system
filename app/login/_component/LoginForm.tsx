@@ -9,6 +9,7 @@ import { login } from "@/actions/auth";
 import { useMutation } from "@tanstack/react-query";
 import { API_ENDPOINTS } from "@/libs/config";
 import { cn } from "@nextui-org/react";
+import { toast } from "sonner";
 
 export const LoginForm = () => {
   const [visible, setVisible] = useState(false);
@@ -72,7 +73,7 @@ export const LoginForm = () => {
         Object.entries(res).forEach(([key, value]) => {
           window.localStorage.setItem(key, value);
         });
-
+        toast.success("Login successfully");
         redirect("/");
       }
     },

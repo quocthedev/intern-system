@@ -13,8 +13,8 @@ import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
 import { cn } from "@nextui-org/react";
 import { usePathname } from "next/navigation";
-import { Accordion, AccordionItem } from "@nextui-org/accordion";
 import { getCookie } from "@/app/util";
+import { UniversityIcon } from "@/app/(dashboard)/_components/dashboard/Icons";
 
 type NavigationProps = {
   className?: string;
@@ -22,23 +22,23 @@ type NavigationProps = {
 
 const role = getCookie("userRole");
 
-export const AccordionItems = [
-  {
-    label: "Candidates",
-    href: "/intern",
-    icon: InternManagementIcon,
-  },
-  {
-    label: "Intern periods",
-    href: "/internPeriod",
-    icon: InternManagementIcon,
-  },
-  {
-    label: "Universities",
-    href: "/university",
-    icon: InternManagementIcon,
-  },
-];
+// export const AccordionItems = [
+//   {
+//     label: "Candidates",
+//     href: "/intern",
+//     icon: InternManagementIcon,
+//   },
+//   {
+//     label: "Intern periods",
+//     href: "/internPeriod",
+//     icon: InternManagementIcon,
+//   },
+//   {
+//     label: "Universities",
+//     href: "/university",
+//     icon: InternManagementIcon,
+//   },
+// ];
 
 export const NavigationItems = [
   {
@@ -53,9 +53,14 @@ export const NavigationItems = [
   },
 
   {
-    label: "Interns",
-    href: "/intern",
+    label: "Intern periods",
+    href: "/internPeriod",
     icon: InternManagementIcon,
+  },
+  {
+    label: "Universities",
+    href: "/university",
+    icon: UniversityIcon,
   },
   {
     label: "Positions",
@@ -204,50 +209,50 @@ export default function Navigation(props: NavigationProps) {
       {NavigationItems.map((item) => {
         const isActive = item.href === `/${currentPath.split("/")[1]}`;
 
-        if (item.label === "Interns") {
-          return (
-            <Accordion key={item.label}>
-              <AccordionItem
-                aria-label="Intern Accordion"
-                title="Internship"
-                startContent={<InternManagementIcon />}
-                classNames={{
-                  base: "px-1",
-                  trigger: "py-0",
-                  title: "text-sm text-grey font-medium",
-                }}
-              >
-                {AccordionItems.map((AccordionItem) => {
-                  const isAccordionItemActive =
-                    AccordionItem.href === `/${currentPath.split("/")[1]}`;
+        // if (item.label === "Interns") {
+        //   return (
+        //     <Accordion key={item.label}>
+        //       <AccordionItem
+        //         aria-label="Intern Accordion"
+        //         title="Internship"
+        //         startContent={<InternManagementIcon />}
+        //         classNames={{
+        //           base: "px-1",
+        //           trigger: "py-0",
+        //           title: "text-sm text-grey font-medium",
+        //         }}
+        //       >
+        //         {AccordionItems.map((AccordionItem) => {
+        //           const isAccordionItemActive =
+        //             AccordionItem.href === `/${currentPath.split("/")[1]}`;
 
-                  return (
-                    <Button
-                      color="primary"
-                      variant={isAccordionItemActive ? "shadow" : "light"}
-                      as={Link}
-                      startContent={
-                        <AccordionItem.icon
-                          size={20}
-                          active={isAccordionItemActive}
-                        />
-                      }
-                      className={cn(
-                        "m-1 w-full justify-start text-sm font-medium text-grey",
-                        isAccordionItemActive && "font-semibold text-white",
-                      )}
-                      href={AccordionItem.href}
-                      size="md"
-                      key={AccordionItem.label}
-                    >
-                      {AccordionItem.label}
-                    </Button>
-                  );
-                })}
-              </AccordionItem>
-            </Accordion>
-          );
-        }
+        //           return (
+        //             <Button
+        //               color="primary"
+        //               variant={isAccordionItemActive ? "shadow" : "light"}
+        //               as={Link}
+        //               startContent={
+        //                 <AccordionItem.icon
+        //                   size={20}
+        //                   active={isAccordionItemActive}
+        //                 />
+        //               }
+        //               className={cn(
+        //                 "m-1 w-full justify-start text-sm font-medium text-grey",
+        //                 isAccordionItemActive && "font-semibold text-white",
+        //               )}
+        //               href={AccordionItem.href}
+        //               size="md"
+        //               key={AccordionItem.label}
+        //             >
+        //               {AccordionItem.label}
+        //             </Button>
+        //           );
+        //         })}
+        //       </AccordionItem>
+        //     </Accordion>
+        //   );
+        // }
 
         return (
           <Button
