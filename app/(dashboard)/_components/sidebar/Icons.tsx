@@ -16,6 +16,8 @@ import InterviewManagementActiveSVG from "@/public/icons/sidebar/interview-manag
 import InterviewManagementInActiveSVG from "@/public/icons/sidebar/interview-management-inactive.svg";
 import HomeIconNavbarSVG from "@/public/icons/sidebar/home-icon-navbar.svg";
 import ProjectIconNavbarSVG from "@/public/icons/sidebar/project-icon-navbar.svg";
+import UniversityManagementActiveSVG from "@/public/icons/sidebar/university-management-icon-active.svg";
+import UniversityManagementInactiveSVG from "@/public/icons/sidebar/university-management-icon-inactive.svg";
 
 import Image from "next/image";
 
@@ -161,6 +163,22 @@ export const ProjectIconNavbar = ({
   />
 );
 
+export const UniversityManagementIcon = ({
+  active = false,
+  size = 24,
+  className,
+}: SidebarIconProps) => (
+  <Image
+    src={
+      active ? UniversityManagementActiveSVG : UniversityManagementInactiveSVG
+    }
+    alt="Question Management"
+    width={size}
+    height={size}
+    className={className}
+  />
+);
+
 export default {
   DashboardIcon,
   AccountManagementIcon,
@@ -170,4 +188,5 @@ export default {
   TechnologyManagementIcon,
   QuestionManagementIcon,
   InterviewManagementIcon,
+  UniversityManagementIcon,
 };

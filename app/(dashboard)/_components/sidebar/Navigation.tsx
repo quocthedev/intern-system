@@ -8,13 +8,13 @@ import {
   TechnologyManagementIcon,
   QuestionManagementIcon,
   InterviewManagementIcon,
+  UniversityManagementIcon,
 } from "./Icons";
 import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
 import { cn } from "@nextui-org/react";
 import { usePathname } from "next/navigation";
 import { getCookie } from "@/app/util";
-import { UniversityIcon } from "@/app/(dashboard)/_components/dashboard/Icons";
 
 type NavigationProps = {
   className?: string;
@@ -60,7 +60,7 @@ export const NavigationItems = [
   {
     label: "Universities",
     href: "/university",
-    icon: UniversityIcon,
+    icon: UniversityManagementIcon,
   },
   {
     label: "Positions",
