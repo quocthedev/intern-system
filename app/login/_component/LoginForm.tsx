@@ -108,14 +108,19 @@ export const LoginForm = () => {
         }
       >
         <div className="relative flex w-[30%] flex-col gap-3 rounded-xl bg-white p-10 shadow-xl">
-          <div className="mb-3 text-center text-2xl font-semibold">
+          <div className="text-center text-2xl font-semibold">
             {
               {
-                [Mode.Login]: "Welcome to InternS",
+                [Mode.Login]: "Welcome to Intern System ",
                 [Mode.ResetPassword]: "Reset password",
               }[mode]
             }
           </div>
+          {mode === Mode.Login && (
+            <p className="mb-3 text-center text-sm text-gray-500">
+              Please sign in with the account provided
+            </p>
+          )}
           {
             {
               [Mode.Login]: (
