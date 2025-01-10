@@ -9,11 +9,9 @@ import {
   useDisclosure,
 } from "@nextui-org/modal";
 import React, { Key } from "react";
-import APIClient from "@/libs/api-client";
 import { useToggle } from "usehooks-ts";
 import { Tab, Tabs } from "@nextui-org/tabs";
 import { DatePicker } from "@nextui-org/date-picker";
-
 import { now, getLocalTimeZone } from "@internationalized/date";
 import { Select, SelectItem } from "@nextui-org/select";
 import { sendEmail } from "@/actions/send-email-next";
@@ -24,13 +22,6 @@ import { ChipProps } from "@nextui-org/chip";
 import { I18nProvider } from "@react-aria/i18n";
 import { useInterviewDetailContext } from "@/app/(dashboard)/interview/_providers/InterviewDetailProvider";
 import Loading from "@/components/Loading";
-
-const apiClient = new APIClient({
-  // onFulfilled: (response) => response,
-  // onRejected: (error) => {
-  //   return error;
-  // },
-});
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   Approved: "success",
@@ -143,10 +134,8 @@ export default function InterviewRescheduleModal(
                       await sendEmail(formData);
 
                       toast.success("Interview email send successfully! 🎉");
-                    } catch (e) {
-                      console.log(e);
-
-                      toast.error("Failed to send email! 😢");
+                    } catch (error: any) {
+                      toast.error(error.message || "Failed to send email! 😢");
                     }
 
                     if (props.callback) {

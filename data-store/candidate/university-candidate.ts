@@ -8,6 +8,7 @@ import { useState } from "react";
 import { API_ENDPOINTS } from "@/libs/config";
 import { create } from "zustand";
 import { toast } from "sonner";
+import { getCookie } from "@/app/util";
 
 export enum CandidateStatus {
   Pending = 0,
@@ -77,6 +78,8 @@ const apiClient = new APIClient({
   },
 });
 
+const accessToken = getCookie("accessToken");
+
 const useFilterStore = create<{
   filter: UniversityCandidateFilter | null;
   setFilter: (newFilter: UniversityCandidateFilter | null) => void;
@@ -144,7 +147,13 @@ export function useUniversityCandidate(params: {
         PaginationResponse<UniversityCandidate>
       >(
         `${API_ENDPOINTS.candidate}/${params.internPeriodId}/university/${params.universityId}/candidates`,
-        { params: new URLSearchParams(queryParams) },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+          params: new URLSearchParams(queryParams),
+        },
       );
 
       if (response?.statusCode === "200") {
