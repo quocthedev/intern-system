@@ -131,8 +131,36 @@ export default class APIClient {
 
   async delete<ResponseType>(
     url: string,
-    config: AxiosRequestConfig = {},
+    headers = {},
+    auth = false,
   ): Promise<ResponseType> {
+     // If auth is true, add the Authorization header to the request by using the access token stored in cookies
+
+     const config = {
+      headers,
+    };
+
+    if (auth) {
+      let accessToken: string | null;
+
+      if (typeof window === "undefined") {
+        const { cookies } = await import("next/headers");
+        // Add the Authorization header
+
+        accessToken = cookies().get("accessToken")?.value || null;
+      } else {
+        accessToken = (await getCookie("accessToken")) || null;
+      }
+
+      if (!accessToken) {
+        throw new Error("Access token is missing");
+      }
+
+      config.headers = {
+        ...config.headers,
+        Authorization: `Bearer ${accessToken}`,
+      };
+    }
     const response = await this.client.delete(url, config);
 
     return response.data as ResponseType;

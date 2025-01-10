@@ -47,12 +47,7 @@ import { Chip, ChipProps } from "@nextui-org/chip";
 import { formatDate } from "@/app/util";
 import { I18nProvider } from "@react-aria/i18n";
 
-const apiClient = new APIClient({
-  // onFulfilled: (response) => response,
-  // onRejected: (error) => {
-  //   return error;
-  // },
-});
+const apiClient = new APIClient({});
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   Approved: "success",
@@ -255,10 +250,8 @@ export default function InterviewScheduleModal(
         await sendEmail(formData);
 
         toast.success("Interview email send successfully! 🎉");
-      } catch (e) {
-        console.log(e);
-
-        toast.error("Failed to send email! 😢");
+      } catch (error: any) {
+        toast.error(error.message || "Failed to send email!");
       }
     },
   });
@@ -319,7 +312,6 @@ export default function InterviewScheduleModal(
                       formData.append("duration", duration);
 
                       await sendEmailMutation.mutateAsync(formData);
-
                       if (props.callback) {
                         props.callback();
                       }
