@@ -58,7 +58,7 @@ export default function AssignedProjectRate() {
     labels: ["Assigned", "Not Assigned"],
     fill: {
       opacity: 1,
-      colors: ["#58A9FB", "#48E970"],
+      colors: ["#58A9FB", "#88868a"],
     },
   };
 
