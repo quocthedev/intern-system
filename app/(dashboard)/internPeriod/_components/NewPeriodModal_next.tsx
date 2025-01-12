@@ -20,6 +20,7 @@ import { Select, SelectItem } from "@nextui-org/select";
 import { useInternPeriodContext } from "../_providers/InternPeriodProvider";
 import { CalendarDate, parseDate } from "@internationalized/date";
 import { addMonths } from "date-fns";
+import { getCookie } from "@/app/util";
 
 interface CreatePeriodData {
   internPeriod: {
@@ -37,12 +38,14 @@ export default function NewPeriodModalNext() {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
   const { refetchListInternPeriod } = useInternPeriodContext();
+  const accessToken = getCookie("accessToken");
 
   const { mutate } = useMutation({
     mutationFn: async (newPeriod: CreatePeriodData) => {
       const response = await fetch(API_ENDPOINTS.internPeriod, {
         method: "POST",
         headers: {
+          Athorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(newPeriod),

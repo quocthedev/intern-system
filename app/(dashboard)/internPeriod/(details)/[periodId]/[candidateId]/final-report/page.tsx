@@ -11,7 +11,6 @@ import { API_ENDPOINTS } from "@/libs/config";
 import { Button } from "@nextui-org/button";
 import { Divider } from "@nextui-org/divider";
 import { Input } from "@nextui-org/input";
-import { Spinner } from "@nextui-org/spinner";
 import {
   Table,
   TableBody,
@@ -20,11 +19,11 @@ import {
   TableHeader,
   TableRow,
 } from "@nextui-org/table";
-import { PDFExport } from "@progress/kendo-react-pdf";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import React, { Key, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
+import { useReactToPrint } from "react-to-print";
 
 export default function FinalReportPage() {
   const statusColor: Record<string, string> = {
@@ -44,6 +43,8 @@ export default function FinalReportPage() {
   const { candidateId } = useParams();
 
   const role = getCookie("userRole");
+  const contentRef = useRef<HTMLDivElement>(null);
+  const reactToPrintFn = useReactToPrint({ contentRef });
 
   const apiClient = new APIClient({
     onFulfilled: (response) => response,
@@ -237,10 +238,12 @@ export default function FinalReportPage() {
           <Input
             type="number"
             name={criterias.content}
-            readOnly={!isEditable}
+            disabled={!isEditable}
             classNames={{
-              inputWrapper: `${isEditable ? "bg-transparent shadow-none" : ""}`,
+              inputWrapper: `${!isEditable ? "bg-transparent shadow-none" : ""}`,
             }}
+            className="w-20"
+            size="sm"
             value={
               isEditable
                 ? criteriaArray[index].evaluateScore?.toString()
@@ -257,7 +260,7 @@ export default function FinalReportPage() {
             name={criterias.content}
             readOnly={!isEditable}
             classNames={{
-              inputWrapper: `${isEditable ? "bg-transparent shadow-none" : ""}`,
+              inputWrapper: `${!isEditable ? "bg-transparent shadow-none" : ""}`,
             }}
             value={
               isEditable
@@ -301,20 +304,12 @@ export default function FinalReportPage() {
     mutate(criteriaRecord);
   };
 
-  const pdfExportComponent = useRef<PDFExport>(null);
-
-  const exportPDFWithComponent = () => {
-    if (pdfExportComponent.current) {
-      pdfExportComponent.current.save();
-    }
-  };
-
   return (
-    <div className="p-6">
-      <Button type="button" onClick={exportPDFWithComponent}>
-        Export with component
+    <div>
+      <Button color="secondary" onPress={() => reactToPrintFn()}>
+        Download PDF file
       </Button>
-      <PDFExport ref={pdfExportComponent} paperSize="auto" margin={40}>
+      <div ref={contentRef} className="p-6">
         <div>
           <div className="text-center text-3xl font-semibold">
             INTERNSHIP FINAL REPORT
@@ -329,15 +324,15 @@ export default function FinalReportPage() {
               </h2>
               <div className="mb-2">
                 <span className="font-medium">Full Name:</span>{" "}
-                {candidateInfor.candidateName}
+                {candidateInfor?.candidateName}
               </div>
               <div className="mb-2">
                 <span className="font-medium">University:</span>{" "}
-                {candidateInfor.university}
+                {candidateInfor?.university}
               </div>
               <div>
                 <span className="font-medium">Student Code:</span>{" "}
-                {candidateInfor.studentCode}
+                {candidateInfor?.studentCode}
               </div>
             </div>
 
@@ -347,15 +342,15 @@ export default function FinalReportPage() {
               </h2>
               <div className="mb-2">
                 <span className="font-medium">Internship Name:</span>{" "}
-                {internPeriodViewReport.name}
+                {internPeriodViewReport?.name}
               </div>
               <div className="mb-2">
                 <span className="font-medium">Start Date:</span>{" "}
-                {formatDate(internPeriodViewReport.startDate)}
+                {formatDate(internPeriodViewReport?.startDate)}
               </div>
               <div>
                 <span className="font-medium">End Date:</span>{" "}
-                {formatDate(internPeriodViewReport.endDate)}
+                {formatDate(internPeriodViewReport?.endDate)}
               </div>
             </div>
 
@@ -373,26 +368,26 @@ export default function FinalReportPage() {
           </h1>
           <div>
             {workPerformance?.map((workPerformance: any) => {
-              const projectTasks = workPerformance.tasks || [];
+              const projectTasks = workPerformance?.tasks || [];
 
               return (
                 <div key={workPerformance.title}>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="mt-3">
                       <span className="font-medium">Project name:</span>{" "}
-                      {workPerformance.title}
+                      {workPerformance?.title}
                     </div>
                     <div className="mt-3">
                       <span className="font-medium">Leader:</span>{" "}
-                      {workPerformance.leader}
+                      {workPerformance?.leader}
                     </div>
                     <div className="mb-4">
                       <span className="font-medium">Start date:</span>{" "}
-                      {formatDate(workPerformance.startDate)}
+                      {formatDate(workPerformance?.startDate)}
                     </div>
                     <div className="mb-4">
                       <span className="font-medium">Release date:</span>{" "}
-                      {formatDate(workPerformance.releaseDate)}
+                      {formatDate(workPerformance?.releaseDate)}
                     </div>
                   </div>
 
@@ -430,21 +425,27 @@ export default function FinalReportPage() {
                     {" "}
                     <div className="mt-3">
                       <span className="font-medium">Total difficulty: </span>{" "}
-                      {workPerformance.totalDifficulty}
+                      {workPerformance?.totalDifficulty}
                     </div>
                     <div className="mt-3">
                       <span className="font-medium">Total KPI: </span>{" "}
-                      {workPerformance.totalKPI}
+                      {workPerformance?.totalKPI}
                     </div>
                     <div className="mt-2">
                       <span className="font-medium">Total average score: </span>{" "}
-                      {workPerformance.averageScore}
+                      {workPerformance?.averageScore}
                     </div>
                     <div className="mt-2">
                       <span className="font-medium">Result: </span>{" "}
-                      <span className={statusColor[workPerformance.result]}>
-                        {workPerformance.result}
-                      </span>
+                      {workPerformance?.result === "NotPassed" ? (
+                        <span className="font-medium text-red-500">
+                          Not Passed
+                        </span>
+                      ) : (
+                        <span className={statusColor[workPerformance?.result]}>
+                          {workPerformance?.result}
+                        </span>
+                      )}
                     </div>
                   </div>
                   <Divider className="mb-8" />
@@ -470,12 +471,17 @@ export default function FinalReportPage() {
             </div>
             <div>
               <span className="font-medium">Result: </span>
-              {/* {statusColor(workPerformanceEvaluationFinal?.result)} */}
-              <span
-                className={statusColor[workPerformanceEvaluationFinal?.result]}
-              >
-                {workPerformanceEvaluationFinal?.result}
-              </span>
+              {workPerformanceEvaluationFinal?.result === "NotPassed" ? (
+                <span className="font-medium text-red-500">Not Passed</span>
+              ) : (
+                <span
+                  className={
+                    statusColor[workPerformanceEvaluationFinal?.result]
+                  }
+                >
+                  {workPerformanceEvaluationFinal?.result}
+                </span>
+              )}
             </div>
           </div>
           <div className="mb-4 flex items-center justify-between">
@@ -534,14 +540,14 @@ export default function FinalReportPage() {
             </div>
 
             <div className="mt-5 grid grid-cols-2 gap-2">
-              <div>Total Percent: {complianceEvaluate.totalPercent}%</div>
+              <div>Total Percent: {complianceEvaluate?.totalPercent}%</div>
               <div>
-                Total Converted Score: {complianceEvaluate.totalConvertedScore}
+                Total Converted Score: {complianceEvaluate?.totalConvertedScore}
               </div>
               <div>
                 Result:{" "}
-                <span className={statusColor[complianceEvaluate.result]}>
-                  {complianceEvaluate.result}
+                <span className={statusColor[complianceEvaluate?.result]}>
+                  {complianceEvaluate?.result}
                 </span>
               </div>
             </div>
@@ -551,13 +557,17 @@ export default function FinalReportPage() {
             <div>
               <h1 className="text-lg">
                 <span className="font-medium">Overall Score: </span>{" "}
-                {candidateInfor.overallScore}
+                {candidateInfor?.overallScore}
               </h1>
               <div className="text-lg">
                 <span className="font-medium"> Final result: </span>
-                <span className={statusColor[candidateInfor?.result]}>
-                  {candidateInfor?.result}
-                </span>
+                {candidateInfor?.result === "NotPassed" ? (
+                  <span className="font-medium text-red-500">Not Passed</span>
+                ) : (
+                  <span className={statusColor[candidateInfor?.result]}>
+                    {candidateInfor?.result}
+                  </span>
+                )}
               </div>
             </div>
             <div>
@@ -566,7 +576,7 @@ export default function FinalReportPage() {
             </div>
           </div>
         </div>
-      </PDFExport>
+      </div>
     </div>
   );
 }

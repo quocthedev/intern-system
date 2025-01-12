@@ -41,6 +41,7 @@ const statusColorMap: Record<string, ChipProps["color"]> = {
 };
 
 const role = getCookie("userRole");
+const accessToken = getCookie("accessToken");
 
 export default function UniversityCandidateCard() {
   const { isLoading, data, setPageIndex, refetch } =
@@ -57,9 +58,12 @@ export default function UniversityCandidateCard() {
 
   const deleteInternMutation = useMutation({
     mutationFn: (id: string) =>
-      fetch(`${API_ENDPOINTS.candidate}/${id}`, { method: "DELETE" }).then(
-        (response) => response.json(),
-      ),
+      fetch(`${API_ENDPOINTS.candidate}/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${accessToken}`, // Add Bearer token in the header
+        },
+      }).then((response) => response.json()),
     onError: (error) => {
       console.log(error);
       toast.error(error.message);
