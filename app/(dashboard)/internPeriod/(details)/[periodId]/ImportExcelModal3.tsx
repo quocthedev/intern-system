@@ -15,10 +15,11 @@ import { toast } from "sonner";
 import { ExcelIcon } from "@/app/(dashboard)/intern/_components/Icons";
 import { Divider } from "@nextui-org/divider";
 import Link from "next/link";
-import APIClient from "@/libs/api-client";
-import { useInternPeriodContext } from "@/app/(dashboard)/internPeriod/_providers/InternPeriodProvider";
 import { useUniversityCandidateContext } from "@/app/(dashboard)/internPeriod/(details)/[periodId]/_providers/UniversityCandidateProvider";
 import { Spinner } from "@nextui-org/react";
+import { getCookie } from "@/app/util";
+import APIClient from "@/libs/api-client";
+import axios from "axios";
 
 interface PeriodModalIdProps {
   internPeriodId: string | null;
@@ -36,16 +37,8 @@ function ImportExcelModal3({
 
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
   const { refetch } = useUniversityCandidateContext();
-  const apiClient = new APIClient({
-    onFulfilled: (response) => response,
-    onRejected: (error) => {
-      console.log(error.response.data);
 
-      return {
-        data: error.response.data,
-      };
-    },
-  });
+  const accessToken = getCookie("accessToken");
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target?.files?.[0];
@@ -56,38 +49,38 @@ function ImportExcelModal3({
     }
   };
 
-  // Mutation for file upload
   const { mutate, isPending } = useMutation({
     mutationFn: async (formData: FormData) => {
-      const response = await apiClient.post<{
-        statusCode: string;
-        message: string;
-      }>(
-        `${API_ENDPOINTS.candidate}/import-candidate-list?internPeriodId=${selectedInternPeriodId}&universityId=${selectedUniversityId}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
+      try {
+        const response = await fetch(
+          `${API_ENDPOINTS.candidate}/import-candidate-list?internPeriodId=${selectedInternPeriodId}&universityId=${selectedUniversityId}`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+            body: formData,
           },
-        },
-      );
+        );
 
-      if (response.statusCode !== "200") {
-        const errorMessage = response.message || "Failed to upload file";
+        const data = await response.json();
 
-        throw new Error(errorMessage);
+        if (!response.ok) {
+          throw new Error(data.message || "Failed to upload file");
+        }
+
+        return data;
+      } catch (error: any) {
+        throw error; // Pass the error to onError
       }
-
-      return response;
     },
-    onError: (error) => {
-      console.log(error);
-      toast.error(error.message);
+    onError: (error: any) => {
+      toast.error(error.message || "Failed to upload file");
     },
     onSuccess: () => {
       toast.success("Upload file successfully!");
       refetch();
-      onClose(); // Close modal or reset state
+      onClose();
     },
   });
 

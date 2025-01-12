@@ -131,7 +131,7 @@ export default function InternPeriodOverview() {
     labels: ["Pass Rate", "Fail Rate"],
     fill: {
       opacity: 1,
-      colors: ["#58A9FB", "#48E970", "#F31260"],
+      colors: ["#48E970", "#F31260"],
     },
   };
 

@@ -112,7 +112,7 @@ export default function ProjectDistribution() {
     },
     fill: {
       opacity: 1,
-      colors: ["#48E970", "#58A9FB"],
+      colors: ["#58A9FB", "#48E970"],
     },
     legend: {
       position: "top",

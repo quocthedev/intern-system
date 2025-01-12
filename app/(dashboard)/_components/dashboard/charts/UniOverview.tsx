@@ -134,7 +134,7 @@ export default function UniOverview() {
 
     fill: {
       opacity: 1,
-      colors: ["#48E970", "#58A9FB", "#D9D9D9", "#F31260"],
+      colors: ["#58A9FB", "#a42bf0", "#f7c923", "#48E970"],
     },
     legend: {
       position: "top",
@@ -192,7 +192,7 @@ export default function UniOverview() {
     },
     fill: {
       opacity: 1,
-      colors: ["#48E970", "#58A9FB"],
+      colors: ["#58A9FB", "#48E970"],
     },
     legend: {
       position: "top",
