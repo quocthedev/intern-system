@@ -13,6 +13,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Select, SelectItem } from "@nextui-org/select";
 import { toast } from "sonner";
 import { usePositionContext } from "@/app/(dashboard)/position/_providers/PositionProvider";
+import { getCookie } from "cookies-next";
 
 export default function ActionBar() {
   const {
@@ -32,6 +33,7 @@ export default function ActionBar() {
   const [positionId, setPositionId] = useState("");
   const [technologyId, setTechnologyId] = useState<string[]>([]);
   const queryClient = useQueryClient();
+  const accessToken = getCookie("accessToken");
 
   interface PositionInterface {
     name: string;
@@ -43,25 +45,22 @@ export default function ActionBar() {
     isDeleted: boolean;
   }
 
+  const { listPositionData } = usePositionContext();
+
   const { isLoading, error, data, refetch } = useQuery({
     queryKey: ["data"],
     queryFn: async () => {
-      const [positionRes, technologyRes] = await Promise.all([
-        fetch(API_ENDPOINTS.position),
-        fetch(API_ENDPOINTS.technology),
-      ]);
+      const response = await fetch(API_ENDPOINTS.technology);
 
-      const position = await positionRes.json();
-      const technology = await technologyRes.json();
+      const technology = await response.json();
 
       return {
-        positions: position?.data?.pagingData || [],
         technologies: technology?.data?.pagingData || [],
       };
     },
   });
 
-  const positionData = data?.positions || [];
+  const positionData = listPositionData?.positions || [];
   const technologyData = data?.technologies || [];
 
   const mutation = useMutation({
@@ -72,6 +71,7 @@ export default function ActionBar() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
           },
           body: JSON.stringify(techIds),
         },

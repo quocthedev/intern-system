@@ -1,3 +1,4 @@
+
 import APIClient from "@/libs/api-client";
 import { PaginationResponse, PaginationResponseSuccess } from "../libs/types";
 import { useQuery } from "@tanstack/react-query";
@@ -5,6 +6,7 @@ import { useState } from "react";
 import { API_ENDPOINTS } from "@/libs/config";
 import { create } from "zustand";
 import { useInfiniteScroll } from "@nextui-org/use-infinite-scroll";
+import { getCookie } from "@/app/util";
 
 interface Position {
   name: string;
@@ -20,12 +22,15 @@ interface Position {
 const apiClient = new APIClient({
   onFulfilled: (response) => response,
   onRejected: (error) => {
-    console.log(error.response.data);
+    return error.response.data;
   },
 });
 
+
 // create a usePositionStore as a dynamic list of positions
 // this list are able to be extended when user scroll down to the bottom of the list
+
+const accessToken = getCookie("accessToken");
 
 const usePositionStore = create<{
   dynamicPositionList: Position[];
@@ -81,6 +86,10 @@ export function usePosition(params: { pageSize: number }) {
             PageSize: params.pageSize.toString(),
             Search: search,
           }),
+          headers: {
+            Authorization:`Bearer ${accessToken}`,
+            "Content-Type": "multipart/form-data"
+          }
         },
       );
 

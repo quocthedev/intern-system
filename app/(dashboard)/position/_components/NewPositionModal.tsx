@@ -14,6 +14,7 @@ import { AddIcon } from "@/app/(dashboard)/position/_components/Icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { API_ENDPOINTS } from "@/libs/config";
 import { toast } from "sonner";
+import { getCookie } from "@/app/util";
 
 export default function NewPostionModal() {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
@@ -22,11 +23,15 @@ export default function NewPostionModal() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const queryClient = useQueryClient();
+  const accessToken = getCookie("accessToken");
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (newPosition: FormData) => {
       const response = await fetch(API_ENDPOINTS.position, {
         method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
         body: newPosition,
       });
 

@@ -18,6 +18,7 @@ import { useTechnology } from "@/data-store/technology.store";
 import { useMutation } from "@tanstack/react-query";
 import { API_ENDPOINTS } from "@/libs/config";
 import { toast } from "sonner";
+import { getCookie } from "@/app/util";
 
 interface Tech {
   id: string;
@@ -37,6 +38,8 @@ export type PositonCardProps = {
   refetch: () => void;
 };
 
+const accessToken = getCookie("accessToken");
+
 export default function PositionCard(props: PositonCardProps) {
   const {
     isOpen: isDeleteOpen,
@@ -54,7 +57,10 @@ export default function PositionCard(props: PositonCardProps) {
     mutationFn: async () => {
       await fetch(API_ENDPOINTS.position + "/" + props.data.id, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(updateData),
       });
     },
@@ -69,6 +75,10 @@ export default function PositionCard(props: PositonCardProps) {
     mutationFn: (id: string) =>
       fetch(API_ENDPOINTS.position + "/" + id, {
         method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
       }).then((response) => response.json()),
 
     onError: (error) => {
@@ -87,6 +97,7 @@ export default function PositionCard(props: PositonCardProps) {
         {
           method: "POST",
           headers: {
+            Authorization: `Bearer ${accessToken}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify(techIds),
@@ -117,6 +128,10 @@ export default function PositionCard(props: PositonCardProps) {
             `${API_ENDPOINTS.position}/${props.data.id}/technology/${techId}`,
             {
               method: "DELETE",
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+                "Content-Type": "application/json",
+              },
             },
           ),
         ),
@@ -175,6 +190,10 @@ export default function PositionCard(props: PositonCardProps) {
         {
           method: "PUT",
           body: formData,
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "multipart/form-data",
+          },
         },
       );
 

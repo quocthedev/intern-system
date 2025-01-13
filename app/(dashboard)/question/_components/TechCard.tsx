@@ -10,16 +10,22 @@ import { useQuery } from "@tanstack/react-query";
 import { API_ENDPOINTS } from "@/libs/config";
 import { Spinner } from "@nextui-org/spinner";
 import { Autocomplete, AutocompleteItem } from "@nextui-org/autocomplete";
+import { getCookie } from "@/app/util";
 
 export const TechCard = () => {
   const defaultId = "e7a7142d-72cf-4a9d-bcb7-389c1278db6b";
+  const accessToken = getCookie("accessToken");
 
   const [positionId, setPositionId] = useState(defaultId);
   const { data } = useQuery({
     queryKey: ["allPositions", positionId],
     queryFn: async () => {
       try {
-        const response = await fetch(`${API_ENDPOINTS.position}?pageSize=20`);
+        const response = await fetch(`${API_ENDPOINTS.position}?pageSize=100`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
         const result = await response.json();
 
         return result?.data?.pagingData || [];

@@ -5,6 +5,7 @@ import { useState } from "react";
 import { API_ENDPOINTS } from "@/libs/config";
 import { create } from "zustand";
 import { useInfiniteScroll } from "@nextui-org/use-infinite-scroll";
+import { getCookie } from "@/app/util";
 
 interface Technology {
   id: string;
@@ -20,9 +21,11 @@ interface Technology {
 const apiClient = new APIClient({
   onFulfilled: (response) => response,
   onRejected: (error) => {
-    console.log(error.response.data);
+    return error.response.data;
   },
 });
+
+const accessToken = getCookie("accessToken");
 
 // create a useTechnologyStore as a dynamic list of Technologys
 // this list are able to be extended when user scroll down to the bottom of the list
@@ -86,6 +89,10 @@ export function useTechnology(params: { pageSize: number }) {
             PageSize: params.pageSize.toString(),
             Search: search,
           }),
+          headers: {
+            Authorization:`Bearer ${accessToken}`,
+            "Content-Type": "multipart/form-data"
+          }
         },
       );
 
