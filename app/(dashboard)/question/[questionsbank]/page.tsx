@@ -34,13 +34,6 @@ import { Input } from "@nextui-org/input";
 import Image from "next/image";
 import Loading from "@/components/Loading";
 
-// interface QuestionData {
-//   content: string;
-//   imageUri: string;
-//   difficulty: string;
-//   technologyId: string;
-// }
-
 export default function QuestionBankPage() {
   const params = useParams();
 
@@ -91,7 +84,6 @@ export default function QuestionBankPage() {
 
   const [updateData, setUpdateData] = useState({
     content: "",
-    imageUri: "",
     difficulty: "",
     technologyId: techId,
   });
@@ -181,14 +173,12 @@ export default function QuestionBankPage() {
   const openEditModal = (
     id: React.SetStateAction<string>,
     content: string,
-    imageUri: string,
     difficulty: number,
     technologyId: string,
   ) => {
     setSelectedQuestion(id);
     setUpdateData({
       content,
-      imageUri,
       difficulty: difficulty.toString(),
       technologyId,
     });
@@ -291,7 +281,6 @@ export default function QuestionBankPage() {
                     openEditModal(
                       question.id,
                       question.content,
-                      question.imageUri,
                       question.difficulty,
                       techId,
                     );
@@ -409,19 +398,11 @@ export default function QuestionBankPage() {
             />
 
             <Input
-              placeholder="Image URL"
-              label="Image URL"
-              className="mt-2"
-              value={updateData.imageUri}
-              onChange={(e) =>
-                setUpdateData({ ...updateData, imageUri: e.target.value })
-              }
-            />
-            <Input
               placeholder="Difficulty"
               label="Difficulty"
               className="mt-2"
               value={updateData.difficulty}
+              type="number"
               onChange={(e) =>
                 setUpdateData({ ...updateData, difficulty: e.target.value })
               }
