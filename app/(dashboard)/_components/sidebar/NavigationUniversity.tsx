@@ -25,11 +25,11 @@ export const NavigationItems = [
     href: "/internPeriod",
     icon: InternManagementIcon,
   },
-  {
-    label: "Projects",
-    href: "/project",
-    icon: ProjectManagementIcon,
-  },
+  // {
+  //   label: "Projects",
+  //   href: "/project",
+  //   icon: ProjectManagementIcon,
+  // },
 ];
 
 export default function NavigationUniversity(props: NavigationProps) {

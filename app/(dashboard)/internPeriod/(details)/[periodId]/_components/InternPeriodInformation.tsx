@@ -6,7 +6,7 @@ import { useMutation } from "@tanstack/react-query";
 import React from "react";
 import { useInternPeriodContext } from "../_providers/InternPeriodDetailProvider";
 import { toast } from "sonner";
-import { formatDate } from "@/app/util";
+import { formatDate, getCookie } from "@/app/util";
 import { Skeleton } from "@nextui-org/skeleton";
 import { useToggle } from "usehooks-ts";
 import { EditIcon } from "../../../_components/Icons";
@@ -64,6 +64,8 @@ export default function InternPeriodInformation() {
 
     updateMutation.mutate(params);
   };
+
+  const role = getCookie("userRole");
 
   return (
     <>
@@ -140,7 +142,9 @@ export default function InternPeriodInformation() {
             <h2 className="text-2xl font-semibold text-amber-600">
               Intern Period Details
             </h2>
-            {internPeriodData?.status == "InProgress" ? (
+            {internPeriodData?.status == "InProgress" ||
+            role === "Mentor" ||
+            role === "University Offical" ? (
               <></>
             ) : (
               <div>

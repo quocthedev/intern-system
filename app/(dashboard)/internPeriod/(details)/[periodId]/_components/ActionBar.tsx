@@ -6,11 +6,14 @@ import ImportExcelModal3 from "../ImportExcelModal3";
 import { useInternPeriodContext } from "../_providers/InternPeriodDetailProvider";
 import UniversityCandidateFilter from "./UniversityCandidateFilter";
 import InterviewScheduleModal from "@/components/InterviewScheduleModal";
+import { getCookie } from "@/app/util";
 
 export default function ActionBar() {
   const { setSearch, universityId } = useUniversityCandidateContext();
 
   const { periodId } = useInternPeriodContext();
+
+  const role = getCookie("userRole");
 
   return (
     <div className="flex w-full flex-col items-start gap-4">
@@ -20,17 +23,22 @@ export default function ActionBar() {
           placeholder="Search by student code, full name"
           onChange={(e) => setSearch(e.target.value)}
         />
+        {role === "HR Manager" || role === "Administrator" ? (
+          <div className="flex gap-1">
+            <ImportExcelModal3
+              internPeriodId={periodId}
+              universityId={universityId}
+            />
 
-        <ImportExcelModal3
-          internPeriodId={periodId}
-          universityId={universityId}
-        />
-
-        <InterviewScheduleModal
-          isAddingCandidate
-          universityId={universityId}
-          internPeriodId={periodId}
-        />
+            <InterviewScheduleModal
+              isAddingCandidate
+              universityId={universityId}
+              internPeriodId={periodId}
+            />
+          </div>
+        ) : (
+          <></>
+        )}
       </div>
       <UniversityCandidateFilter />
     </div>

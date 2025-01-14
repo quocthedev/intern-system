@@ -31,6 +31,7 @@ import Link from "next/link";
 import { useInternPeriodContext } from "../_providers/InternPeriodProvider";
 import { Pagination } from "@nextui-org/pagination";
 import Loading from "@/components/Loading";
+import { getCookie } from "@/app/util";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   InProgress: "warning",
@@ -78,6 +79,8 @@ export default function InternPeriodTable() {
       onClose();
     }
   };
+
+  const role = getCookie("userRole");
 
   const columns = [
     { key: "no", label: "NO" },
@@ -156,23 +159,27 @@ export default function InternPeriodTable() {
                 </Link>
               </Tooltip>
 
-              <Tooltip content="Delete">
-                <button
-                  onClick={() => {
-                    if (period.currentCandidateQuantity > 0) {
-                      toast.error(
-                        "Cannot delete a period with active candidates.",
-                      );
+              {role == "HR Manager" || role == "Administrator" ? (
+                <Tooltip content="Delete">
+                  <button
+                    onClick={() => {
+                      if (period.currentCandidateQuantity > 0) {
+                        toast.error(
+                          "Cannot delete a period with active candidates.",
+                        );
 
-                      return;
-                    }
-                    handleDeleteConfirmation(period.id);
-                  }}
-                  className="flex w-full cursor-pointer items-center text-danger"
-                >
-                  <DeleteIcon className="mr-2" />
-                </button>
-              </Tooltip>
+                        return;
+                      }
+                      handleDeleteConfirmation(period.id);
+                    }}
+                    className="flex w-full cursor-pointer items-center text-danger"
+                  >
+                    <DeleteIcon className="mr-2" />
+                  </button>
+                </Tooltip>
+              ) : (
+                <></>
+              )}
             </div>
           );
         default:

@@ -24,7 +24,18 @@ export default function SideBar() {
     return (
       <div className="flex h-full w-sidebar-expand flex-col items-center px-3">
         {/* Title */}
-        <p className="my-10 text-2xl font-bold text-title">Intern System</p>
+        <Link href="/" className="my-6 text-2xl font-bold text-title">
+          <div className="flex justify-center">
+            <Image
+              width={50}
+              height={50}
+              alt="Amazing tech logo"
+              src="/icons/technology/intern.png"
+              className="h-16 w-16"
+            />
+          </div>
+          Intern System
+        </Link>
         <Divider orientation="horizontal" className="bg-grey" />
 
         {role === "HR Manager" ? (
@@ -47,25 +58,30 @@ export default function SideBar() {
       <div className="h-sidebar-horizontal flex w-full items-center justify-between px-12 py-2">
         <div>
           <div className="flex items-center">
-            <Image
-              width={150}
-              height={150}
-              alt="Amazing tech logo"
-              src="/icons/technology/amazingtech.png"
-            />
-
-            <Button
-              className="bg-blue-100"
-              startContent={<ProjectManagementIcon />}
+            <Link href="/" className="my-6 text-lg font-bold text-title">
+              <div className="flex justify-center">
+                <Image
+                  width={50}
+                  height={50}
+                  alt="Amazing tech logo"
+                  src="/icons/technology/intern.png"
+                  className="h-8 w-8"
+                />
+              </div>
+              Intern System
+            </Link>
+            <Link
+              className="text-xl font-semibold text-slate-600 transition duration-200 hover:text-blue-600"
+              href="/projectCandidate"
             >
-              {" "}
-              <Link
-                className="text-xl font-semibold text-slate-600 transition duration-200 hover:text-blue-600"
-                href="/projectCandidate"
+              <Button
+                className="bg-blue-100 text-lg"
+                startContent={<ProjectManagementIcon />}
               >
+                {" "}
                 Projects
-              </Link>
-            </Button>
+              </Button>
+            </Link>
           </div>
         </div>
 

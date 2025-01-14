@@ -120,6 +120,8 @@ export default function UniversityCandidateCard() {
     },
   ];
 
+  const role = getCookie("userRole");
+
   const renderCellCandidate = (
     candidate: any,
     columnKey: React.Key,
@@ -203,14 +205,18 @@ export default function UniversityCandidateCard() {
               </Link>
             </Tooltip>
 
-            <Tooltip content="Delete">
-              <button
-                onClick={() => openDeleteModal(candidate.id)}
-                className="-ml-1 -mt-1 flex w-full cursor-pointer items-center text-medium"
-              >
-                <DeleteIcon />
-              </button>
-            </Tooltip>
+            {role === "HR Manager" || role === "Administrator" ? (
+              <Tooltip content="Delete">
+                <button
+                  onClick={() => openDeleteModal(candidate.id)}
+                  className="-ml-1 -mt-1 flex w-full cursor-pointer items-center text-medium"
+                >
+                  <DeleteIcon />
+                </button>
+              </Tooltip>
+            ) : (
+              <></>
+            )}
           </div>
         );
       default:
