@@ -3,6 +3,7 @@ import {
   DashboardIcon,
   InternManagementIcon,
   InterviewManagementIcon,
+  UniversityManagementIcon,
 } from "./Icons";
 import { Button } from "@nextui-org/button";
 import { Link } from "@nextui-org/link";
@@ -28,6 +29,11 @@ export const NavigationItems = [
     label: "Interviews",
     href: "/interview",
     icon: InterviewManagementIcon,
+  },
+  {
+    label: "Universities",
+    href: "/university",
+    icon: UniversityManagementIcon,
   },
 ];
 

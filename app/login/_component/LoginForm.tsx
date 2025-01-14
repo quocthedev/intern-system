@@ -10,6 +10,7 @@ import { useMutation } from "@tanstack/react-query";
 import { API_ENDPOINTS } from "@/libs/config";
 import { cn } from "@nextui-org/react";
 import { toast } from "sonner";
+import { getCookie } from "@/app/util";
 
 export const LoginForm = () => {
   const [visible, setVisible] = useState(false);
@@ -73,7 +74,19 @@ export const LoginForm = () => {
         Object.entries(res).forEach(([key, value]) => {
           window.localStorage.setItem(key, value);
         });
+        const userRole = getCookie("userRole");
+        const userId = getCookie("userId");
+
         toast.success("Login successfully");
+        if (userRole === "Candidate") {
+          redirect(`/candidate/${userId}`);
+        }
+        if (userRole === "Mentor") {
+          redirect(`/project`);
+        }
+        if (userRole === "HR Manager") {
+          redirect(`/internPeriod`);
+        }
         redirect("/");
       }
     },

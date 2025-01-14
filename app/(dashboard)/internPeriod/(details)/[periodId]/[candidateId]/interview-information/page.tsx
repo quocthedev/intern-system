@@ -18,6 +18,7 @@ import {
   GetPositionPaginationResponse,
   Position,
 } from "@/app/(dashboard)/candidate/_types/GetPositionPaginationResponse";
+import { getCookie } from "@/app/util";
 
 const apiClient = new APIClient({
   onFulfilled: (response) => response,
@@ -38,6 +39,8 @@ enum QuestionTemplateStatus {
   SUBMITTED = "SUBMITTED",
   EVALUATED = "EVALUATED",
 }
+
+const accessToken = getCookie("accessToken");
 
 export default function InterviewInformationPage() {
   const { candidateId } = useParams();
@@ -61,6 +64,11 @@ export default function InterviewInformationPage() {
         await apiClient.get<GetCandidateQuestionTemplateResponse>(
           API_ENDPOINTS.questionTemplate +
             `/${candidateId}/question-template-details`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          },
         );
 
       if (response.statusCode == "200") {
@@ -79,6 +87,9 @@ export default function InterviewInformationPage() {
         {
           params: {
             pageSize: 20,
+          },
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
           },
         },
       )) as PaginationResponseSuccess<Position>;
