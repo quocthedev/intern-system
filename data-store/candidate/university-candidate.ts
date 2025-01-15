@@ -176,6 +176,7 @@ export function useUniversityCandidate(params: {
     error,
     data,
     refetch,
+    pageIndex,
     setPageIndex,
     setSearch,
     filter,

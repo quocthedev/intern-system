@@ -46,6 +46,7 @@ import {
 import { Chip, ChipProps } from "@nextui-org/chip";
 import { formatDate } from "@/app/util";
 import { I18nProvider } from "@react-aria/i18n";
+import Loading from "./Loading";
 
 const apiClient = new APIClient({});
 
@@ -68,7 +69,7 @@ export type InterviewScheduleModalProps = {
 export default function InterviewScheduleModal(
   props: InterviewScheduleModalProps,
 ) {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
   const [showSubmissionForm, toggleShowSubmissionForm, setShowSubmissionForm] =
     useToggle(false);
@@ -126,6 +127,8 @@ export default function InterviewScheduleModal(
   const {
     data: universityCandidateData,
     isLoading: isLoadinguniversityCandidateData,
+    setPageIndex: setPageIndexUniversityCandidate,
+    pageIndex: pageIndexUniversityCandidate,
   } = useUniversityCandidate({
     pageSize: 10,
     internPeriodId: props.internPeriodId,
@@ -250,6 +253,7 @@ export default function InterviewScheduleModal(
         await sendEmail(formData);
 
         toast.success("Interview email send successfully! 🎉");
+        onClose();
       } catch (error: any) {
         toast.error(error.message || "Failed to send email!");
       }
@@ -287,7 +291,7 @@ export default function InterviewScheduleModal(
         }}
       >
         <ModalContent className="max-w-fit">
-          {(onClose) => (
+          {() => (
             <>
               <ModalHeader className="flex flex-col gap-1">
                 <h1 className="">
@@ -315,7 +319,6 @@ export default function InterviewScheduleModal(
                       if (props.callback) {
                         props.callback();
                       }
-                      onClose();
                     }}
                   >
                     <div className="flex flex-col gap-2">
@@ -465,7 +468,7 @@ export default function InterviewScheduleModal(
                   </form>
                 ) : (
                   <div className="flex flex-col gap-4">
-                    <div className="flex flex-col items-center gap-4">
+                    <div className="relative flex flex-col items-center gap-4">
                       <div className="flex w-full gap-3">
                         <Input
                           type="text"
@@ -488,10 +491,28 @@ export default function InterviewScheduleModal(
                         selectionMode="multiple"
                         selectedKeys={selectedKeys}
                         onSelectionChange={(selectedKeys) => {
+                          if (selectedKeys === "all") {
+                            setSelectedKeys(
+                              new Set(
+                                candidates?.map((candidate) => candidate.id) ||
+                                  [],
+                              ) as Set<never>,
+                            );
+
+                            return;
+                          }
                           setSelectedKeys(selectedKeys as Set<never>);
                         }}
                         className="max-h-[300px]"
                         isHeaderSticky
+                        disabledKeys={
+                          // Disable remaining candidates if the limit is reached
+                          selectedKeys.size >= 10
+                            ? candidates
+                                ?.map((candidate) => candidate.id)
+                                .filter((id) => !selectedKeys.has(id as never))
+                            : []
+                        }
                       >
                         <TableHeader columns={columns}>
                           {(column) => (
@@ -501,7 +522,15 @@ export default function InterviewScheduleModal(
                           )}
                         </TableHeader>
 
-                        <TableBody className="">
+                        <TableBody
+                          className=""
+                          isLoading={
+                            !props.universityId
+                              ? isLoading
+                              : isLoadinguniversityCandidateData
+                          }
+                          loadingContent={<Loading />}
+                        >
                           {(candidates || []).map((candidate) => (
                             <TableRow key={candidate.id}>
                               {(columnKey) => (
@@ -520,8 +549,20 @@ export default function InterviewScheduleModal(
                         showControls
                         total={Number(totalPages || candidates?.length || 1)}
                         initialPage={1}
-                        onChange={setPageIndex}
+                        onChange={(pageIndex) => {
+                          if (props.universityId) {
+                            setPageIndexUniversityCandidate(pageIndex);
+                          } else {
+                            setPageIndex(pageIndex);
+                          }
+                        }}
                       />
+
+                      {selectedKeys.size > 0 && (
+                        <p className="absolute bottom-1 left-1">
+                          {selectedKeys.size} Candidates Selected
+                        </p>
+                      )}
                     </div>
                   </div>
                 )}
