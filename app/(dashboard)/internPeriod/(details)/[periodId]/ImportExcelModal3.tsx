@@ -19,12 +19,22 @@ import { useUniversityCandidateContext } from "@/app/(dashboard)/internPeriod/(d
 import { Spinner } from "@nextui-org/react";
 import { getCookie } from "@/app/util";
 import APIClient from "@/libs/api-client";
-import axios from "axios";
+import { BaseResponse } from "@/libs/types";
+import { headers } from "next/headers";
 
 interface PeriodModalIdProps {
   internPeriodId: string | null;
   universityId: string | null;
 }
+
+const apiClient = new APIClient({
+  onFulfilled: (response) => response,
+  onRejected: (error) => {
+    return {
+      data: error.response.data,
+    };
+  },
+});
 
 function ImportExcelModal3({
   internPeriodId,
@@ -51,36 +61,20 @@ function ImportExcelModal3({
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (formData: FormData) => {
-      try {
-        const response = await fetch(
-          `${API_ENDPOINTS.candidate}/import-candidate-list?internPeriodId=${selectedInternPeriodId}&universityId=${selectedUniversityId}`,
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-            body: formData,
-          },
-        );
+      const response = await apiClient.post<BaseResponse<any>>(
+        `${API_ENDPOINTS.candidate}/import-candidate-list?internPeriodId=${selectedInternPeriodId}&universityId=${selectedUniversityId}`,
+        formData,
+        { "Content-Type": "multipart/form-data" },
+        true,
+      );
 
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.message || "Failed to upload file");
-        }
-
-        return data;
-      } catch (error: any) {
-        throw error; // Pass the error to onError
+      if (response.statusCode === "200") {
+        toast.success("Upload file successfully!");
+        refetch();
+        onClose();
+      } else {
+        toast.error(response.message);
       }
-    },
-    onError: (error: any) => {
-      toast.error(error.message || "Failed to upload file");
-    },
-    onSuccess: () => {
-      toast.success("Upload file successfully!");
-      refetch();
-      onClose();
     },
   });
 
