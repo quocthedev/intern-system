@@ -17,14 +17,6 @@ import TaskFilter from "./TaskFilter";
 import { Pagination } from "@nextui-org/pagination";
 import { Chip, ChipProps } from "@nextui-org/chip";
 import { Popover, PopoverContent, PopoverTrigger } from "@nextui-org/popover";
-import {
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
-} from "@nextui-org/dropdown";
-import { Button } from "@nextui-org/button";
-import { EllipsisIcon } from "@/app/(dashboard)/internPeriod/_components/Icons";
 import { getCookie } from "@/app/util";
 
 export default function TaskList() {

@@ -9,7 +9,12 @@ export default function ToastProvider({ children }: ToastProviderProps) {
   return (
     <>
       {children}
-      <Toaster position="top-right" richColors closeButton={true} />
+      <Toaster
+        position="top-right"
+        richColors
+        closeButton={true}
+        duration={2300}
+      />
     </>
   );
 }

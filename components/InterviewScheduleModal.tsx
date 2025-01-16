@@ -48,8 +48,14 @@ import { formatDate } from "@/app/util";
 import { I18nProvider } from "@react-aria/i18n";
 import Loading from "./Loading";
 
-const apiClient = new APIClient({});
-
+const apiClient = new APIClient({
+  onFulfilled: (response) => response,
+  onRejected: (error) => {
+    return {
+      data: error.response.data,
+    };
+  },
+});
 const statusColorMap: Record<string, ChipProps["color"]> = {
   Approved: "success",
   InProgress: "warning",
@@ -80,7 +86,7 @@ export default function InterviewScheduleModal(
   const [duration, setDuration] = React.useState("00:30");
 
   const [pageIndex, setPageIndex] = React.useState(1);
-
+  const pageSize = 10;
   const {
     data: getCandidateData,
     isLoading,
@@ -90,12 +96,8 @@ export default function InterviewScheduleModal(
     queryFn: async () => {
       const response = (await apiClient.get<GetCandidatePaginationResponse>(
         API_ENDPOINTS.candidate,
-        {
-          params: {
-            pageIndex: pageIndex,
-            pageSize: 10,
-          },
-        },
+        {},
+        true,
       )) as PaginationResponseSuccess<Candidate>;
 
       return response.data;
@@ -129,6 +131,7 @@ export default function InterviewScheduleModal(
     isLoading: isLoadinguniversityCandidateData,
     setPageIndex: setPageIndexUniversityCandidate,
     pageIndex: pageIndexUniversityCandidate,
+    setSearch,
   } = useUniversityCandidate({
     pageSize: 10,
     internPeriodId: props.internPeriodId,
@@ -474,6 +477,7 @@ export default function InterviewScheduleModal(
                           type="text"
                           label="Search by member name"
                           size="sm"
+                          onChange={(e) => setSearch(e.target.value)}
                         />
 
                         <Button
