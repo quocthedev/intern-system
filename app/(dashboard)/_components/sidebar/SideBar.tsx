@@ -58,19 +58,19 @@ export default function SideBar() {
       <div className="h-sidebar-horizontal flex w-full items-center justify-between px-12 py-2">
         <div>
           <div className="flex items-center">
-            <Link href="/" className="my-6 text-lg font-bold text-title">
+            <Link href="/" className="text-lg font-bold text-title">
               <div className="flex justify-center">
                 <Image
                   width={50}
                   height={50}
                   alt="Amazing tech logo"
                   src="/icons/technology/intern.png"
-                  className="h-8 w-8"
+                  className="h-9 w-9"
                 />
               </div>
               Intern System
             </Link>
-            <Link
+            {/* <Link
               className="text-xl font-semibold text-slate-600 transition duration-200 hover:text-blue-600"
               href="/projectCandidate"
             >
@@ -81,7 +81,7 @@ export default function SideBar() {
                 {" "}
                 Projects
               </Button>
-            </Link>
+            </Link> */}
           </div>
         </div>
 

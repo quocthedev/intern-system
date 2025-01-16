@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { DropdownMenu, DropdownItem } from "@nextui-org/dropdown";
 import { getCookie } from "@/app/util";
+import { redirect } from "next/dist/server/api-utils";
 
 export default function UserDropdown() {
   const router = useRouter();
@@ -21,7 +22,9 @@ export default function UserDropdown() {
       router.push(`/candidate/${id}`);
     } else router.push(`/account/${id}`);
   };
-
+  const handleMoveProject = () => {
+    router.push("/projectCandidate");
+  };
   const changePassword = () => {
     router.push("/password-change");
   };
@@ -32,7 +35,7 @@ export default function UserDropdown() {
       key: "profile",
       onClick: handleMove,
     },
-
+    { name: "Projects", key: "projects", onClick: handleMoveProject },
     {
       name: "Change password",
       key: "changePassword",
@@ -44,6 +47,13 @@ export default function UserDropdown() {
       onClick: logoutUser,
     },
   ];
+
+  if (role !== "Candidate") {
+    items.splice(1, 1);
+  }
+  if (role == "Candidate") {
+    items.splice(2, 1);
+  }
 
   return (
     <DropdownMenu
