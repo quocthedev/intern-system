@@ -11,7 +11,6 @@ import {
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 import { DatePicker } from "@nextui-org/date-picker";
-import { CreateIcon } from "@/app/(dashboard)/intern/_components/Icons";
 import { useMutation } from "@tanstack/react-query";
 import { API_ENDPOINTS } from "@/libs/config";
 import { toast } from "sonner";
@@ -21,6 +20,7 @@ import { useInternPeriodContext } from "../_providers/InternPeriodProvider";
 import { CalendarDate, parseDate } from "@internationalized/date";
 import { addMonths } from "date-fns";
 import { getCookie } from "@/app/util";
+import { CreateIcon } from "@/app/(dashboard)/internPeriod/_components/Icons";
 
 interface CreatePeriodData {
   internPeriod: {

@@ -1,5 +1,4 @@
 "use client";
-import { CreateQuestionIcon } from "@/app/(dashboard)/intern/_components/Icons";
 import { formatDate, formatedTimeToMinutes } from "@/app/util/format";
 import { API_ENDPOINTS } from "@/libs/config";
 import { Chip, ChipProps } from "@nextui-org/chip";
@@ -24,6 +23,7 @@ import { Tab, Tabs } from "@nextui-org/tabs";
 import RescheduleModal from "@/app/(dashboard)/interview/details/[detailId]/RescheduleModal";
 import { getCookie } from "@/app/util";
 import Loading from "@/components/Loading";
+import { CreateQuestionIcon } from "@/app/(dashboard)/internPeriod/_components/Icons";
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
   Confirmed: "success",
