@@ -364,7 +364,7 @@ export default function FinalReportPage() {
             </div>
           </div>
           <h1 className="mt-8 text-lg font-semibold">
-            I. Work Performance Evaluation
+            I. Work Performance Evaluation (65%)
           </h1>
           <div>
             {workPerformance?.map((workPerformance: any) => {
@@ -485,7 +485,9 @@ export default function FinalReportPage() {
             </div>
           </div>
           <div className="mb-4 flex items-center justify-between">
-            <h1 className="text-lg font-semibold">II. Compliance Evaluation</h1>
+            <h1 className="text-lg font-semibold">
+              II. Compliance Evaluation (35%)
+            </h1>
             {role == "Candidate" ? (
               <></>
             ) : (

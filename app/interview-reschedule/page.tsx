@@ -65,12 +65,11 @@ export default function InterviewReschedule() {
                 handleSubmit(formData);
               }}
             >
-              <h1 className="font-bold">Interview Confirmation</h1>
+              <h1 className="font-bold">Interview Rescheulde Confirmation</h1>
 
               <p>
                 Please confirm your attendance to the interview. If you are
-                unable to attend, please rescheulde of reject the invitation and
-                provide a reason.
+                unable to attend, please reject the invitation.
               </p>
 
               <RadioGroup

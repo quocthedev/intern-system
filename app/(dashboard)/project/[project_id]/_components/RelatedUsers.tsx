@@ -35,6 +35,9 @@ export default function RelatedUsers() {
   }, [] as RelatedUser[]);
 
   const renderCell = (item: any, columnKey: Key) => {
+    if (item.role == "Creator") {
+      return null; // Only display admin and mentor roles
+    }
     switch (columnKey) {
       case "name":
         return <p className="text-sm">{item.fullName}</p>;

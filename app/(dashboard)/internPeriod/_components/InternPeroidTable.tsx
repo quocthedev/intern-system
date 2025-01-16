@@ -18,7 +18,6 @@ import {
 import { Tooltip } from "@nextui-org/tooltip";
 import { useMutation } from "@tanstack/react-query";
 import { API_ENDPOINTS } from "@/libs/config";
-import { Spinner } from "@nextui-org/spinner";
 import {
   Modal,
   ModalBody,
