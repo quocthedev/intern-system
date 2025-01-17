@@ -252,13 +252,12 @@ export default function InterviewScheduleModal(
 
   const sendEmailMutation = useMutation({
     mutationFn: async (formData: FormData) => {
-      try {
-        await sendEmail(formData);
+      const res = await sendEmail(formData);
 
+      if (res.statusCode === "200") {
         toast.success("Interview email send successfully! 🎉");
-        onClose();
-      } catch (error: any) {
-        toast.error(error.message || "Failed to send email!");
+      } else {
+        toast.error(res.message || "Failed to send email! 😢");
       }
     },
   });
