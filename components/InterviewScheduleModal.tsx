@@ -47,6 +47,7 @@ import { Chip, ChipProps } from "@nextui-org/chip";
 import { formatDate } from "@/app/util";
 import { I18nProvider } from "@react-aria/i18n";
 import Loading from "./Loading";
+import { useApprovedUniversityCandidateContext } from "@/app/(dashboard)/internPeriod/(details)/[periodId]/_providers/ApprovedUniversityCandidateProvider";
 
 const apiClient = new APIClient({
   onFulfilled: (response) => response,
@@ -130,14 +131,8 @@ export default function InterviewScheduleModal(
     data: universityCandidateData,
     isLoading: isLoadinguniversityCandidateData,
     setPageIndex: setPageIndexUniversityCandidate,
-    pageIndex: pageIndexUniversityCandidate,
     setSearch,
-  } = useUniversityCandidate({
-    pageSize: 10,
-    internPeriodId: props.internPeriodId,
-    universityId: props.universityId,
-    status: CandidateStatus.Approved,
-  });
+  } = useApprovedUniversityCandidateContext();
 
   let candidates: Candidate[] | UniversityCandidate[] | undefined;
   let totalPages: number | undefined;

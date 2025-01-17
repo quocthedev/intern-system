@@ -185,3 +185,13 @@ export function useUniversityCandidate(params: {
     removeAllFilter,
   };
 }
+
+export const useApprovedUniversityCandidate = (params: {
+  pageSize: number;
+  internPeriodId: string | undefined;
+  universityId: string | undefined;
+}) =>
+  useUniversityCandidate({
+    ...params,
+    status: CandidateStatus.Approved,
+  });

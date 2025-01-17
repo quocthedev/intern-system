@@ -21,6 +21,7 @@ import APIClient from "@/libs/api-client";
 import { BaseResponse } from "@/libs/types";
 import { headers } from "next/headers";
 import { ExcelIcon } from "@/app/(dashboard)/internPeriod/_components/Icons";
+import { useApprovedUniversityCandidateContext } from "./_providers/ApprovedUniversityCandidateProvider";
 
 interface PeriodModalIdProps {
   internPeriodId: string | null;
@@ -59,6 +60,8 @@ function ImportExcelModal3({
     }
   };
 
+  const { refetch: refetchApprovedCandidates } =
+    useApprovedUniversityCandidateContext();
   const { mutate, isPending } = useMutation({
     mutationFn: async (formData: FormData) => {
       const response = await apiClient.post<BaseResponse<any>>(
@@ -71,6 +74,7 @@ function ImportExcelModal3({
       if (response.statusCode === "200") {
         toast.success("Upload file successfully!");
         refetch();
+        refetchApprovedCandidates();
         onClose();
       } else {
         toast.error(response.message);

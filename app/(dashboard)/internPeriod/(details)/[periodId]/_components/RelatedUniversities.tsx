@@ -5,6 +5,7 @@ import React from "react";
 import { useInternPeriodContext } from "../_providers/InternPeriodDetailProvider";
 import UniversityCandidateCard from "./UniversityCandidateCard";
 import UniversityCandidateProvider from "../_providers/UniversityCandidateProvider";
+import ApprovedUniversityCandidateProvider from "../_providers/ApprovedUniversityCandidateProvider";
 
 const customAccordionTitle = (universityName: string, abbreviation: string) => {
   return (
@@ -46,7 +47,13 @@ export default function RelatedUniversities() {
                     universityId={university.id}
                     key={university.id}
                   >
-                    <UniversityCandidateCard />
+                    <ApprovedUniversityCandidateProvider
+                      internPeriodId={internPeriodData?.id}
+                      universityId={university.id}
+                      key={university.id}
+                    >
+                      <UniversityCandidateCard />
+                    </ApprovedUniversityCandidateProvider>
                   </UniversityCandidateProvider>
                 </AccordionItem>
               );
