@@ -20,6 +20,7 @@ import { useParams } from "next/navigation";
 import { ProjectTask } from "@/data-store/project/project-task.store";
 import { useProjectDetailContext } from "../../_providers/ProjectDetailProvider";
 import { AddIcon, EditIcon } from "@/app/(dashboard)/project/_components/Icons";
+import { getCookie } from "@/app/util";
 
 export type TaskModalProps = {
   mode: "create" | "edit";
@@ -33,6 +34,8 @@ const apiClient = new APIClient({
     console.log(error.response.data);
   },
 });
+
+const role = getCookie("userRole");
 
 export type User = {
   id: string;
@@ -138,7 +141,35 @@ export default function TaskModal(props: TaskModalProps) {
   ];
 
   const submitTask = async (formData: FormData) => {
+    formData.append(
+      "priority",
+      priorityOptions.find(
+        (priority) => priority.value === props.selectedTaskInfo?.priority,
+      )?.key ?? "0",
+    );
+    formData.append(
+      "difficulty",
+      difficultyOptions.find(
+        (difficulty) =>
+          String(difficulty.value) ===
+          String(props.selectedTaskInfo?.difficulty),
+      )?.key ?? "1",
+    );
+
+    formData.append(
+      "priority",
+      priorityOptions.find(
+        (priority) => priority.value === props.selectedTaskInfo?.priority,
+      )?.key ?? "0",
+    );
     formData.append("projectId", props.projectId);
+    formData.append("positionId", selectedPositionId);
+    formData.append(
+      "status",
+      statusOptions.find(
+        (status) => status.value === props.selectedTaskInfo?.status,
+      )?.key ?? "0",
+    );
 
     if (props.mode === "edit") {
       formData.append("taskId", props.selectedTaskInfo?.id as string);
@@ -207,6 +238,7 @@ export default function TaskModal(props: TaskModalProps) {
                       <Select
                         label="Status"
                         labelPlacement="outside"
+                        isDisabled={role === "Candidate"}
                         defaultSelectedKeys={[
                           statusOptions.find(
                             (status) =>
@@ -230,6 +262,7 @@ export default function TaskModal(props: TaskModalProps) {
                     placeholder="Enter Task Title"
                     isRequired
                     name="title"
+                    readOnly={role === "Candidate"}
                     defaultValue={props.selectedTaskInfo?.title}
                   />
                   <Textarea
@@ -237,6 +270,7 @@ export default function TaskModal(props: TaskModalProps) {
                     label="Summary"
                     labelPlacement="outside"
                     placeholder="Enter Task Summary"
+                    readOnly={role === "Candidate"}
                     isRequired
                     minRows={2}
                     name="summary"
@@ -250,6 +284,7 @@ export default function TaskModal(props: TaskModalProps) {
                       name="startDate"
                       isRequired
                       granularity="day"
+                      isReadOnly={role === "Candidate"}
                       defaultValue={
                         props.mode === "create"
                           ? now(getLocalTimeZone())
@@ -268,6 +303,7 @@ export default function TaskModal(props: TaskModalProps) {
                       isRequired
                       showMonthAndYearPickers
                       granularity="day"
+                      isReadOnly={role === "Candidate"}
                       defaultValue={
                         props.mode === "create"
                           ? now(getLocalTimeZone())
@@ -282,6 +318,7 @@ export default function TaskModal(props: TaskModalProps) {
 
                   <div className="flex w-full gap-3">
                     <Select
+                      isDisabled={role === "Candidate"}
                       label="Priority"
                       labelPlacement="outside"
                       defaultSelectedKeys={[
@@ -302,6 +339,7 @@ export default function TaskModal(props: TaskModalProps) {
                     <Select
                       label="Difficulty"
                       labelPlacement="outside"
+                      isDisabled={role === "Candidate"}
                       defaultSelectedKeys={[
                         difficultyOptions.find(
                           (difficulty) =>
@@ -338,6 +376,7 @@ export default function TaskModal(props: TaskModalProps) {
                           labelPlacement="outside"
                           placeholder="Enter Progress Assessment"
                           name="progressAssessment"
+                          isReadOnly={role === "Candidate"}
                           min={0}
                           max={100}
                           defaultValue={props.selectedTaskInfo?.progressAssessment?.toString()}
@@ -351,6 +390,7 @@ export default function TaskModal(props: TaskModalProps) {
                         label="Select position"
                         labelPlacement="outside"
                         placeholder="Select position"
+                        isDisabled={role === "Candidate"}
                         defaultSelectedKeys={[
                           props.selectedTaskInfo?.typeTask.id || "",
                         ]}
@@ -370,6 +410,7 @@ export default function TaskModal(props: TaskModalProps) {
                         label="Assignee"
                         labelPlacement="outside"
                         placeholder="Select Assignee"
+                        isDisabled={role === "Candidate"}
                         defaultSelectedKeys={[
                           props.selectedTaskInfo?.assignedPerson.id || "",
                         ]}

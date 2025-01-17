@@ -19,7 +19,14 @@ import {
   Position,
 } from "@/app/(dashboard)/candidate/_types/GetPositionPaginationResponse";
 import { getCookie } from "@/app/util";
-
+import {
+  Modal,
+  ModalContent,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
+} from "@nextui-org/modal";
+import { CreateIcon } from "@/app/(dashboard)/internPeriod/_components/Icons";
 const apiClient = new APIClient({
   onFulfilled: (response) => response,
   onRejected: (error) => {
@@ -44,6 +51,36 @@ const accessToken = getCookie("accessToken");
 
 export default function InterviewInformationPage() {
   const { candidateId } = useParams();
+  const {
+    isOpen: isCreateQuestionOpen,
+    onOpen: onCreateQuestionOpen,
+    onOpenChange: onOpenQuestionOpenChange,
+    onClose,
+  } = useDisclosure();
+
+  const {
+    isOpen: isSubmitAnswerOpen,
+    onOpen: onSubmitAnswerOpen,
+    onOpenChange: onOpenSubmitAnswerChange,
+    onClose: closeSubmitAnswerModal,
+  } = useDisclosure();
+
+  const {
+    isOpen: isSubmitEvaluationOpen,
+    onOpen: onSubmitEvaluationOpen,
+    onOpenChange: onOpenSubmitEvaluationChange,
+    onClose: closeSubmitEvaluationModal,
+  } = useDisclosure();
+
+  const handleSubmitAnswer = async (formData: FormData) => {
+    await submitAnswer(formData);
+    closeSubmitAnswerModal();
+  };
+
+  const handleSubmitEvaluation = async (formData: FormData) => {
+    await submitEvaluation(formData);
+    closeSubmitEvaluationModal();
+  };
 
   const [selectedPosition, setSelectedPosition] = React.useState<string | null>(
     null,
@@ -215,48 +252,79 @@ export default function InterviewInformationPage() {
 
   if (status === QuestionTemplateStatus.NOT_CREATED)
     return (
-      <form className="flex flex-col gap-3">
-        <h2 className="text-2xl font-bold text-gray-800">
-          <span role="img" aria-label="form-icon">
-            📝
-          </span>{" "}
-          Interview Questions Form
-        </h2>
-        <div className="mb-2">
-          This candidate do not have question form yet, please create one!
-        </div>
-        <Select
-          label="Select one position"
-          placeholder="Back-end"
-          items={positions || []}
-          onChange={(item) => {
-            setSelectedPosition(item.target.value);
-            setSelectedTechnologies(new Set([]));
-          }}
-        >
-          {(item) => <SelectItem key={item.id}>{item.name}</SelectItem>}
-        </Select>
-        {/* {selectedPosition && ( */}
-        <div className="flex flex-col gap-3">
+      <div>
+        <form className="flex flex-col gap-3">
+          <h2 className="text-2xl font-bold text-gray-800">
+            <span role="img" aria-label="form-icon">
+              📝
+            </span>{" "}
+            Interview Questions Form
+          </h2>
+          <div className="mb-2">
+            This candidate do not have question form yet, please create one!
+          </div>
           <Select
-            label="Select technologies"
-            placeholder="Java, Javascript, Nodejs, ..."
-            items={technologies}
-            selectionMode="multiple"
-            // disabled={!selectedPosition}
-            onSelectionChange={setSelectedTechnologies as any}
-            selectedKeys={selectedTechnologies}
+            label="Select one position"
+            placeholder="Back-end"
+            items={positions || []}
+            onChange={(item) => {
+              setSelectedPosition(item.target.value);
+              setSelectedTechnologies(new Set([]));
+            }}
           >
             {(item) => <SelectItem key={item.id}>{item.name}</SelectItem>}
           </Select>
-        </div>
-        {/* )} */}
-        {Array.from(selectedTechnologies)[0] ? (
-          <Button onPress={createQuestions}>Create questions</Button>
-        ) : (
-          <></>
-        )}
-      </form>
+          {/* {selectedPosition && ( */}
+          <div className="flex flex-col gap-3">
+            <Select
+              label="Select technologies"
+              placeholder="Java, Javascript, Nodejs, ..."
+              items={technologies}
+              selectionMode="multiple"
+              // disabled={!selectedPosition}
+              onSelectionChange={setSelectedTechnologies as any}
+              selectedKeys={selectedTechnologies}
+            >
+              {(item) => <SelectItem key={item.id}>{item.name}</SelectItem>}
+            </Select>
+          </div>
+          {/* )} */}
+          {Array.from(selectedTechnologies)[0] ? (
+            <Button
+              onPress={onCreateQuestionOpen}
+              startContent={<CreateIcon />}
+              color="primary"
+            >
+              Create questions
+            </Button>
+          ) : (
+            <></>
+          )}
+        </form>
+        <Modal
+          isOpen={isCreateQuestionOpen}
+          onOpenChange={onOpenQuestionOpenChange}
+        >
+          <ModalContent>
+            <ModalBody className="mt-6 text-center">
+              Are you sure you want to create questions for this candidate?
+            </ModalBody>
+            <ModalFooter>
+              {" "}
+              <Button
+                onPress={createQuestions}
+                color="primary"
+                className="w-full"
+              >
+                Confirm
+              </Button>
+              <Button onPress={onClose} className="w-full">
+                Cancel
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      </div>
     );
   else
     return (
@@ -264,11 +332,12 @@ export default function InterviewInformationPage() {
         <h1 className="text-2xl font-bold">{titleMapping[status]}</h1>
         <form
           className="mt-2 flex flex-col gap-3"
-          action={
+          onSubmit={(e) => {
+            e.preventDefault();
             status === QuestionTemplateStatus.CREATED
-              ? submitAnswer
-              : submitEvaluation
-          }
+              ? onSubmitAnswerOpen()
+              : onSubmitEvaluationOpen();
+          }}
         >
           <Card shadow="sm">
             <CardHeader>
@@ -459,6 +528,64 @@ export default function InterviewInformationPage() {
             </Button>
           )}
         </form>
+
+        <Modal
+          isOpen={isSubmitAnswerOpen}
+          onOpenChange={onOpenSubmitAnswerChange}
+        >
+          <ModalContent>
+            <ModalBody className="mt-6 text-center">
+              Are you sure you want to submit candidate answers?
+            </ModalBody>
+            <ModalFooter>
+              <Button
+                onPress={() =>
+                  handleSubmitAnswer(
+                    new FormData(
+                      document.querySelector("form") as HTMLFormElement,
+                    ),
+                  )
+                }
+                className="w-full"
+                color="primary"
+              >
+                Confirm
+              </Button>
+              <Button onPress={closeSubmitAnswerModal} className="w-full">
+                Cancel
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+
+        <Modal
+          isOpen={isSubmitEvaluationOpen}
+          onOpenChange={onOpenSubmitEvaluationChange}
+        >
+          <ModalContent>
+            <ModalBody className="mt-6 text-center">
+              Are you sure you want to submit the evaluation?
+            </ModalBody>
+            <ModalFooter>
+              <Button
+                onPress={() =>
+                  handleSubmitEvaluation(
+                    new FormData(
+                      document.querySelector("form") as HTMLFormElement,
+                    ),
+                  )
+                }
+                color="primary"
+                className="w-full"
+              >
+                Confirm
+              </Button>
+              <Button onPress={closeSubmitEvaluationModal} className="w-full">
+                Cancel
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
       </div>
     );
 }
