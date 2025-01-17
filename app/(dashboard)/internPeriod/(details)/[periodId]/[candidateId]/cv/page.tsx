@@ -109,7 +109,7 @@ export default function CandidateCVPage() {
         </div>
       ) : (
         <div>
-          <div className="mb-4 flex justify-end space-x-2">
+          {/* <div className="mb-4 flex justify-end space-x-2">
             <Button
               onPress={() => document.getElementById("uploadCV")?.click()}
               color="primary"
@@ -126,7 +126,7 @@ export default function CandidateCVPage() {
               disabled={uploading}
               hidden
             />
-          </div>
+          </div> */}
 
           {previewUrl ? (
             <PDFEmbed pdfUrl={previewUrl} />

@@ -127,7 +127,7 @@ function ImportExcelModal3({
               <Divider />
               <ModalBody className="mt-2 gap-4">
                 <Link
-                  href="/files/Example_Excel.xlsx"
+                  href="/files/ImportCandidateExcel-Example.xlsx"
                   className="text-blue-500"
                 >
                   <div>Download example file</div>

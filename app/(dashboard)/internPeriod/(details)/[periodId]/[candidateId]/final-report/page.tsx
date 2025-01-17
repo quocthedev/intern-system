@@ -24,6 +24,13 @@ import { useParams } from "next/navigation";
 import React, { Key, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { useReactToPrint } from "react-to-print";
+import {
+  Modal,
+  ModalContent,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
+} from "@nextui-org/modal";
 
 export default function FinalReportPage() {
   const statusColor: Record<string, string> = {
@@ -45,6 +52,8 @@ export default function FinalReportPage() {
   const role = getCookie("userRole");
   const contentRef = useRef<HTMLDivElement>(null);
   const reactToPrintFn = useReactToPrint({ contentRef });
+
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
 
   const apiClient = new APIClient({
     onFulfilled: (response) => response,
@@ -302,6 +311,7 @@ export default function FinalReportPage() {
 
     //.....
     mutate(criteriaRecord);
+    onClose();
   };
 
   return (
@@ -495,22 +505,42 @@ export default function FinalReportPage() {
                 <Button
                   variant="solid"
                   color="primary"
-                  className={`${isEditable === false ? "hidden" : ""}`}
-                  onClick={handleUpdateCriteria}
+                  // className={`${isEditable === false ? "hidden" : ""}`}
+                  onPress={onOpen}
                 >
                   Update
                 </Button>
 
-                <Button
+                {/* <Button
                   variant="solid"
                   color="primary"
-                  onClick={() => setIsEditable(!isEditable)}
+                  onPress={() => setIsEditable(!isEditable)}
                   // className={`${isScored ? "hidden" : ""}`}
                 >
                   {isEditable ? "Cancel" : "Evaluate"}
-                </Button>
+                </Button> */}
               </div>
             )}
+            <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+              <ModalContent>
+                <ModalBody className="mt-4 text-center">
+                  Are you sure you want to evaluate this candidate ?
+                </ModalBody>
+                <ModalFooter>
+                  <Button
+                    onPress={handleUpdateCriteria}
+                    color="primary"
+                    className="w-full"
+                  >
+                    Confirm
+                  </Button>
+
+                  <Button onPress={onClose} className="w-full">
+                    Cancel
+                  </Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
           </div>
           <div>
             <div>
@@ -575,6 +605,9 @@ export default function FinalReportPage() {
             <div>
               <div className="text-center font-semibold">Evaluator name </div>
               <div className="text-center">(Sign and write full name) </div>
+              <div className="mt-24 text-center">
+                {candidateInfor?.mentorName}
+              </div>
             </div>
           </div>
         </div>
