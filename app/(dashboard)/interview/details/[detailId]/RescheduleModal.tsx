@@ -130,12 +130,13 @@ export default function InterviewRescheduleModal(
                       rescheduleDetailData?.interviewerId || "",
                     );
                     formData.append("duration", duration);
-                    try {
-                      await sendEmail(formData);
 
+                    const res = await sendEmail(formData);
+
+                    if (res.statusCode === "200") {
                       toast.success("Interview email send successfully! 🎉");
-                    } catch (error: any) {
-                      toast.error(error.message || "Failed to send email! 😢");
+                    } else {
+                      toast.error(res.message || "Failed to send email! 😢");
                     }
 
                     if (props.callback) {

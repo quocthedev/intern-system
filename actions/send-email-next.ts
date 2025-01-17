@@ -70,9 +70,5 @@ export async function sendEmail(data: FormData) {
     Authorization: `Bearer ${accessToken?.value}`,
   });
 
-  if (result.statusCode !== "200") {
-    throw new Error(result.message);
-  }
-
   return result;
 }
