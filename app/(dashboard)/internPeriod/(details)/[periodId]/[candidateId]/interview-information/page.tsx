@@ -417,6 +417,7 @@ export default function InterviewInformationPage() {
                               name={questionTemplateDetail.id}
                               max={questionTemplateDetail.maxQuestionScore}
                               min={0}
+                              step={0.1}
                               validate={(value) => {
                                 if (Number(value) < 0) {
                                   return "Score must be greater than 0";
