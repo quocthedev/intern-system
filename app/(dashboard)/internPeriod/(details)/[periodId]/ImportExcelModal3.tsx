@@ -12,7 +12,6 @@ import { Button } from "@nextui-org/button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { API_ENDPOINTS } from "@/libs/config";
 import { toast } from "sonner";
-import { ExcelIcon } from "@/app/(dashboard)/intern/_components/Icons";
 import { Divider } from "@nextui-org/divider";
 import Link from "next/link";
 import { useUniversityCandidateContext } from "@/app/(dashboard)/internPeriod/(details)/[periodId]/_providers/UniversityCandidateProvider";
@@ -21,6 +20,7 @@ import { getCookie } from "@/app/util";
 import APIClient from "@/libs/api-client";
 import { BaseResponse } from "@/libs/types";
 import { headers } from "next/headers";
+import { ExcelIcon } from "@/app/(dashboard)/internPeriod/_components/Icons";
 
 interface PeriodModalIdProps {
   internPeriodId: string | null;

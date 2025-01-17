@@ -10,10 +10,10 @@ import {
 } from "@nextui-org/modal";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
-import { CreateIcon } from "@/app/(dashboard)/intern/_components/Icons";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { API_ENDPOINTS } from "@/libs/config";
 import { toast } from "sonner";
+import { CreateIcon } from "@/app/(dashboard)/university/_components/Icons";
 
 export default function NewUniverModal() {
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();

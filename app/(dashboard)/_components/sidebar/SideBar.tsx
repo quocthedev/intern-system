@@ -8,17 +8,11 @@ import Link from "next/link";
 import NavigationHR from "@/app/(dashboard)/_components/sidebar/NavigationHR";
 import NavigationMentor from "@/app/(dashboard)/_components/sidebar/NavigationMentor";
 import NavigationUniversity from "@/app/(dashboard)/_components/sidebar/NavigationUniversity";
-import { Button } from "@nextui-org/react";
-import {
-  HomeIconNavbar,
-  ProjectManagementIcon,
-} from "@/app/(dashboard)/_components/sidebar/Icons";
 
 export default function SideBar() {
   const cookiesStore = cookies();
 
   const role = cookiesStore.get("userRole")?.value as string;
-  const id = cookiesStore.get("userId")?.value as string;
 
   if (role !== "Candidate") {
     return (

@@ -85,6 +85,7 @@ export default function QuestionBankPage() {
   const [updateData, setUpdateData] = useState({
     content: "",
     difficulty: "",
+    imageUri: "",
     technologyId: techId,
   });
 
@@ -174,19 +175,46 @@ export default function QuestionBankPage() {
     id: React.SetStateAction<string>,
     content: string,
     difficulty: number,
+    imageUri: string,
     technologyId: string,
   ) => {
     setSelectedQuestion(id);
     setUpdateData({
       content,
       difficulty: difficulty.toString(),
+      imageUri,
       technologyId,
     });
     onOpenEdit();
   };
 
-  const handleUpdate = () => {
+  const handleUpdate = async () => {
     updateMutation.mutate();
+
+    // if (!selectedFile) return;
+
+    // try {
+    //   const formData = new FormData();
+
+    //   formData.append("file", selectedFile);
+
+    //   const response = await fetch(
+    //     `${API_ENDPOINTS.interviewQuestion}/${selectedQuestion}/upload-question-image`,
+    //     {
+    //       method: "PUT",
+    //       body: formData,
+    //     },
+    //   );
+
+    //   if (!response.ok) {
+    //     throw new Error("File upload failed");
+    //   }
+
+    //   await refetch(); /// <reference path="" />
+    // } catch (error) {
+    //   toast.error("Error uploading image");
+    //   console.error(error);
+    // }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -282,6 +310,7 @@ export default function QuestionBankPage() {
                       question.id,
                       question.content,
                       question.difficulty,
+                      question.imageUri,
                       techId,
                     );
                   }}
@@ -408,11 +437,33 @@ export default function QuestionBankPage() {
               }
             />
 
+            <div className="mb-4">
+              <label
+                htmlFor="file-upload"
+                className="cursor-pointer text-blue-500 hover:text-blue-700"
+              >
+                Upload Image
+              </label>
+              <input
+                id="file-upload"
+                type="file"
+                accept=".png, .jpg"
+                onChange={handleFileChange}
+                className="hidden"
+              />
+              {selectedFile && (
+                <p className="mt-2 text-sm text-gray-600">
+                  <span className="font-semibold">Selected file: </span>
+                  {selectedFile.name}
+                </p>
+              )}
+            </div>
+
             <div className="mt-2 grid grid-cols-2 gap-5">
-              <Button onClick={handleUpdate} color="primary">
+              <Button onPress={handleUpdate} color="primary">
                 Update
               </Button>
-              <Button onClick={onCloseEdit}>Cancel</Button>
+              <Button onPress={onCloseEdit}>Cancel</Button>
             </div>
           </ModalBody>
         </ModalContent>

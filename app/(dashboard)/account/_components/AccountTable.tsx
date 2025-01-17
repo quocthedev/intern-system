@@ -26,8 +26,7 @@ import Link from "next/link";
 import { useAccountContext } from "../_providers/AccountProvider";
 import { Pagination } from "@nextui-org/pagination";
 import Loading from "@/components/Loading";
-import { ViewIcon } from "../../intern/_components/Icons";
-import { DeleteIcon } from "../../internPeriod/_components/Icons";
+import { DeleteIcon, ViewIcon } from "../../internPeriod/_components/Icons";
 
 export type Account = {
   fullName: string;

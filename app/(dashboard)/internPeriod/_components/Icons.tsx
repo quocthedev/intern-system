@@ -7,6 +7,7 @@ import EditIconSVG from "@/public/icons/others/edit-icon.svg";
 import ViewIconSVG from "@/public/icons/others/view-icon.svg";
 import CandidateIconSVG from "@/public/icons/sidebar/intern-management-inactive.svg";
 import EllipsisIconSVG from "@/public/icons/others/ellipsis-icon.svg";
+import CreateQuestionIconSVG from "@/public/icons/others/create-question-icon.svg";
 
 import Image from "next/image";
 
@@ -104,6 +105,19 @@ export const CandidateIcon = ({
     width={size}
     height={size}
     src={CandidateIconSVG}
+    className={className}
+  />
+);
+
+export const CreateQuestionIcon = ({
+  size = 20,
+  className,
+}: ActionBarIconsProps) => (
+  <Image
+    alt="Filter Icon"
+    width={size}
+    height={size}
+    src={CreateQuestionIconSVG}
     className={className}
   />
 );
