@@ -159,7 +159,6 @@ export default function FinalReportPage() {
   );
 
   const [isEditable, setIsEditable] = useState(false);
-  const [disable, setDisable] = useState(false);
   const [criteriaArray, setcriteriaArray] = useState<Criteria[]>([]);
 
   const renderCellTask = (task: any, columnKey: Key, index: number) => {
@@ -312,7 +311,6 @@ export default function FinalReportPage() {
 
     //.....
     mutate(criteriaRecord);
-    setDisable(true);
     onClose();
   };
 
