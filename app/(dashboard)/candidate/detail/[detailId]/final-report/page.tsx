@@ -397,6 +397,9 @@ export default function FinalReportPage() {
             <div>
               <div className="text-center font-semibold">Evaluator name </div>
               <div className="text-center">(Sign and write full name) </div>
+              <div className="mt-24 text-center">
+                {candidateInfor?.mentorName}
+              </div>
             </div>
           </div>
         </div>
