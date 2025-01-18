@@ -229,11 +229,11 @@ export default function TaskList() {
             // ) {
             //   return false;
             // }
-            if (!projectTaskFilter?.Status && column.key === "actions") {
-              return false;
-            } else {
-              return true;
-            }
+            // if (!projectTaskFilter?.Status && column.key === "actions") {
+            //   return false;
+            // } else {
+            return true;
+            // }
           })}
         >
           {(column) => (
@@ -265,9 +265,9 @@ export default function TaskList() {
                     // ) {
                     //   return false;
                   }
-                  if (!projectTaskFilter?.Status && column.key === "actions") {
-                    return false;
-                  }
+                  // if (!projectTaskFilter?.Status && column.key === "actions") {
+                  //   return false;
+                  // }
 
                   return true;
                 })

@@ -30,7 +30,6 @@ import { Link } from "@nextui-org/link";
 import { useToggle } from "usehooks-ts";
 import { Tab, Tabs } from "@nextui-org/tabs";
 import { DatePicker } from "@nextui-org/date-picker";
-
 import { now, getLocalTimeZone } from "@internationalized/date";
 import { Select, SelectItem } from "@nextui-org/select";
 import { GetUsersByRoleResponse } from "../libs/_types/GetUsersResponse";
@@ -48,6 +47,7 @@ import { formatDate } from "@/app/util";
 import { I18nProvider } from "@react-aria/i18n";
 import Loading from "./Loading";
 import { useApprovedUniversityCandidateContext } from "@/app/(dashboard)/internPeriod/(details)/[periodId]/_providers/ApprovedUniversityCandidateProvider";
+import { useUniversityCandidateContext } from "@/app/(dashboard)/internPeriod/(details)/[periodId]/_providers/UniversityCandidateProvider";
 
 const apiClient = new APIClient({
   onFulfilled: (response) => response,
@@ -133,6 +133,8 @@ export default function InterviewScheduleModal(
     setPageIndex: setPageIndexUniversityCandidate,
     setSearch,
   } = useApprovedUniversityCandidateContext();
+
+  const { refetch } = useUniversityCandidateContext();
 
   let candidates: Candidate[] | UniversityCandidate[] | undefined;
   let totalPages: number | undefined;
@@ -254,6 +256,8 @@ export default function InterviewScheduleModal(
       } else {
         toast.error(res.message || "Failed to send email! 😢");
       }
+      refetch();
+      onClose();
     },
   });
 
