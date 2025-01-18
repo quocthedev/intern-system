@@ -104,13 +104,13 @@ export default function NewMemberModal(props: NewMemberModalProps) {
 
     if (res.statusCode !== "200") {
       toast.error(res.message);
-      setLoading(false);
       return;
     }
 
     toast.success("New members added successfully");
     refetchProjectSummary();
     onClose();
+    setLoading(false);
   };
 
   const columns = [
