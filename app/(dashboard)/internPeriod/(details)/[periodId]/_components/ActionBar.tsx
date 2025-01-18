@@ -11,7 +11,7 @@ import { getCookie } from "@/app/util";
 export default function ActionBar() {
   const { setSearch, universityId } = useUniversityCandidateContext();
 
-  const { periodId } = useInternPeriodContext();
+  const { periodId, internPeriodData } = useInternPeriodContext();
 
   const role = getCookie("userRole");
 
@@ -23,7 +23,10 @@ export default function ActionBar() {
           placeholder="Search by student code, full name"
           onChange={(e) => setSearch(e.target.value)}
         />
-        {role === "HR Manager" || role === "Administrator" ? (
+        {role === "HR Manager" ||
+        (role === "Administrator" &&
+          internPeriodData?.status === "NotStarted") ||
+        internPeriodData?.status === "InProgress" ? (
           <div className="flex gap-1">
             <ImportExcelModal3
               internPeriodId={periodId}

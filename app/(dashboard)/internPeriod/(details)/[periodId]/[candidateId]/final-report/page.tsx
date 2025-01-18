@@ -159,6 +159,7 @@ export default function FinalReportPage() {
   );
 
   const [isEditable, setIsEditable] = useState(false);
+  const [disable, setDisable] = useState(false);
   const [criteriaArray, setcriteriaArray] = useState<Criteria[]>([]);
 
   const renderCellTask = (task: any, columnKey: Key, index: number) => {
@@ -311,6 +312,7 @@ export default function FinalReportPage() {
 
     //.....
     mutate(criteriaRecord);
+    setDisable(true);
     onClose();
   };
 
@@ -445,18 +447,6 @@ export default function FinalReportPage() {
                       <span className="font-medium">Total average score: </span>{" "}
                       {workPerformance?.averageScore}
                     </div>
-                    <div className="mt-2">
-                      <span className="font-medium">Result: </span>{" "}
-                      {workPerformance?.result === "NotPassed" ? (
-                        <span className="font-medium text-red-500">
-                          Not Passed
-                        </span>
-                      ) : (
-                        <span className={statusColor[workPerformance?.result]}>
-                          {workPerformance?.result}
-                        </span>
-                      )}
-                    </div>
                   </div>
                   <Divider className="mb-8" />
                 </div>
@@ -505,20 +495,21 @@ export default function FinalReportPage() {
                 <Button
                   variant="solid"
                   color="primary"
-                  // className={`${isEditable === false ? "hidden" : ""}`}
+                  className={`${isEditable === false ? "hidden" : ""}`}
                   onPress={onOpen}
+                  isDisabled={disable}
                 >
                   Update
                 </Button>
 
-                {/* <Button
+                <Button
                   variant="solid"
                   color="primary"
                   onPress={() => setIsEditable(!isEditable)}
                   // className={`${isScored ? "hidden" : ""}`}
                 >
                   {isEditable ? "Cancel" : "Evaluate"}
-                </Button> */}
+                </Button>
               </div>
             )}
             <Modal isOpen={isOpen} onOpenChange={onOpenChange}>

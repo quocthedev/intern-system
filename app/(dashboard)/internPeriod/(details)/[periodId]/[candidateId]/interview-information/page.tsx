@@ -368,7 +368,7 @@ export default function InterviewInformationPage() {
                     ? candidateQuestionTemplateDetails?.result
                     : candidateQuestionTemplateDetails?.result === "WaitAnswer"
                       ? "Waiting for answer"
-                      : "Waiting for result"}
+                      : "Not passed"}
                 </p>
               </p>
               <div className="flex gap-2">
