@@ -497,7 +497,6 @@ export default function FinalReportPage() {
                   color="primary"
                   className={`${isEditable === false ? "hidden" : ""}`}
                   onPress={onOpen}
-                  isDisabled={disable}
                 >
                   Update
                 </Button>
@@ -506,7 +505,7 @@ export default function FinalReportPage() {
                   variant="solid"
                   color="primary"
                   onPress={() => setIsEditable(!isEditable)}
-                  // className={`${isScored ? "hidden" : ""}`}
+                  className={`${isScored ? "hidden" : ""}`}
                 >
                   {isEditable ? "Cancel" : "Evaluate"}
                 </Button>
